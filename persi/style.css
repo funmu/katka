@@ -1,0 +1,17 @@
+/* style.css */
+
+body {
+	background: lightcyan;
+	width: 800px;
+	margin: auto;
+}
+
+h1 {
+	color: brown;
+	text-align: center;
+}
+
+p {
+	color: gray;
+	padding: 10px;
+}
