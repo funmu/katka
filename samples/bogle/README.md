@@ -23,8 +23,15 @@ The code has more in-line documentation.
 The above command will run thru the simple set of tests used for checking out the *Bogle Board*. For matching words, the board is printed out with sequential indices to show the flow of the word in the board.
 
 ###Wish List###
- * Enable a graphical mode to show the matches
- * An app to illustrate the use of the Bogle Board matches
+ * Optimizations 
+  * Use 16-bit number for storing prefixList so we can avoid linear search
+  * Use iteartion with a queue instead of recursion (if processor cycles are important)
+  * Use letter scan early on to check if all letters exist independent of position
+ * Experience
+  * Enable a graphical mode to show the matches
+  * An app to illustrate the use of the Bogle Board matches
+  * Generalize BogleBoar for nxn sized grids (instead of just 4x4)
+  * Genaralize to support other langauges
 
 ##Contriburors##
 Murali Krishnan
