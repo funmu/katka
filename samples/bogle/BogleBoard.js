@@ -1,6 +1,6 @@
 /*
  *  BogleBoard.js
- *    Represent and solve Bogle Board Gome 
+ *    Represent and solve Bogle Board Game 
  *
  *
  *  Created: muralirk@gmail.com - Dec 8, 2015
