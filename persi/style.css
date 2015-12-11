@@ -1,17 +1,88 @@
 /* style.css */
 
 body {
-	background: lightcyan;
-	width: 800px;
+	background: linen;
+	width: 900px;
 	margin: auto;
+	font-family: 'Dosis', sans-serif;
 }
 
-h1 {
-	color: brown;
+
+header, main, footer {
+	mind-width: 400px;
+} 
+
+header h1 {
+	color: green;
 	text-align: center;
+	float: left;
+	width: 600px;
+}
+
+header nav {
+	padding-top: 20px;
+	width: 200px;
+	float: right;
+}
+
+main {
+	width: 600px;
+	margin: auto;
+	background: lightgray;
+	overflow: auto;
+}
+
+nav p {
+	margin: 0;
+	padding: 0;
+}
+
+footer {
+	clear: both;
+}
+
+footer div.contact {
+	float: left;
+	width: 500px;
+}
+
+footer div.sitemap {
+	float: right;
+	width: 300px;
+}
+
+footer div.copyright {
+	clear: both;
+	font-size: 0.8em;
 }
 
 p {
 	color: gray;
-	padding: 10px;
+	padding: 0;
+	margin: 0;
+}
+
+
+/*  Anchor Styling */
+a {
+	color: cornflowerblue;
+	text-decoration: none;
+}
+
+a:visited {
+	color: tomato;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+/* List & Items */
+ol {
+	border: 5px solid salmon;
+	border-radius: 15px;
+}
+
+ol li {
+	color: brown;
 }
