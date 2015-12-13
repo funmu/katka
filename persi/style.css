@@ -2,33 +2,32 @@
 
 body {
 	background: linen;
-	width: 900px;
+	width: 1200px;
 	margin: auto;
 	font-family: 'Dosis', sans-serif;
 }
 
 
 header, main, footer {
-	mind-width: 400px;
+	min-width: 400px;
 } 
 
 header h1 {
 	color: green;
 	text-align: center;
 	float: left;
-	width: 600px;
+	width: 800px;
 }
 
 header nav {
 	padding-top: 20px;
-	width: 200px;
+	width: 400px;
 	float: right;
 }
 
 main {
-	width: 600px;
+	width: 1000px;
 	margin: auto;
-	background: lightgray;
 	overflow: auto;
 }
 
@@ -38,20 +37,24 @@ nav p {
 }
 
 footer {
+	padding-top: 20px;
 	clear: both;
 }
 
 footer div.contact {
+	padding-left: 100px;
 	float: left;
 	width: 500px;
 }
 
 footer div.sitemap {
 	float: right;
-	width: 300px;
+	width: 400px;
 }
 
 footer div.copyright {
+	padding-left: 100px;
+	float: left;
 	clear: both;
 	font-size: 0.8em;
 }
@@ -85,4 +88,55 @@ ol {
 
 ol li {
 	color: brown;
+}
+
+/* For the URL Notes */
+
+span.ulabel {
+	width: 100px;
+}
+
+.urlNotes-input {
+	float: left;
+}
+
+.urlNotes-input button:hover {
+
+	cursor: pointer;
+}
+
+.urlNotes {
+	padding-top: 30px;
+	clear: both;
+}
+
+.urlNotes p:nth-child(even) {
+	background: orange;
+}
+
+.urlNotes p:nth-child(odd) {
+	background: lime;
+}
+
+/* For the Tabs UI */
+.tabs a span {
+	display: inline-block;
+	border-radius: 10px 10px 0 0;
+	width: 200px;
+	text-align: center;
+	margin-right: 20px;
+	background: #00cccc;
+	padding: 0x;
+}
+
+.tabs a span.active {
+	background: #773300;
+	font-size: 20px;
+}
+
+.content {
+	background: lightgray;
+	padding: 0px;
+	margin: 0px;
+	display: none;
 }

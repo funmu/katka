@@ -12,19 +12,57 @@
  		<nav>
  			<a href="#">Signup</a> |
  			<a href="#">Login</a> |
- 			<a href="#">About</a> |
+ 			<a href="index.html">Home</a> |
+ 			<a href="about.html">About</a> |
  			<a href="faq.html">FAQ</a>
  		</nav>
  	</header>
 
  	<main>
- 		<p>Main content for personalized Information Pages Go here</p>
+ 		<div class="container">
+ 			<div class="tabs">
+ 				<a href=""><span class="active">News</span></a>
+ 				<a href=""><span>People</a>
+ 				<a href=""><span>Add</a>
+ 			</div>
 
- 		<ul>
- 			<li>New Topics</li>
- 			<li>People</li>
- 			<li>Evergreen Topics</li>
- 		</ul>
+ 			<div class="content NewsSites">
+				<section class="urlNotes">
+			 		<ul>
+			 			<li><a href="http://www.cnn.com">CNN News</a></li>
+			 			<li><a href="http://www.geekwire.com">Geekwire (Seattle)</a></li>
+			 		</ul>
+			 	<section>
+			</div>
+
+ 			<div class="content People">
+				<section class="people">
+			 		<ul>
+			 			<li><a href="http://www.gmail.com">Gmail</a></li>
+			 			<li><a href="http://www.outlook.com">Hotmail Personal</a></li>
+			 			<li><a href="http://www.outlook.com/krishnanfamily.org">Family Account</a></li>
+			 		</ul>
+			 	<section>
+			</div>
+
+			<div class="content AddUrl">
+				<section class="InputForUrl">
+			 		<p>Tracks the notes for URLs</p>
+
+			 		<section class="urlNotes-input">
+			 			<p> <span class='ulabel'> URL :</span> 
+			 				<input type='text' size='60' 
+			 					name='urlInput' id='urlInput'></input>
+			 			</p>
+			 			<p> <span class='ulabel'> Note :</span> 
+			 				<input type='text' size='60' 
+			 					name='urlNoteInput' id='urlNoteInput'></input>
+			 			</p>
+			 			<button>+</button>
+			 		</section>
+			 	</section>
+		 	</div>
+		</div>
  	</main>
 
  	<footer>
@@ -37,8 +75,8 @@
  		<div class="sitemap">
  			<h4>Site Map</h4>
  			<ul>
- 				<li><a href="#">Home</a></li>
- 				<li><a href="#">About Us</a></li>
+ 				<li><a href="index.html">Home</a></li>
+ 				<li><a href="about.html">About Us</a></li>
  				<li><a href="faq.html">FAQ</a></li>
  			</ul>
  		</div>
@@ -48,5 +86,7 @@
 	 	</div>
  	</footer>
 
+ 	<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+ 	<script src="scripts/urlnotes.js"></script>
  </body>
 </html>
