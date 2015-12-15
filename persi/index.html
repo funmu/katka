@@ -21,9 +21,7 @@
  	<main>
  		<div class="container">
  			<div class="tabs">
- 				<a href=""><span class="active">News</span></a>
- 				<a href=""><span>People</a>
- 				<a href=""><span>Add</a>
+ 				<!-- Tabs are auto generated as per scripts + dynamic data -->
  			</div>
 
  			<div class="content NewsSites">
@@ -87,6 +85,21 @@
  	</footer>
 
  	<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+ 	<script src="scripts/tabManager.js"></script>
  	<script src="scripts/urlnotes.js"></script>
+	<script>
+ 	 	// Pull tab content as metadata
+
+	 	var tabContent = [
+	 		{ tabNum : 1, category: "News", contentClass: ".NewsSites" },
+	 		{ tabNum : 2, category: "People", contentClass: ".People" },
+	 		{ tabNum : 3, category: "Add Item", contentClass: ".AddUrl" }
+	 	];
+
+	 	var tb = new tabManager( tabContent, true);
+		tb.setupTabs( ".tabs");
+	 	tb.setActiveTab(2);
+
+ 	</script> 	
  </body>
 </html>

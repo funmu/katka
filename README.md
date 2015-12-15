@@ -4,6 +4,9 @@ Project and files related to **learning** new technology
 > Continuous Learning is great for us!
 
 ##References##
+ * Problems
+  * [Project Euler](http://projecteuler.net)
+
  * Tutorials for Tools
   * [Markdown Tutorial](http://markdowntutorial.com/)
   * [Curl Tutorial](https://gist.github.com/caspyin/2288960)
@@ -23,6 +26,11 @@ Project and files related to **learning** new technology
  * Tutorials for Language
   * [Javascript](http://Unknown.com)
   * [JSLint](http://www.jslint.org)
+  * [JQuery](http://www.jquery.com)
+  * [JQuery Plugins](http://plugins.jquery.com)
+  * [JQuery Selectors](http://api.jquery.com/category/selectors) - how to select using JQuery
+
+
   
 
 ##Contriburors##
