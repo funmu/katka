@@ -1,0 +1,104 @@
+<!doctype html>
+<html>
+ <head>
+	 <link href='https://fonts.googleapis.com/css?family=Dosis' rel='stylesheet' type='text/css'>
+ 	<link href="style.css" rel="stylesheet" type="text/css"/>
+ 	<title>Persi - Photos Explorer Pages </title>
+ </head>
+
+ <body>
+ 	<header>
+ 		<h1>Persi - Photos Explorer Pages</h1>
+ 		<nav>
+ 			<a href="#">Signup</a> |
+ 			<a href="#">Login</a> |
+ 			<a href="index.html">Home</a> |
+ 			<a href="about.html">About</a> |
+ 			<a href="faq.html">FAQ</a>
+ 		</nav>
+ 	</header>
+
+ 	<main>
+ 		<div class="container">
+ 			<div class="Query">
+				<section class="photosQuery">
+		 			<p> <span class='plabel'> Search for Photos:</span> 
+		 				<input type='text' size='60' 
+		 					name='photoInput' id='photoInput'></input>
+		 			</p>
+					<button class="show">Show</button>
+					<button class="refreshButton">Refresh</button>
+		 		</section>
+		 	</div>
+
+ 			<div class="tabs">
+ 				<!-- Tabs are auto generated as per scripts + dynamic data -->
+ 			</div>
+
+		 	<div class="content FlickrImages">
+		 		<section class="photosResults">
+		 		</section>
+		 	</div>
+ 			<div class="content GoogleImages">
+				<section class="pictures">
+			 	</section>
+			</div>
+
+ 			<div class="content BingImages">
+				<section class="pictures">
+			 	</section>
+			</div>
+
+		</div>
+ 	</main>
+
+ 	<footer>
+ 		<hr/>
+ 		<div class="contact">
+ 			<h4>Persi</h4>
+ 			<p>Bellevue, WA</p>
+ 		</div>
+
+ 		<div class="sitemap">
+ 			<h4>Site Map</h4>
+ 			<ul>
+ 				<li><a href="index.html">Home</a></li>
+ 				<li><a href="about.html">About Us</a></li>
+ 				<li><a href="faq.html">FAQ</a></li>
+ 			</ul>
+ 		</div>
+
+ 		<div class="copyright">
+	 		<p>Copyright (c) Persi 2015</p>
+	 	</div>
+ 	</footer>
+
+ 	<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+ 	<script src="scripts/tabManager.js"></script>
+ 	<script src="scripts/urlnotes.js"></script>
+ 	<script src="scripts/flickrPhotos.js"></script>
+	<script>
+ 	 	// Pull tab content as metadata
+
+	 	var tabContent = [
+	 		{ tabNum : 1, category: "Flickr", contentClass: ".FlickrImages" },
+	 		{ tabNum : 2, category: "Google Images", contentClass: ".GoogleImages" },
+	 		{ tabNum : 3, category: "Bing Images", contentClass: ".BingImages" }
+	 	];
+
+	 	var tb = new tabManager( tabContent, true);
+		tb.setupTabs( ".tabs");
+
+	 	var fp = new flickrPhotos( true);
+
+ 	 	$(".photosQuery button").on('click', 
+ 	 		fp.showPhotos.bind( fp, ".photosResults", "#photoInput"));
+
+ 	 	$(".photosQuery refreshButton").on('click', 
+ 	 		fp.showPhotos.bind( fp, ".photosResults", "#photoInput"));
+
+	 	tb.setActiveTab(1);
+
+ 	</script> 	
+ </body>
+</html>

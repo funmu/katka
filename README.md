@@ -26,7 +26,7 @@ Project and files related to **learning** new technology
  * Tutorials for Language
   * [Javascript](http://Unknown.com)
   * [JSLint](http://www.jslint.org)
-  * [JQuery](http://www.jquery.com)
+  * Get [JQuery](http://www.jquery.com) and use [JQuery docs](http://api.jquery.com)
   * [JQuery Plugins](http://plugins.jquery.com)
   * [JQuery Selectors](http://api.jquery.com/category/selectors) - how to select using JQuery
 

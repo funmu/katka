@@ -140,3 +140,10 @@ span.ulabel {
 	margin: 0px;
 	display: none;
 }
+
+button {
+	background: orange;
+	margin: 20px;
+	border-radius: 10px 10px 10px 10px;
+	width: 100px;
+}

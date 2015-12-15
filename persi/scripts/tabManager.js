@@ -47,7 +47,7 @@
 
  		if (this.fVerbose) { 
  			console.log( " Activating tab: %d. Category=%s", 
- 				tabNum, this.tabsList[tabNum-1].Category);
+ 				tabNum, this.tabsList[tabNum-1].category);
  		}
 
  		var $tabSelector = ".tabs a:nth-child(" + tabNum + ") span";
