@@ -1,0 +1,85 @@
+<!doctype html>
+<html>
+ <head>
+	 <link href='https://fonts.googleapis.com/css?family=Dosis' rel='stylesheet' type='text/css'>
+ 	<link href="../styles/pestyle.css" rel="stylesheet" type="text/css"/>
+ 	<title>Persi - Personalized Information Pages </title>
+ </head>
+
+ <body>
+ 	<header>
+ 		<h1>Persi - Personalized Information Pages</h1>
+ 		<nav>
+ 			<a href="#">Signup</a> |
+ 			<a href="#">Login</a> |
+ 			<a href="../index.html">Home</a>
+ 		</nav>
+ 	</header>
+
+ 	<main>
+ 		<hr/>
+ 		<div class="container">
+ 			<section id="personalProfile">
+ 			</section>
+		</div>
+ 	</main>
+
+ 	<footer>
+ 		<hr/>
+ 		<div class="contact">
+ 			<h4>Persi</h4>
+ 			<p>Bellevue, WA</p>
+ 		</div>
+
+ 		<div class="sitemap">
+ 			<h4>Site Map</h4>
+ 			<ul>
+ 				<li><a href="../index.html">Home</a></li>
+ 				<li><a href="../about.html">About</a></li>
+ 				<li><a href="../faq.html">FAQ</a></li>
+ 			</ul>
+ 		</div>
+
+ 		<div class="copyright">
+	 		<p>Copyright (c) Persi 2015</p>
+	 	</div>
+ 	</footer>
+
+ 	<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+ 	<script src="../scripts/PersonalProfilesManager.js"></script>
+	<script>
+
+		// var pathToProfile1 = "http://hemocoel.com/persers/murali.json?callback=perser";
+
+	 	var ppm = new PersonalProfilesManager( window.location, true);
+
+		// ToDo: Use Cookies or query string to find the name of the user
+	 	// First load the configuration and then load profile
+	 	ppm.loadConfig( loadProfile);
+
+	 	function loadProfile( err, config) 
+	 	{
+	 		if (err) {
+	 			console.log( "ERROR: Unable to load configuration. So no profiles");
+	 		} else {
+
+				// Personalize as per input user name
+				// ToDo: localize configuration management inside PersonalProfilesManager
+				var pathToProfile = ppm.PerserUrl( config.primaryPerser);
+	 			ppm.showProfile( "#personalProfile", pathToProfile);
+	 		}
+	 	}
+
+
+	 // -------------- Track Page Usage -------------------------------------
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-68421266-1', 'auto');
+      ga('send', 'pageview');
+
+ 	</script> 	
+ </body>
+</html>

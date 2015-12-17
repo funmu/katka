@@ -31,7 +31,6 @@ Project and files related to **learning** new technology
   * [JQuery Selectors](http://api.jquery.com/category/selectors) - how to select using JQuery
 
 
-  
 
 ##Contriburors##
 Murali Krishnan
