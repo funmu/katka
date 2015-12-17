@@ -17,7 +17,6 @@
  	</header>
 
  	<main>
- 		<hr/>
  		<div class="container">
  			<section id="personalProfile">
  			</section>
@@ -26,49 +25,69 @@
 
  	<footer>
  		<hr/>
- 		<div class="contact">
- 			<h4>Persi</h4>
- 			<p>Bellevue, WA</p>
- 		</div>
+ 		<div class="container">
+	 		<div class="contact">
+	 			<h4>Persi</h4>
+	 			<p>Bellevue, WA</p>
+	 		</div>
 
- 		<div class="sitemap">
- 			<h4>Site Map</h4>
- 			<ul>
- 				<li><a href="../index.html">Home</a></li>
- 				<li><a href="../about.html">About</a></li>
- 				<li><a href="../faq.html">FAQ</a></li>
- 			</ul>
- 		</div>
+	 		<div class="sitemap">
+	 			<h4>Site Map</h4>
+	 			<ul>
+	 				<li><a href="../index.html">Home</a></li>
+	 				<li><a href="../about.html">About</a></li>
+	 				<li><a href="../faq.html">FAQ</a></li>
+	 			</ul>
+	 		</div>
 
- 		<div class="copyright">
-	 		<p>Copyright (c) Persi 2015</p>
-	 	</div>
+	 		<div class="copyright">
+		 		<p>Copyright (c) Persi 2015</p>
+		 	</div>
+		 </div>
  	</footer>
 
  	<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+ 	<script src="../scripts/MavexUtils.js"></script>
  	<script src="../scripts/PersonalProfilesManager.js"></script>
+    <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/d3/3.4.1/d3.min.js"></script>
+
 	<script>
 
-		// var pathToProfile1 = "http://hemocoel.com/persers/murali.json?callback=perser";
 
+	 	function loadProfile( perserName) 
+	 	{
+			// Personalize as per input user name
+			// ToDo: localize configuration management inside PersonalProfilesManager
+			var pathToProfile = ppm.PerserUrl( perserName);
+ 			ppm.showProfile( "#personalProfile", pathToProfile);
+	 	}
+
+	 	// 1. Find the name of user
+		// ToDo: Use Cookies or query string to find the name of the user
+		var mutils = new MavexUtils();
+		var urlParams = mutils.ParseURLParams( window.location.search);
+		var perserName = urlParams["user"];
+		console.log( "Name: %s", perserName);
+
+		// 2. Load up profile and render
 	 	var ppm = new PersonalProfilesManager( window.location, true);
 
-		// ToDo: Use Cookies or query string to find the name of the user
-	 	// First load the configuration and then load profile
-	 	ppm.loadConfig( loadProfile);
+	 	if ( perserName == undefined) {
 
-	 	function loadProfile( err, config) 
-	 	{
-	 		if (err) {
-	 			console.log( "ERROR: Unable to load configuration. So no profiles");
-	 		} else {
+	 		// 3. Load config to find the perser name
+		 	ppm.loadConfig( function( err, config) {
+		 		if (err) {
+		 			console.log( "ERROR: Unable to load configuration. So no profiles");
+		 		} else {
+		 			perserName = config.primaryPerser;
+		 			loadProfile( perserName);
+		 		}
+		 	});
+		 } else {
 
-				// Personalize as per input user name
-				// ToDo: localize configuration management inside PersonalProfilesManager
-				var pathToProfile = ppm.PerserUrl( config.primaryPerser);
-	 			ppm.showProfile( "#personalProfile", pathToProfile);
-	 		}
-	 	}
+		 	loadProfile( perserName);
+		 }
+
 
 
 	 // -------------- Track Page Usage -------------------------------------

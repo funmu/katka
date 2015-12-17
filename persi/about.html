@@ -1,0 +1,112 @@
+<!doctype html>
+<html>
+ <head>
+	 <link href='https://fonts.googleapis.com/css?family=Dosis' rel='stylesheet' type='text/css'>
+ 	<link href="styles/pestyle.css" rel="stylesheet" type="text/css"/>
+ 	<title>Persi - Personalized Information Pages </title>
+ </head>
+
+ <body>
+ 	<header>
+ 		<h1>Persi - Personalized Information Pages</h1>
+ 		<nav>
+ 			<a href="#">Signup</a> |
+ 			<a href="#">Login</a> |
+ 			<a href="index.html">Home</a>
+ 		</nav>
+ 	</header>
+
+ 	<main>
+ 		<div class="container">
+ 			<div class="tabs">
+ 				<!-- Tabs are auto generated as per scripts + dynamic data -->
+ 			</div>
+
+ 			<div class="content NewsSites">
+				<section class="urlNotes">
+			 		<ul>
+			 			<li><a href="http://www.cnn.com">CNN News</a></li>
+			 			<li><a href="http://www.geekwire.com">Geekwire (Seattle)</a></li>
+			 		</ul>
+			 	<section>
+			</div>
+
+ 			<div class="content People">
+				<section class="people">
+			 		<ul>
+			 			<li><a href="http://www.gmail.com">Gmail</a></li>
+			 			<li><a href="http://www.outlook.com">Hotmail Personal</a></li>
+			 			<li><a href="http://www.outlook.com/krishnanfamily.org">Family Account</a></li>
+			 		</ul>
+			 	<section>
+			</div>
+
+			<div class="content AddUrl">
+				<section class="InputForUrl">
+			 		<p>Tracks the notes for URLs</p>
+
+			 		<section class="urlNotes-input">
+			 			<p> <span class='ulabel'> URL :</span> 
+			 				<input type='text' size='60' 
+			 					name='urlInput' id='urlInput'></input>
+			 			</p>
+			 			<p> <span class='ulabel'> Note :</span> 
+			 				<input type='text' size='60' 
+			 					name='urlNoteInput' id='urlNoteInput'></input>
+			 			</p>
+			 			<button>+</button>
+			 		</section>
+			 	</section>
+		 	</div>
+		</div>
+ 	</main>
+
+ 	<footer>
+ 		<hr/>
+ 		<div class="contact">
+ 			<h4>Persi</h4>
+ 			<p>Bellevue, WA</p>
+ 		</div>
+
+ 		<div class="sitemap">
+ 			<h4>Site Map</h4>
+ 			<ul>
+ 				<li><a href="index.html">Home</a></li>
+ 				<li><a href="about.html">About</a></li>
+ 				<li><a href="faq.html">FAQ</a></li>
+ 			</ul>
+ 		</div>
+
+ 		<div class="copyright">
+	 		<p>Copyright (c) Persi 2015</p>
+	 	</div>
+ 	</footer>
+
+ 	<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+ 	<script src="scripts/tabManager.js"></script>
+ 	<script src="scripts/urlnotes.js"></script>
+	<script>
+ 	 	// Pull tab content as metadata
+
+	 	var tabContent = [
+	 		{ tabNum : 1, category: "News", contentClass: ".NewsSites" },
+	 		{ tabNum : 2, category: "People", contentClass: ".People" },
+	 		{ tabNum : 3, category: "Add Item", contentClass: ".AddUrl" }
+	 	];
+
+	 	var tb = new tabManager( tabContent, true);
+		tb.setupTabs( ".tabs");
+	 	tb.setActiveTab(2);
+
+
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-68421266-1', 'auto');
+      ga('send', 'pageview');
+
+ 	</script> 	
+ </body>
+</html>

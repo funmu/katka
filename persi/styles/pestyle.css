@@ -25,15 +25,20 @@ header nav {
 	float: right;
 }
 
+nav p {
+	margin: 0;
+	padding: 0;
+}
+
 main {
 	width: 1000px;
 	margin: auto;
 	overflow: auto;
 }
 
-nav p {
-	margin: 0;
-	padding: 0;
+h3.meme {
+	padding-left: 100px;
+	font-style: italic;
 }
 
 footer {

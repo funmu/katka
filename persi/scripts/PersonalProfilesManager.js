@@ -126,9 +126,20 @@
 
  			$docItem.append( $profile);
  			$docItem.fadeIn();
- 		}, this);
+ 		}, this)
+ 		.fail(function( jqxhr, textStatus, error ) {
+		    var err = textStatus + ", " + error;
+		    console.log( "Request Failed: " + err );
+
+		    var $profile = $("<div>").text(" Could not find personal information. Create fresh one!");
+		    $docItem.append($profile);
+		    $docItem.fadeIn();
+		});
  	}
- 	
+
+// -------------------------------------------------------------------------
+// export the constructor for local and remote usage
+
  	if ( (typeof module === 'undefined')) {
  		window.PersonalProfilesManager = PersonalProfilesManager;
  	}
