@@ -160,3 +160,26 @@ button.refreshButton {
 .textInput {
 	font-size: 1.1em;
 }
+
+/* Group Related Stuff */
+.groupHeader {
+	font-size: 1.4em;
+	font-weight: bold;
+	padding-left: 1em;
+	padding-top: 1em;
+	margin-top: 1em;
+	margin-right: 1em;
+	text-align: "center";
+	background-color: aqua;
+}
+.groupItem {
+	font-size: 1.1em;
+	margin-top: 0.5em;
+	margin-left: 0.5em;
+	vertical-align: middle;
+}
+.groupItemImage {
+	width: 1.1em;
+	height: 1.1em;
+	vertical-align: middle;
+}

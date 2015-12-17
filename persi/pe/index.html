@@ -2,6 +2,9 @@
 <html>
  <head>
 	 <link href='https://fonts.googleapis.com/css?family=Dosis' rel='stylesheet' type='text/css'>
+
+	<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet" integrity="sha256-MfvZlkHCEqatNoGiOXveE8FIwMzZg4W85qfrfIFBfYc= sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
+
  	<link href="../styles/pestyle.css" rel="stylesheet" type="text/css"/>
  	<title>Persi - Personalized Information Pages </title>
  </head>
@@ -17,9 +20,18 @@
  	</header>
 
  	<main>
+
  		<div class="container">
- 			<section id="personalProfile">
- 			</section>
+			<div class="tabs">
+ 				<!-- Tabs are auto generated as per scripts + dynamic data -->
+ 			</div>
+ 		
+ 			<div class="content Favorites" id="main">
+ 			</div>
+
+ 			<div class="content About" id="personalProfile">
+ 			</div>
+ 		
 		</div>
  	</main>
 
@@ -47,9 +59,12 @@
  	</footer>
 
  	<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js" integrity="sha256-Sk3nkD6mLTMOF0EOpNtsIry+s1CsaqQC1rVLTAy+0yc= sha512-K1qjQ+NcF2TYO/eI3M6v8EiNYZfA95pQumfvcVrTHtwQVDG+aHRqLi/ETn2uB+1JqwYqVG3LIvdm9lj6imS/pQ==" crossorigin="anonymous"></script>
+
  	<script src="../scripts/MavexUtils.js"></script>
  	<script src="../scripts/PersonalProfilesManager.js"></script>
     <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/d3/3.4.1/d3.min.js"></script>
+   	<script src="../scripts/tabManager.js"></script>
 
 	<script>
 
@@ -88,6 +103,218 @@
 		 	loadProfile( perserName);
 		 }
 
+
+// GROUP / NEWS STUFF
+/*
+		renderSelections()
+		- Dynamically load up the selector with details received
+
+		Input:
+			selector - to which we will attach the generated nodes
+			pagesJson - list of pages organized as groups
+
+		Output:
+		  for each item we will get the output as:
+		  <div class="groupHeader" id="usmagazines">
+		  	USMagazines
+		  	... group items .. 
+		  </div>
+	*/
+	function renderGroups( selector, pagesJson) {
+
+		// layout in a grid if there are more than 3 columns in the output
+		// create the group headers first
+		var groups = d3.select( selector)
+					.selectAll("div.groupHeaders")
+					.data( pagesJson)
+					.enter()
+					.append("div")
+						.attr("class", "groupHeader col-sm-4")
+						.style("background-color", function(d) {
+							return d.bgcolor;})
+						.attr("id", function(d) { return d.groupId;});
+
+		groups.append("span").text( function(d) { return d.group;});
+
+		// iterate throgh each item and create per-group list
+		groups.each( function(d, i) {
+			// first create the containing div for the group items
+			var groupItemsContainer = d3.select(this).append("div")
+						.attr("id", function(d) { return d.group + d.items.length;});
+			renderGroupItems( groupItemsContainer, d.items);
+		});
+
+		// remove unwanted nodes
+		d3.select(selector).selectAll("div.groupHeaders")
+			.data(pagesJson)
+			.exit()
+			.remove();
+	}
+
+/*
+	renderGroupItems()
+	- create all the group items per group
+
+	Input:
+		group - header item to which we attach all the generated nodes
+		groupItems - data - array with the items for the group
+
+	Ouptut:
+		<div style="margin-top: 15px;">
+			<a href="http://www.dinamani.com" target="_blank" style="margin-left: 10px;">
+				<img width="40px" height="40px" src="http://www.dinamani.com/favicon.ico">
+				<span style="padding-left: 20px;">தினமணி
+				</span>
+			</a>
+		</div>
+
+*/
+	function renderGroupItems( group, groupItems) 
+	{
+		var itemList = group.selectAll("div.groupItem")
+						.data( groupItems)
+						.enter()
+						.append("div")
+							.attr("class", "groupItem");
+
+		var itemLink = itemList.append("a")
+			.attr( "href", function(d) { return d.url})
+			.attr( "id", function(d) { return d.inputId; })
+			.attr( "target", "_blank");
+
+		itemLink.append("img")
+			.attr("class", "groupItemImage")
+			.attr("src", function(d) { return d.url + "/favicon.ico";});
+
+		itemLink.append("span")
+			.style("padding-left", "0.5em")
+			.text(function(d) { return (d.nativelabel != null)? d.nativelabel: d.label;});
+
+	}
+
+
+/*
+<div class="header" style="background-color: green;">
+    <div class="row">
+        <div class="col-sm-2">
+            <div class="dropdown">
+                <button class="btn-sm btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
+                    Topics
+                    <span class="caret"></span>
+                </button>
+                <div id="groupsList"></div>
+                <ul class="dropdown-menu">
+                    <!-- ToDo: find a way to avoid hardcoding the absolute root link -->
+                    <li><a href="/hm/default.html#magazines" target="_blank">Magazines</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-sm-2">
+            <div class="dropdown">
+                <button class="btn-sm btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
+                    Productivity
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                    <li class="dropdown-header">Emails</li>
+                    <li><a href="http://www.outlook.com" target="_blank">Hotmail (ranukrish@hotmail.com)</a></li>
+                    <li><a href="https://www.gmail.com" target="_blank">Gmail (ranukrish@gmail.com)</a></li>
+                    <li class="divider" role="separator"></li>
+                    <li class="dropdown-header">TBD</li>
+                    <li><a href="https://tbd.com" target="_blank">TBD</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-sm-1" style="padding-top:5px;">
+            <a href="./" style="color: white;"><span class=" glyphicon glyphicon-home" aria-hidden="true"></span> Radhkrishnan's Home Page</a>
+        </div>
+    </div>
+</div>
+*/
+	function renderHeader( headerSelector, pagesJson) 
+	{
+
+		var headerList = d3.select(headerSelector)
+					.append("div").attr("class", "col-sm-2")
+					.append("div")
+						.attr("id", "groupsList")
+						.attr("class", "dropdown");
+
+		headerList.append("button")
+			.attr("class", "btn-sm btn-primary dropdown-toggle")
+			.attr("type", "button")
+			.attr("aria-hidden", "false")
+			.attr("data-toggle", "dropdown")
+				.text( function(d) { return pagesJson.header; })// "Topics")  ToDo: Get this from data in the pagesJson
+				.append("span").attr("class", "caret");
+
+		var groupsList = headerList.append("ul")
+				.attr("class", "dropdown-menu");
+
+		// for each gorup create the top-level anchor link in the menu
+		groupsList.selectAll("li")
+				.data( pagesJson.groups)
+				.enter()
+				.append( "li")
+				.append("a")
+					.attr( "href", function(d) { return "/hm/default.html#" + d.group;})
+					.attr( "id", function(d) { return "header-" + d.group; })
+					.append("span").text( function(d) { return d.group;});
+
+		// remove unwanted nodes
+		groupsList.selectAll("li")
+			.data(pagesJson.groups)
+			.exit()
+			.remove();
+	}
+
+	function renderUsertile( selector, userName)
+	{
+		var userNameAnchor = d3.select(selector)
+			.append("div")
+				.attr("class", "col-sm-2")
+			.append("a")
+				.attr("href", "./default.html") // need to use right home page location
+				.style("color", "white");
+
+		userNameAnchor
+				.append("span")
+				.attr("class", "glyphicon glyphicon-home");
+		userNameAnchor
+				.append("span")
+				.style("margin-left", "0.5em")
+				.text(function(d) { return userName})
+				;
+	}
+
+	if (perserName) {
+		pagesList = "../hm/Content/" + perserName + ".sites.json";
+	}
+
+	// load the page here
+    d3.json( pagesList, function( data){
+
+    	// input is an array of objects { header, groups} ... render them
+    	data.forEach( function(d) {
+//	    	renderHeader( "#pageHeader", d);
+	    	renderGroups( "#main", d.groups);    		
+    	});
+
+//    	renderUsertile( "#pageHeader", userName);
+
+    });
+
+// TABS
+	 	// Pull tab content as metadata
+
+	 	var tabContent = [
+	 		{ tabNum : 1, category: "Favorites", contentClass: ".Favorites" },
+	 		{ tabNum : 2, category: "About", contentClass: ".About" }
+	 	];
+
+	 	var tb = new tabManager( tabContent, true);
+		tb.setupTabs( ".tabs");
+	 	tb.setActiveTab(1);
 
 
 	 // -------------- Track Page Usage -------------------------------------
