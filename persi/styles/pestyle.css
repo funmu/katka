@@ -12,6 +12,10 @@ header, main, footer {
 	min-width: 400px;
 } 
 
+header {
+	background: orange;
+}
+
 header h1 {
 	color: green;
 	text-align: center;
@@ -31,7 +35,7 @@ nav p {
 }
 
 main {
-	width: 1000px;
+	width: 1200px;
 	margin: auto;
 	overflow: auto;
 }

@@ -74,12 +74,14 @@
 	tabManager.prototype.setupTabs = function( tabsParent) 
 	{
 		var $tabs = $(tabsParent);
+		
 		this.tabsList.forEach( function( item, i) {
 
 			if (this.fVerbose) {
 				console.log( "creating new tab [%d]. name=%s",
 					i, item.category);
 			}
+
 			var $thistab = $("<a href=''>");
 			var $tabname = $("<span>");
 			$tabname.text( item.category);
