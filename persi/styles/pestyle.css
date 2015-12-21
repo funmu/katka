@@ -38,6 +38,7 @@ main {
 	width: 1200px;
 	margin: auto;
 	overflow: auto;
+	padding-bottom: 20px;
 }
 
 h3.meme {
@@ -46,8 +47,8 @@ h3.meme {
 }
 
 footer {
-	padding-top: 20px;
 	clear: both;
+	background: lightgray;
 }
 
 footer div.contact {
@@ -74,11 +75,22 @@ p {
 	margin: 0;
 }
 
+footer p {
+	color: gray;
+	padding: 0;
+	margin: 0;
+}
+
+
 
 /*  Anchor Styling */
 a {
 	color: cornflowerblue;
 	text-decoration: none;
+}
+
+header a {
+	font-size: 1.2em;
 }
 
 a:visited {
@@ -144,7 +156,6 @@ span.ulabel {
 }
 
 .content {
-	background: lightgray;
 	padding: 0px;
 	margin: 0px;
 	display: none;

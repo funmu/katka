@@ -15,7 +15,7 @@
 
  <body>
  	<header class="navbar navbar-static-top bs-docs-nav" role="banner">
- 		<h1>Persi - Personalized Information Pages</h1>
+ 		<h1><span id="perserFor"></span></h1>	
  		<nav>
  			<a href="#">Signup</a> |
  			<a href="#">Login</a> |
@@ -26,18 +26,17 @@
  	</header>
 
  	<main>
- 		<div class="container">
-			<div class="tabs">
- 				<!-- Tabs are auto generated as per scripts + dynamic data -->
- 			</div>
- 		
- 			<div class="content Favorites" id="favoritesTab">
+ 			<div class="row col-sm-12 col-lg-12">
+				<div class="tabs">
+	 				<!-- Tabs are auto generated as per scripts + dynamic data -->
+	 			</div>
+	 		</div>
+	 		
+ 			<div class="row content Favorites" id="favoritesTab">
  			</div>
 
- 			<div class="content About" id="personalProfile">
+ 			<div class="row content About" id="personalProfile">
  			</div>
-	
-		</div>
  	</main>
 
  	<footer>
@@ -90,7 +89,6 @@
 
 		// 2. Load up profile and render
 	 	var ppm = new PersonalProfilesManager( window.location, true);
-		ppm.ProcessSiteInfo( "#favoritesTab", perserName);
 
  		// 3. Load config to find the perser name
 	 	ppm.loadConfig( function( err, config) {
@@ -100,12 +98,15 @@
 	 		} else {
 
 	 			if (undefined == perserName) {
+	 				console.log( " Setting the persername from config as: %s", config.primaryPerser);
 	 				perserName = config.primaryPerser;
 	 			}
 
+	 			// ToDo: get full name and use it here ...
+	 			$("#perserFor").text( perserName);
 	 			ppm.linkToAllUsers( "#allUsers", config);
-
 	 			ppm.loadProfile( "#personalProfile", perserName);
+				ppm.ProcessSiteInfo( "#favoritesTab", perserName);
 	 		}
 	 	});
 

@@ -78,7 +78,7 @@
  		});
  	}
 
- 	PersonalProfilesManager.prototype.linkToAllUsers1 = function( selector, config)
+ 	PersonalProfilesManager.prototype.linkToAllUsers = function( selector, config)
  	{
  		// Construct the navigation links for all users
  		var d3selector = d3.select( selector);
