@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
  <head>
-	<link href='https://fonts.googleapis.com/css?family=Dosis' rel='stylesheet' type='text/css'>
+ 	<link href='https://fonts.googleapis.com/css?family=Dosis' rel='stylesheet' type='text/css'>
 
  	<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
 
@@ -35,7 +35,12 @@
  			<div class="row content Favorites" id="favoritesTab">
  			</div>
 
- 			<div class="row content About" id="personalProfile">
+ 			<div class="row content AddLinks">
+				<section class="formClass addData" id="addLinks">
+		 		</section>
+ 			</div>
+
+ 			<div class="row content Links" id="idLinks">
  			</div>
  	</main>
 
@@ -65,6 +70,8 @@
  	<script src="../scripts/PersonalProfilesManager.js"></script>
     <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/d3/3.4.1/d3.min.js"></script>
    	<script src="../scripts/tabManager.js"></script>
+   	<script src="../scripts/formsManager.js"></script>
+   	<script src="../scripts/linksManager.js"></script>
 
 	<script>
 
@@ -81,7 +88,8 @@
 	 	// Pull tab content as metadata
 	 	var tabContent = [
 	 		{ tabNum : 1, category: "Favorites", contentClass: ".Favorites" },
-	 		{ tabNum : 2, category: "About", contentClass: ".About" }
+	 		{ tabNum : 2, category: "AddLinks", contentClass: ".AddLinks" },
+	 		{ tabNum : 3, category: "Links", contentClass: ".Links" }
 	 	];
 
 	 	var tb = new tabManager( tabContent, true);
@@ -105,12 +113,55 @@
 	 			// ToDo: get full name and use it here ...
 	 			$("#perserFor").text( perserName);
 	 			ppm.linkToAllUsers( "#allUsers", config);
-	 			ppm.loadProfile( "#personalProfile", perserName);
+	 			// ppm.loadProfile( "#personalProfile", perserName);
+
 				ppm.ProcessSiteInfo( "#favoritesTab", perserName);
+
+				ppm.ShowLinks( "#idLinks", lm.organizeByGroups());
 	 		}
 	 	});
 
-	 	tb.setActiveTab(1);
+		// populate the AddLins and Links tab
+		var addFormInfo = [
+			{ label: "Label", id: "idLabel", size: 60, type: "text"},
+			{ label: "URL", id: "idUrl", size: 120, type: "text"},
+			{ label: "Group", id: "idGroup", size: 60, type: "text"},
+			{ label: "Subgroup", id: "idSubgroup", size: 60, type: "text"}
+		];
+		var fm = new FormsManager( addFormInfo, handleAddLink, true);
+		fm.setupForm( "#addLinks");
+
+		var lm = new LinksManager( true);
+
+		function handleAddLink()
+		{
+			console.log( "Add Link called.");
+
+			// Form a structured input here.
+			var newLink = {
+				label: $("#idLabel").val(),
+				url: $("#idUrl").val(),
+				group: $("#idGroup").val(), 
+				subgroup: $("#idSubgroup").val(),
+				createdAt: Date.now()
+			}
+
+			// save the new link away
+			lm.add( newLink);
+			lm.print();
+
+			// ToDo: optimize the generation of links
+			ppm.ShowLinks( "#idLinks", lm.organizeByGroups());
+
+			// clear form fields for the new inputs
+			addFormInfo.forEach( function( formItem, i) {
+				$("#" + formItem.id).val("");
+			});
+		}
+
+
+		
+	 	tb.setActiveTab(2);
 
 
 	 // -------------- Track Page Usage -------------------------------------

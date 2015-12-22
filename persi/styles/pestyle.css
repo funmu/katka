@@ -176,8 +176,8 @@ button.refreshButton {
 	font-size: 1.1em;
 }
 
-/* Group Related Stuff */
-.groupHeader {
+/* Subgroup Related Stuff */
+.subgroupHeader {
 	font-size: 1.4em;
 	font-weight: bold;
 	padding-left: 1em;
@@ -197,4 +197,18 @@ button.refreshButton {
 	width: 1.1em;
 	height: 1.1em;
 	vertical-align: middle;
+}
+
+.plabel {
+	font-color: brown;
+	font-size: 2em;
+	width: 100px;
+}
+
+/* ---------------------------------------- */
+/*  FormsManager related Styles             */
+/* ---------------------------------------- */
+
+section.formClass {
+	padding: 50px;
 }

@@ -13,6 +13,7 @@
 
  	var PersonalProfilesManager = function( urlloc, verbose)
  	{
+ 		this.self = this;
  		this.fVerbose = verbose;
  		this.urlloc = urlloc;
  		this.basepath = getBasePath( urlloc);
@@ -265,29 +266,29 @@
 	} 	
 
 	/*
-		renderGroups()
+		renderSubGroups()
 		- Dynamically load up the selector with details received
 
 	 @param{object} d3selector - root selector to which attach the nodes generated
-	 @param{groupsJson} groupsJson - list of groups with pages in it
+	 @param{Array} subgroupsJson - list of subgroups with pages in it
 
 		Output:
 		  for each item we will get the output as:
-		  <div class="groupHeader" id="usmagazines">
+		  <div class="subgroupHeader" id="usmagazines">
 		  	USMagazines
 		  	... group items .. 
 		  </div>
 	*/
-	function renderGroups( d3selector, pagesJson) {
+	function renderSubGroups( d3selector, pagesJson) {
 
 		// layout in a grid if there are more than 3 columns in the output
 		// create the group headers first
 		var groups = d3selector
-					.selectAll("div.groupHeaders")
+					.selectAll("div.subgroupHeader")
 					.data( pagesJson.groups)
 					.enter()
 					.append("div")
-						.attr("class", "groupHeader col-sm-4")
+						.attr("class", "subgroupHeader col-sm-4")
 						.style("background-color", function(d) {
 							return d.bgcolor;})
 						.attr("id", function(d) { return d.groupId;});
@@ -296,6 +297,10 @@
 
 		// iterate throgh each item and create per-group list
 		groups.each( function(d, i) {
+
+			console.log( " Rendering subgroup: %s with %d items",
+				d.group, d.items.length);
+
 			// first create the containing div for the group items
 			var groupItemsContainer = d3.select(this).append("div")
 						.attr("id", function(d) { return d.group + d.items.length;});
@@ -303,7 +308,7 @@
 		});
 
 		// remove unwanted nodes
-		d3selector.selectAll("div.groupHeaders")
+		d3selector.selectAll("div.subgroupHeader")
 			.data(pagesJson.groups)
 			.exit()
 			.remove();
@@ -321,18 +326,60 @@
  				perserName, perserSiteUrl, docSelector);
  		}
 
+ 		var self = this;
  		$.getJSON( perserSiteUrl, function( siteInfo) {
 
-	 		var d3DocSelector = d3.select( docSelector);
-
-	    	// input is an array of objects { header, groups} ... render them
-	 		siteInfo.forEach( function( group, i) {
-	 			renderGroups( d3DocSelector, group);
-	 		});
+ 			self.ShowLinks( docSelector, siteInfo);
 		 })
  		.fail( function (err) {
 	 		console.log( "ERROR: Unable to load site info. Error:%s", err);
  		});
+
+ 		return;
+	}
+
+ 	PersonalProfilesManager.prototype.ShowLinks = function( docSelector, groups)
+ 	{
+   		if (this.fVerbose) {
+ 			console.log( " ShowLinks() - show %d links at %s",
+ 				groups.length, docSelector);
+ 		}
+
+		var d3selector = d3.select(docSelector);
+
+		// remove all and start afresh that way deeply nested items are shown
+		d3selector.selectAll("div.groupHeader")
+			.remove();
+
+
+		// layout in a grid if there are more than 3 columns in the output
+		// create the group headers first
+		var d3groups = d3selector
+					.selectAll("div.groupHeader")
+					.data( groups)
+					.enter()
+					.append("div")
+						.attr("class", "groupHeader");
+
+		d3groups.append("span").text( function(d) { return d.header;});
+
+		// iterate throgh each item and create per-group list
+		d3groups.each( function(d, i) {
+
+			console.log( " Rendering group: %s with %d items",
+				d.header, d.groups.length);
+
+			// first create the containing div for the group items
+			var groupItemsContainer = d3.select(this).append("div")
+						.attr("id", function(d) { return d.header + d.groups.length;});
+			renderSubGroups( groupItemsContainer, d);
+		});
+
+		// remove unwanted nodes
+		d3selector.selectAll("div.groupHeader")
+			.data( groups)
+			.exit()
+			.remove();
 
  		return;
 	}
