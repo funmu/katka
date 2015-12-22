@@ -24,8 +24,8 @@
  		this.tabsList = tabsList;
 
  		if (this.fVerbose) {
- 			console.log( "Created a new tab Manager with %d tabs", this.tabsList.length);
- 			console.log( this.tabsList);
+ 			console.log( "Created a new tab Manager with %d tabs", 
+ 				this.tabsList.length);
  		}
  	}
 

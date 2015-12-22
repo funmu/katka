@@ -24,7 +24,6 @@
  		if (this.fVerbose) {
  			console.log( "Created a new forms Manager with %d form items", 
  				this.formInputList.length);
- 			console.log( this.formInputList);
  		}
  	}
 
@@ -36,7 +35,7 @@
  	 * For each input element repeat this structure.
  	 * Input: { label, id, size, type}
  	 * Ouput:
-			<div class='plabel col-sm-1 col-lg-1'> URL:</div> 
+			<div class='form-label col-sm-1 col-lg-1'> URL:</div> 
 			<input type='text' size='120' class='textInput'
 				name='urlInput' id='urlInput'></input>
 			<br/>

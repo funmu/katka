@@ -65,7 +65,7 @@
 
  			if ( groupIndex === -1) {
  				groups.push( link.group);
-	 			groupParent = { header: link.group, groups: []};
+	 			groupParent = { name: link.group, groups: []};
 	 			groupStructure.push( groupParent);
  			} else {
  				groupParent = groupStructure[groupIndex];
@@ -74,7 +74,7 @@
  			// ToDo: handle subgroups; for now use just a single sub-group
  			var subGroupItem = null;
  			for( var i = 0; i < groupParent.groups.length; i++) {
- 				if (groupParent.groups[i].group == link.subgroup) {
+ 				if (groupParent.groups[i].name == link.subgroup) {
  					subGroupItem = groupParent.groups[i];
  					break;
  				}
@@ -82,7 +82,7 @@
 
  			if (null == subGroupItem) {
  				// add a new subgroup Item
- 				subGroupItem = { group: link.subgroup, groupId: Date.now()*10+groupParent.groups.length, items:[]};
+ 				subGroupItem = { name: link.subgroup, groupId: Date.now()*10+groupParent.groups.length, items:[]};
  				groupParent.groups.push( subGroupItem);
  			}
 

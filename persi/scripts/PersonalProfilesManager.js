@@ -222,11 +222,11 @@
 
 	/*
 		renderGroupItems()
-		- create all the group items per group
+		- given a list of groupItems, produce the rendering for the same.
 
 
 	 @param{object} d3selector - root selector to which attach the nodes generated
-	 @param{groupsJson} groupItem - array with the items for the group
+	 @param{Array} groupItems - array with the items that contain link data
 
 	Ouptut:
 		<div style="margin-top: 15px;">
@@ -236,11 +236,10 @@
 				</span>
 			</a>
 		</div>
-
 	*/
-	function renderGroupItems( group, groupItems) 
+	function renderGroupItems( d3selector, groupItems) 
 	{
-		var itemList = group.selectAll("div.groupItem")
+		var itemList = d3selector.selectAll("div.groupItem")
 						.data( groupItems)
 						.enter()
 						.append("div")
@@ -266,11 +265,12 @@
 	} 	
 
 	/*
-		renderSubGroups()
-		- Dynamically load up the selector with details received
+		renderGroups()
+		- given a list of groups, it renders the groups
+		- should it be required a recursive rendering is done with call back function for the items
 
 	 @param{object} d3selector - root selector to which attach the nodes generated
-	 @param{Array} subgroupsJson - list of subgroups with pages in it
+	 @param{Array} groupItems - list of subgroups or items within the pages
 
 		Output:
 		  for each item we will get the output as:
@@ -279,37 +279,54 @@
 		  	... group items .. 
 		  </div>
 	*/
-	function renderSubGroups( d3selector, pagesJson) {
+	function renderSubGroups( d3selector, className, classNameRider, titleClassName, groupItems) {
 
 		// layout in a grid if there are more than 3 columns in the output
 		// create the group headers first
 		var groups = d3selector
-					.selectAll("div.subgroupHeader")
-					.data( pagesJson.groups)
+					.selectAll("div." + className)
+					.data( groupItems)
 					.enter()
 					.append("div")
-						.attr("class", "subgroupHeader col-sm-4")
-						.style("background-color", function(d) {
-							return d.bgcolor;})
-						.attr("id", function(d) { return d.groupId;});
+						.attr("class", function(d) {
+							return className + " " + classNameRider; })
+						.attr("id", function(d) { return d.groupId;})
+						.style("background-color", 
+							function(d) { return d.bgcolor;});
 
-		groups.append("span").text( function(d) { return d.group;});
+		groups.append("span")
+			.attr( "class", titleClassName)
+			.text( function(d) { return d.name;});
 
 		// iterate throgh each item and create per-group list
 		groups.each( function(d, i) {
 
-			console.log( " Rendering subgroup: %s with %d items",
-				d.group, d.items.length);
+			if ( d.items != null) {
 
-			// first create the containing div for the group items
-			var groupItemsContainer = d3.select(this).append("div")
-						.attr("id", function(d) { return d.group + d.items.length;});
-			renderGroupItems( groupItemsContainer, d.items);
+				console.log( "    Rendering subgroup: %s with %d items",
+					d.name, d.items.length);
+
+				// first create the containing div for the group items
+				var groupItemsContainer = d3.select(this).append("div")
+							.attr("id", function(d) { 
+								return d.name + d.items.length;});
+				renderGroupItems( groupItemsContainer, d.items);
+			} else if ( d.groups != null) {
+
+				console.log( " Rendering group: %s with %d items",
+					d.name, d.groups.length);
+
+				// first create the containing div for the group items
+				var groupItemsContainer = d3.select(this).append("div")
+							.attr("id", function(d) { return d.name + d.groups.length;});
+				renderSubGroups( groupItemsContainer, "subgroupHeader", "col-sm-4", "subgroupTitle", d.groups);
+			}
 		});
 
 		// remove unwanted nodes
-		d3selector.selectAll("div.subgroupHeader")
-			.data(pagesJson.groups)
+		d3selector
+			.selectAll("div." + className)
+			.data(groupItems)
 			.exit()
 			.remove();
 
@@ -317,28 +334,24 @@
 	}
 
 
- 	PersonalProfilesManager.prototype.ProcessSiteInfo = function( docSelector, perserName)
+ 	PersonalProfilesManager.prototype.ShowLinks = function( docSelector, groups)
  	{
- 		var perserSiteUrl = this.PerserSiteUrl( perserName);
-
    		if (this.fVerbose) {
- 			console.log( " ProcessSiteInfo() for Perser(%s) from [%s] and render to Element at %s",
- 				perserName, perserSiteUrl, docSelector);
+ 			console.log( " ShowLinks() - show %d links at %s",
+ 				groups.length, docSelector);
  		}
 
- 		var self = this;
- 		$.getJSON( perserSiteUrl, function( siteInfo) {
+		var d3selector = d3.select(docSelector);
 
- 			self.ShowLinks( docSelector, siteInfo);
-		 })
- 		.fail( function (err) {
-	 		console.log( "ERROR: Unable to load site info. Error:%s", err);
- 		});
+		// remove all and start afresh that way deeply nested items are shown
+		d3selector.selectAll("div.groupHeader")
+			.remove();
 
+		renderSubGroups( d3selector, "groupHeader", "col-sm-12", "groupTitle", groups);
  		return;
 	}
 
- 	PersonalProfilesManager.prototype.ShowLinks = function( docSelector, groups)
+ 	PersonalProfilesManager.prototype.ShowLinks2 = function( docSelector, groups)
  	{
    		if (this.fVerbose) {
  			console.log( " ShowLinks() - show %d links at %s",
@@ -361,18 +374,18 @@
 					.append("div")
 						.attr("class", "groupHeader");
 
-		d3groups.append("span").text( function(d) { return d.header;});
+		d3groups.append("span").text( function(d) { return d.name;});
 
 		// iterate throgh each item and create per-group list
 		d3groups.each( function(d, i) {
 
 			console.log( " Rendering group: %s with %d items",
-				d.header, d.groups.length);
+				d.name, d.groups.length);
 
 			// first create the containing div for the group items
 			var groupItemsContainer = d3.select(this).append("div")
-						.attr("id", function(d) { return d.header + d.groups.length;});
-			renderSubGroups( groupItemsContainer, d);
+						.attr("id", function(d) { return d.name + d.groups.length;});
+			renderSubGroups( groupItemsContainer, d.groups);
 		});
 
 		// remove unwanted nodes
@@ -380,6 +393,28 @@
 			.data( groups)
 			.exit()
 			.remove();
+
+ 		return;
+	}
+
+
+ 	PersonalProfilesManager.prototype.ProcessSiteInfo = function( docSelector, perserName)
+ 	{
+ 		var perserSiteUrl = this.PerserSiteUrl( perserName);
+
+   		if (this.fVerbose) {
+ 			console.log( " ProcessSiteInfo() for Perser(%s) from [%s] and render to Element at %s",
+ 				perserName, perserSiteUrl, docSelector);
+ 		}
+
+ 		var self = this;
+ 		$.getJSON( perserSiteUrl, function( siteInfo) {
+
+ 			self.ShowLinks( docSelector, siteInfo);
+		 })
+ 		.fail( function (err) {
+	 		console.log( "ERROR: Unable to load site info. Error:%s", err);
+ 		});
 
  		return;
 	}

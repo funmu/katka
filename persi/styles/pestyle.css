@@ -152,7 +152,7 @@ span.ulabel {
 
 .tabs a span.active {
 	background: #773300;
-	font-size: 20px;
+	font-size: 1.5em;
 }
 
 .content {
@@ -172,13 +172,9 @@ button.refreshButton {
 	background: darkorange;
 }
 
-.textInput {
-	font-size: 1.1em;
-}
-
 /* Subgroup Related Stuff */
 .subgroupHeader {
-	font-size: 1.4em;
+	font-size: 1.3em;
 	font-weight: bold;
 	padding-left: 1em;
 	padding-top: 1em;
@@ -186,6 +182,19 @@ button.refreshButton {
 	margin-right: 1em;
 	text-align: "center";
 	background-color: aqua;
+}
+.groupHeader {
+	font-size: 1.5em;
+	font-weight: bold;
+	text-align: "center";
+}
+.groupTitle {
+	font-size: 2em;
+	font-color: black;
+}
+.subgroupTitle {
+	font-size: 1.5em;
+	font-color: orange;
 }
 .groupItem {
 	font-size: 1.1em;
@@ -197,12 +206,6 @@ button.refreshButton {
 	width: 1.1em;
 	height: 1.1em;
 	vertical-align: middle;
-}
-
-.plabel {
-	font-color: brown;
-	font-size: 2em;
-	width: 100px;
 }
 
 /* ---------------------------------------- */
