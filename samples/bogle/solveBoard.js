@@ -1,5 +1,5 @@
 /*
- *	solveBoard.js - Get Einthusan URLs and Media Content
+ *	solveBoard.js - Get bogle board
  *
  *  Created: muralirk@gmail.com - Dec 8, 2015
  */

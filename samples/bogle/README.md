@@ -33,6 +33,6 @@ The above command will run thru the simple set of tests used for checking out th
   * Generalize BogleBoar for nxn sized grids (instead of just 4x4)
   * Genaralize to support other langauges
 
-##Contriburors##
+##Contributors##
 Murali Krishnan
 
