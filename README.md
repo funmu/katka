@@ -17,6 +17,15 @@ Project and files related to **learning** new technology
   * [CSS Color names](http://www.crockford.com/wrrld/color.html)
   * [Google Fonts](http://www.google.com/fonts)
 
+ * API References
+  * [Programmable Web](http://www.programmableweb.com) - list of public JSON APIs
+ * [Programmable Web with JSONP](http://www.programmableweb.com/apis/directory/1?format=JSONP) - list of JSONP API services
+
+ * Server Hosts / Dev Env
+  * [Virtual Box](http://www.virtualbox.org) - to run virtual servers
+  * [Vagrant](http://www.vagrantup.com) - Lightweight, Reproducible, and portable development environments
+  * [PuTTY - SSH Client](http://www.chiark.greenend.org.uk/~sgtatham/putty/download.html) - for Windows SSH client
+
  * Styling Tools
   * [CSS Lint](http://csslint.net)
   * Use [Bootstrap](http://getbootstrap.com) for responsive layouts
