@@ -11,7 +11,6 @@
  	/*
  	 *	Set up the LinksManager Object
  	 *
- 	 *  @param{Array} formInputList - array of items for form
  	 *  @param{bool} verbose - verbosity level to show values
  	 */
  	var LinksManager = function(verbose)
