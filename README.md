@@ -38,7 +38,10 @@ Project and files related to **learning** new technology
   * Get [JQuery](http://www.jquery.com) and use [JQuery docs](http://api.jquery.com)
   * [JQuery Plugins](http://plugins.jquery.com)
   * [JQuery Selectors](http://api.jquery.com/category/selectors) - how to select using JQuery
-
+ 
+ * Developer Services
+  * [Develop with Twitter](http://dev.twitter.com)
+  * [Apps with Twitter](http://apps.twitter.com)
 
 
 ##Contriburors##
