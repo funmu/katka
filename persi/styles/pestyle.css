@@ -172,30 +172,36 @@ button.refreshButton {
 	background: darkorange;
 }
 
+/* Group Related Stuff */
+.groupHeader {
+	font-size: 1.5em;
+	font-weight: bold;
+	text-align: "center";
+	margin-top: 1em;
+}
+.groupTitle {
+	font-size: 1.5em;
+	font-color: black;
+}
+
 /* Subgroup Related Stuff */
 .subgroupHeader {
-	font-size: 1.2em;
+	font-size: 1.1em;
 	font-weight: bold;
 	padding-left: 1em;
 	padding-top: 1em;
+	padding-bottom: 1em;
 	margin-top: 1em;
 	margin-right: 1em;
 	text-align: "center";
 	background-color: aqua;
 }
-.groupHeader {
-	font-size: 1.5em;
-	font-weight: bold;
-	text-align: "center";
-}
-.groupTitle {
-	font-size: 1.4em;
-	font-color: black;
-}
 .subgroupTitle {
-	font-size: 1.2em;
+	font-size: 1.1em;
 	font-color: orange;
 }
+
+/* Item in a group - styles */
 .groupItem {
 	margin-top: 0.5em;
 	margin-left: 0.5em;
