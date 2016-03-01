@@ -1,5 +1,5 @@
 /*
- *  formsManagaer.js
+ *  formsManager.js
  *     Module to manage Forms for website
  *
  */
@@ -69,7 +69,7 @@
 			.text( function(d, i) { return d.label;})
 
 		inputsList.append("input")
-			.attr("class", "form-input col-sm-3 col-lg-3")
+			.attr("class", "form-input")
 			.attr("id", function(d, i) { return d.id;})
 			.attr("type", function(d, i) { return d.type;})
 			.attr("size", function(d, i) { return d.size;});
