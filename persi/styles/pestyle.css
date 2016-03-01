@@ -34,7 +34,7 @@ nav p {
 	padding: 0;
 }
 
-main {
+.main {
 	width: 1200px;
 	margin: auto;
 	overflow: auto;
@@ -174,7 +174,7 @@ button.refreshButton {
 
 /* Subgroup Related Stuff */
 .subgroupHeader {
-	font-size: 1.3em;
+	font-size: 1.2em;
 	font-weight: bold;
 	padding-left: 1em;
 	padding-top: 1em;
@@ -189,15 +189,14 @@ button.refreshButton {
 	text-align: "center";
 }
 .groupTitle {
-	font-size: 2em;
+	font-size: 1.4em;
 	font-color: black;
 }
 .subgroupTitle {
-	font-size: 1.5em;
+	font-size: 1.2em;
 	font-color: orange;
 }
 .groupItem {
-	font-size: 1.1em;
 	margin-top: 0.5em;
 	margin-left: 0.5em;
 	vertical-align: middle;
