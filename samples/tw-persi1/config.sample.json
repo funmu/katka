@@ -1,0 +1,11 @@
+{
+	"app_name": "SampleApp",
+	"appAuthenticationUrl": "https://api.twitter.com/oauth2/token",
+	"requestTokenUrl": "https://api.twitter.com/oauth/request_token",
+	"authorizeUrl": "https://api.twitter.com/oauth/authorize",
+	"accessTokenUrl": "https://api.twitter.com/oauth/access_token",
+	"consumser_key": "Put VALUE HERE",
+	"consumer_secret":  "Put VALUE HERE",
+	"access_token_key":  "Put VALUE HERE",
+	"access_token_secret":  "Put VALUE HERE"
+}
