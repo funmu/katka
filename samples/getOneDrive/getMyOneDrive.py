@@ -1,16 +1,20 @@
 #!/usr/bin/python
 
 #
-# ------ script to access One Drive Files
+#  getMyOneDrive.py 
+#  -- script to help access files on One Drive
 #
-
+#  Dependencies
+#   -  OneDriveSDK
+#
 
 import onedrivesdk;
 from onedrivesdk.helpers import GetAuthCodeServer;
-from PIL import Image
-import os
 
+from PIL import Image; # for image processing
+import os; # for file access
 
+#
 class AccessOneDrive:
 
 	fVerbpse = 0;
@@ -50,12 +54,6 @@ class AccessOneDrive:
 		collection = self.client.item(drive="me", id="root").children.request(top = topNLevels).get();
 		return collection;
 
-		#get the first item in the collection
-		item = collection[0];
-
-		#get the next page of three elements, if none exist, returns None
-		collection2 = collection.next_page_request.get();
-
 	def _printItem( self, index, item):
 		if (item is None):
 			print(" No item was found");
@@ -76,22 +74,25 @@ class AccessOneDrive:
 
 	def ListItems( self, items, printItem = 1):
 		itemList = [];
-		basecount = 1;
+		basecount = 0;
 		while (not items is None):
-			count = 0;
+			count = 1;
 			for count, item in enumerate( items):
 				if (printItem):
 					self._printItem( basecount+count, item);
 				itemList.append( item);
+
+			basecount = basecount + len(items);
+
+			#get the next page of three elements, if none exist, returns None
 			items = None if items.next_page_request is None else items.next_page_request.get();
-			basecount = basecount + count;
 			print( "\t .... fetched {} items".format( basecount));
 		return itemList;
 
 	def GetItemsForId( self, itemId):
 		if (self.fVerbose):
 			print( "\n Accessing items for itemID = {0}".format( itemId));
-		return self.client.item( id=itemId).children.request(top=100).get();
+		return self.client.item( id=itemId).children.request(top=200).get();
 
 	def GetItemForPath( self, itemPath):
 
@@ -123,8 +124,11 @@ class AccessOneDrive:
 
 	def GetAndShowItems( self, path):
 		print("\n--------------------------------------------------------")
+		print(" Enumerating items in folder \"{}\"".format( path));
+		print("--------------------------------------------------------")
 		item = self.GetItemForPath( path);
-		self.printItemWithPath( 0, item, path);
+		if (self.fVerbose):
+			self.printItemWithPath( 0, item, path);
 
 		subItemsStart = self.GetItemsForId( item.id);
 		allItems = self.ListItems( subItemsStart);
@@ -132,8 +136,11 @@ class AccessOneDrive:
 
 	def DownloadItems( self, path):
 		print("\n--------------------------------------------------------")
+		print(" Downloading files for folder \"{}\"".format( path));
+		print("--------------------------------------------------------")
 		item = self.GetItemForPath( path);
-		self.printItemWithPath( 0, item, path);
+		if (self.fVerbose):
+			self.printItemWithPath( 0, item, path);
 
 		subItemsStart = self.GetItemsForId( item.id);
 		allItems = self.ListItems( subItemsStart, 0);
@@ -142,61 +149,78 @@ class AccessOneDrive:
 		downloadPath = path[parentPathEndsAt+1:] + "/";
 		if (not os.path.exists( downloadPath)):
 			print("\t Creating the directory {}".format(downloadPath));
-			os.makedirs( downloadPath);
+			createdDir = os.makedirs( downloadPath);
+
+		numFilesDownloaded = 0;
+		numBytesDownloaded = 0;
+		numFolders = 0;
 
 		# Now let us really download each item and save it away
 		for item in allItems:
-			print( "Downloading \"{:40}\" Id={} size: {:,d}".format( item.name, item.id, item.size));
-			fileName = downloadPath + item.name;
-			if ( os.path.isfile( fileName) and (os.path.getsize( fileName) == item.size)):
-				print("\tskipping same sized file");
+			if (item.folder):
+				print( "\tskipping folder: \{}\"".format(item.name));
+				numFolders += 1;
 			else:
-				self.client.item( id = item.id).content.request().download( fileName);
+				print( " get \"{:30}\" Id: {} size: {:,d}".format( item.name, item.id, item.size));
+				fileName = downloadPath + item.name;
+				if ( os.path.isfile( fileName) and (os.path.getsize( fileName) == item.size)):
+					print("\tskipping same sized file");
+				else:
+					self.client.item( id = item.id).content.request().download( fileName);
+					numFilesDownloaded += 1;
+					numBytesDownloaded += item.size;				
+
+		print("\n Total of {:,d} files. Downloaded {:,d} files of size {:,d} bytes".format( len(allItems), numFilesDownloaded, numBytesDownloaded));
+		print("\t Skipped {:,d} files".format( len(allItems) - numFilesDownloaded));
+		print("\t Skipped {:,d} folders".format( numFolders));
 
 		return allItems;
 
+	def Apply( self, list, applyFunction):
+		for item in list:
+			applyFunction( item);
 
+# ------------ MAIN Section starts here -----------------------
 import ConfigParser
-Config = ConfigParser.ConfigParser()
-Config.read("myConfig.ini");
-print Config.sections();
 
-client_id = Config.get("HotmailAccount", "AppId");
-client_secret =  Config.get("HotmailAccount", "AppSecret");
-redirect_uri = Config.get("HotmailAccount", "WebRedirectUri");
+def main():
+	Config = ConfigParser.ConfigParser()
+	Config.read("myConfig.ini");
+	print Config.sections();
 
-# mobile Redirect URI does not work ... troubleshoot later.
-# redirect_uri = mobile_redirect_uri;
+	foldersToDownload = [];
+	if ( Config.has_option("HotmailAccount", "FoldersToDownload")):
+		folders = Config.get("HotmailAccount", "FoldersToDownload");
+		foldersToDownload = folders.split('\n');
+
+	foldersToList = [];
+	if ( Config.has_option("HotmailAccount", "FoldersToList")):
+		folders = Config.get("HotmailAccount", "FoldersToList");
+		foldersToList = folders.split('\n');
+
+	client_id = Config.get("HotmailAccount", "AppId");
+	client_secret =  Config.get("HotmailAccount", "AppSecret");
+	redirect_uri = Config.get("HotmailAccount", "WebRedirectUri");
+
+	# mobile Redirect URI does not work ... troubleshoot later.
+	# redirect_uri = mobile_redirect_uri;
 
 
-print("\n1. Creating the Object to access One Drive");
-aod = AccessOneDrive( 0);
+	print("\n1. Creating the Object to access One Drive");
+	aod = AccessOneDrive( 0);
 
-print( "\n2. Getting connected to One Drive using my ID and secret");
-aod.Connect( client_id, redirect_uri, client_secret);
+	print( "\n2. Getting connected to One Drive using my ID and secret");
+	aod.Connect( client_id, redirect_uri, client_secret);
 
-# print( "\n3. Get Collections and print these out");
-# coll = aod.GetCollection( 3);
-# print coll;
 
-# print("\n4. Enumerating list of items at the root");
-# items = aod.GetItemsForId( "root");
-# aod.ListItems(items);
+	if ( len(foldersToList) > 0): 
+		print( "\n3. Enumerate items in a given path");
+		aod.Apply( foldersToList, aod.GetAndShowItems);
 
-# aod.ListItems( "2B25A513D5D15C04!133776");
+	if ( len(foldersToDownload) > 0): 
+		print( "\n4. Download Items");
+		aod.Apply( foldersToDownload, aod.DownloadItems);
 
-print( "\n5. Enumerating items in a given path");
-aod.GetAndShowItems( "/Public/Pictures");
+if __name__ == "__main__":
+    main()
 
-aod.GetAndShowItems( "/Public/Pictures/FamilyPics");
-
-# aod.GetAndShowItems(  "/Public/Pictures/SkyDrive camera roll");
-
-print( "\n6. Download an Item");
-IdForOviyaAug24_12_jpg = "2B25A513D5D15C04!133806"
-item = aod.client.item( id = IdForOviyaAug24_12_jpg).content.request().download( "test.jpg");
-print(item);
-
-aod.DownloadItems( "/Public/Pictures/FamilyPics");
-
-aod.DownloadItems( "/Public/Pictures/SkyDrive camera roll");
