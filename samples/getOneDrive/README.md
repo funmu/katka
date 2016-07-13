@@ -10,6 +10,12 @@ The scripts here use [OneDrive SDK](https://github.com/OneDrive/onedrive-sdk-pyt
 
 A separate configuration file is required to specify account details. For security reasons, the exact configuration file is not stored here. 
 
+###Configuration###
+ Set up an app for accessing One Drive using [Apps for Accesss](
+ https://apps.dev.microsoft.com/). 
+
+ Then copy over the [Config Template](configTemplate.ini) to create your own local config file named **myConfig.ini** to use with the python script.
+
 ##Code##
  * [getMyOneDrive](getMyOneDrive.py) - main script for downloading files
  * [List Config](listConfig.py) - simple script to list config file details
