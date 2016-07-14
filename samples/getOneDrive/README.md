@@ -1,6 +1,6 @@
-# Get My OneDrive
+# My OneDrive
 
-*Get My OneDrive* is a simple utility to list and download files from OneDrive storage.
+*My OneDrive* is a simple utility to list and download files from OneDrive storage.
 
 ##Problem##
 OneDrive provides a convenient way to store files. To manage storage and ensure we have a local copy of the files, a utility is required to list and download files. 
@@ -17,8 +17,9 @@ A separate configuration file is required to specify account details. For securi
  Then copy over the [Config Template](configTemplate.ini) to create your own local config file named **myConfig.ini** to use with the python script.
 
 ##Code##
- * [getMyOneDrive](getMyOneDrive.py) - main script for downloading files
- * [List Config](listConfig.py) - simple script to list config file details
+ * [myOneDrive](myOneDrive.py) - main script for downloading files
+ * [class AccessOneDrive](AccessOneDrive.py) - helper class for handling OneDrive usage as per my needs
+ * [List Config](listConfig.py) - simple script to list config file details (used for testing and viewing configuration)
  * [Config Template](configTemplate.ini) - sample configuration file
 
 
