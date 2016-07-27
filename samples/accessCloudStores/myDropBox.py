@@ -80,10 +80,10 @@ def main():
 
 	if ( len(foldersToDownload) > 0): 
 		print( "\n4. Download Items");
-		items = aod.Apply( foldersToDownload, aod.GetAndShowItems);
+		# items = aod.Apply( foldersToDownload, aod.GetAndShowItems);
 		# aod.DownloadItem( items[0]);
-		# aod.DownloadItem( items[1]);
-		aod.Apply( items, aod.DownloadItem);
+		# aod.Apply( items, aod.DownloadItem);
+		aod.DownloadItems( foldersToDownload);
 
 if __name__ == "__main__":
     main()

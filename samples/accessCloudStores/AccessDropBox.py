@@ -15,6 +15,7 @@ __author__ = 'Murali Krishnan'
 #	Import Section
 import dropbox;
 import os; # for file access
+from stat import *; # for file details
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 class AccessDropBox:
@@ -71,21 +72,13 @@ class AccessDropBox:
 			List the items to cosole
 		"""		
 		itemList = [];
-		basecount = 0;
-		while (not items is None):
-			count = 1;
-			for count, item in enumerate( items):
-				if (printItem):
-					self._printItem( basecount+count + 1, item);
-				itemList.append( item);
 
-			basecount = basecount + len(items);
-
-			# ToDo: How does pagination work in Dropbox?
-			#get the next page of three elements, if none exist, returns None
-			# items = None if items.next_page_request is None else items.next_page_request.get();
-			# print( "\t .... fetched {} items".format( basecount));
-			items = None;
+		# Dropbox provides a full list without pagination
+		count = 1;
+		for count, item in enumerate( items):
+			if (printItem):
+				self._printItem( count + 1, item);
+			itemList.append( item);
 
 		return itemList;
 
@@ -108,8 +101,9 @@ class AccessDropBox:
 		numFolders = len(subFoldersList);
 		numFiles = numItems - numFolders;
 
-		if (self.fVerbose):		
-			print( "{:10d} items had {:10d} folders".format(numItems, numFolders));
+		if (self.fVerbose):
+			print("\t ---- Folder {:30s} has {:,d} folders and {:,d} files"
+				.format( path, numFolders, numItems));
 
 		if ( goDeep ):
 			for folder in subFoldersList:
@@ -123,142 +117,83 @@ class AccessDropBox:
 				foldersHere = [folder for folder in subItems if self.isFolder(folder)];
 				numFoldersHere = len(foldersHere);
 				numFilesHere = numInFolder - numFoldersHere;
+
 				numFolders += numFoldersHere;
 				numFiles += numFilesHere;
 				if (self.fVerbose):
-					print("\t ---- Folder {:30s} has {:,d} items"
-						.format( folder["path"], numInFolder)); 
+					print("\t ---- Folder {:30s} has {:,d} folders and {:,d} files"
+						.format( folder["path"], numFoldersHere, numFilesHere)); 
 
 		print( "\nTotal of {:10d} items: {:10d} folders and {:10d} items\n"
 			.format(numItems, numFolders, numFiles));
 		return allItems;
 
-	def DownloadItem( self, item):
+	def _createDirectory( self, outputFolderName):
+		try:
+			os.makedirs( outputFolderName);
+			print( u"\t Creating the directory {}".format(outputFolderName));
+		except:
+			print("\t Skipping Directory (possibly it exists): {}".format( outputFolderName));
+
+	def _downloadFile( self, path, outputFileName):
+		f = self.client.get_file( path);
+		print( u"Donwload file {:30s} to {:40s}"
+			.format( path, outputFileName));
+		out = open( outputFileName, 'wb');
+		out.write(f.read());
+		out.close();
+		return;
+
+	def DownloadItem( self, item, destRoot = u"."):
+		"""
+			Download the items locally within the destination root path given
+
+		"""
+		savedList = [];
+
 		if (item is None):
 			print(" No item was found");
 		else:
-			print( u"Downloading {:15s} {:15s} {:40s} "
-				.format( item["rev"], 
-					"Folder" if self.isFolder(item) else item["size"],
-					item["path"]
-				));
 
-		outputFileName = u"." + item["path"];
-		if ( self.isFolder( item)):
-			print( u"\t Creating the directory {}".format(outputFileName));
-			try:
-				os.makedirs( outputFileName);
-			except:
-				print( "Directory possibly exists ... skipping");
-		else:
-			f = self.client.get_file( item["path"]);
-			print( u"Donwload file {:30s} to {:40s}"
-				.format( item["path"], outputFileName));
-			out = open( outputFileName, 'wb')
-			out.write(f.read())
-			out.close()
+			outputFileName = destRoot + item["path"];
+			if ( self.isFolder( item)):
+				self._createDirectory( outputFileName);
+			else:
+				toDownload = 0;
+				try:
+					localFileInfo = os.stat( outputFileName);
+					toDownload = (localFileInfo.st_size != item["bytes"]);
+					if (self.fVerbose):
+						print( u" sizes for {} DP = {:,d}  local = {:,d}"
+							.format( item["path"], item["bytes"], localFileInfo.st_size));
+				except:
+					print( u" couldn't get stat for file {}"
+						.format( outputFileName));
+					toDownload = 1;
 
-		savedList = [ outputFileName];
+				if ( toDownload):
+					print( u"Downloading {:15s} {:15s} {:40s} "
+						.format( item["rev"], item["size"], item["path"]
+						));
+					self._downloadFile( item["path"], outputFileName);
+				else:
+					print( u"\t skipping file: {}".format( item["path"]));
+
+			savedList = [ outputFileName];
+
 		return savedList;
 
-	def SampleCode(self):
-
-		f = open('working-draft.txt', 'rb')
-		response = client.put_file('/magnum-opus.txt', f)
-		print 'uploaded: ', response
-
-		f, metadata = client.get_file_and_metadata('/magnum-opus.txt')
-		out = open('magnum-opus.txt', 'wb')
-		out.write(f.read())
-		out.close()
-		print metadata
-
-
-	def GetItemsForId( self, itemId):
-		if (self.fVerbose):
-			print( "\n Accessing items for itemID = {0}".format( itemId));
-		return self.client.item( id=itemId).children.request(top=200).get();
-
-	def GetItemForPath( self, itemPath):
-
-		if (self.fVerbose): 
-			print( "\n Accessing items using the path supplied = {0}".format( itemPath));
-
-		if ( not self.idPathDirectory.has_key( itemPath)):
-			#  split the path into smaller parts to find the specific ID
-			parentPathEndsAt = itemPath.rfind( '/');
-			parentPath = itemPath[0:parentPathEndsAt];
-	
-			if (parentPathEndsAt == 0):
-				itemsInParent = self.GetItemsForId( "root");
-			else:
-				parentItem = self.GetItemForPath( parentPath);
-				itemsInParent = self.GetItemsForId( parentItem.id);
-
-			count = 0
-			for count, item in enumerate( itemsInParent):
-				# add the to item to directory
-				subItemPath = parentPath + "/" + item.name;
-				self.idPathDirectory[subItemPath] = item;
-				if (self.fVerbose):
-					print( "Adding new item {0} to local Directory at path = {1}".format( item.id, subItemPath));
-
-		itemForPath = self.idPathDirectory[ itemPath];
-
-		return itemForPath;
-
-	def printItemWithPath( self, index, item, itemPath = None):
-		if (item is None):
-			print(" No item was found");
-		else:
-			if (itemPath is None):
-				itemFullName = item.name if item.folder is None else "/"+item.name;
-			else:
-				itemFullName = itemPath;
-
-			print("{:4d}. {:10s} \"{:30s}\"".format( index, item["rev"], itemFullName));
-
-
-	def DownloadItems( self, path):
+	def DownloadItems( self, foldersToDownload, downloadPath = u"."):
 		print("\n--------------------------------------------------------")
-		print(" Downloading files for folder \"{}\"".format( path));
+		print(" Downloading files for folder \"{}\"".format( foldersToDownload));
 		print("--------------------------------------------------------")
-		item = self.GetItemForPath( path);
-		if (self.fVerbose):
-			self.printItemWithPath( 0, item, path);
+		items = self.Apply( foldersToDownload, self.GetAndShowItems);
 
-		subItemsStart = self.GetItemsForId( item.id);
-		allItems = self.ListItems( subItemsStart, 0);
-
-		parentPathEndsAt = path.rfind( '/');
-		downloadPath = path[parentPathEndsAt+1:] + "/";
 		if (not os.path.exists( downloadPath)):
 			print("\t Creating the directory {}".format(downloadPath));
 			createdDir = os.makedirs( downloadPath);
 
-		numFilesDownloaded = 0;
-		numBytesDownloaded = 0;
-		numFolders = 0;
-
-		# Now let us really download each item and save it away
-		for item in allItems:
-			if (item.folder):
-				print( "\tskipping folder: \{}\"".format(item.name));
-				numFolders += 1;
-			else:
-				print( " get \"{:30}\" Id: {} size: {:,d}".format( item.name, item.id, item.size));
-				fileName = downloadPath + item.name;
-				if ( os.path.isfile( fileName) and (os.path.getsize( fileName) == item.size)):
-					print("\tskipping same sized file");
-				else:
-					self.client.item( id = item.id).content.request().download( fileName);
-					numFilesDownloaded += 1;
-					numBytesDownloaded += item.size;				
-
-		print("\n Total of {:,d} files. Downloaded {:,d} files of size {:,d} bytes".format( len(allItems), numFilesDownloaded, numBytesDownloaded));
-		print("\t Skipped {:,d} files".format( len(allItems) - numFilesDownloaded));
-		print("\t Skipped {:,d} folders".format( numFolders));
-
+		allItems = self.Apply( items, self.DownloadItem);
 		return allItems;
 
 	def Apply( self, list, applyFunction):
