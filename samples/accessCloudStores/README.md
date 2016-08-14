@@ -23,10 +23,12 @@ A simple class is provided for listing, getting, and downloading the files.
  Then copy over the [Config Template](configTemplate.ini) to create your own local config file named **myConfig.ini** to use with the python script.
 
 ##Code##
+ * [myCloudStorage](myOneDrive.py) - scripts for accessing cloud storage files
  * [myOneDrive](myOneDrive.py) - main script for downloading files from OneDrive
  * [class AccessOneDrive](AccessOneDrive.py) - helper class for handling OneDrive usage as per my needs
  * [myDropBox](myDropBox.py) - main script for downloading files from Dropbox
  * [class AccessDropBox](AccessDropBox.py) - helper class for handling OneDrive usage as per my needs
+ * [class StorageHelper](StorageHelper.py) - helper class for storage related access
  * [List Config](listConfig.py) - simple script to list config file details (used for testing and viewing configuration)
  * [Config Template](configTemplate.ini) - sample configuration file
 
@@ -34,7 +36,6 @@ A simple class is provided for listing, getting, and downloading the files.
 ###Wish List###
  * Logging - write out log to a separate file for analysis.
  * Use shared code for accessing different cloud stores.
- * Copy over folders into appropriate folder structure in the destination. (Right now there is only one level based on last part of the path name).
  * Use conditional input file to perform deletion to remove unwanted files at OneDrive.
 
 ##Contributors##
