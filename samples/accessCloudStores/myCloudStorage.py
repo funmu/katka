@@ -50,12 +50,15 @@ optParser.add_option("-s", "--useStorage",
 from AccessDropBox import AccessDropBox;
 from AccessOneDrive import AccessOneDrive;
 import ConfigParser;
+import StorageHelper as SH;
 
 # ------------ MAIN Section starts here -----------------------
 
 def main():
 	if (options.verbose):
 		print("\t Reading Config File %s" % options.configFile);
+
+	storageHelper = SH.AccessStorageHelper( options.verbose);
 
 	print("\n1. Creating the Object to access Dropbox");
 	if ( options.storageService == "Dropbox"):
@@ -89,6 +92,11 @@ def main():
 		folders = Config.get( accountType	, "FoldersToList");
 		foldersToList = folders.split('\n');
 
+	foldersToDelete = [];
+	if ( Config.has_option( accountType	, "FoldersToDelete")):
+		folders = Config.get( accountType	, "FoldersToDelete");
+		foldersToDelete = folders.split('\n');
+
 	print( "\n3. Get connected to Storage Service using my access token");
 	if ( options.storageService == "Dropbox"):
 		client_token = Config.get( accountType	, "AccessToken");
@@ -105,12 +113,16 @@ def main():
 
 	if ( len(foldersToList) > 0): 
 		print( "\n4. Enumerate items in a given path");
-		items = aod.Apply( foldersToList, aod.GetAndShowItems);
-		aod.PrintItems( items);
+		items = storageHelper.Apply( foldersToList, aod.GetAndShowItems);
+		storageHelper.PrintItems( items, aod.PrintItem);
 
 	if ( len(foldersToDownload) > 0): 
 		print( "\n5. Download Items");
-		aod.Apply( foldersToDownload, aod.DownloadItems);
+		storageHelper.Apply( foldersToDownload, aod.DownloadItems);
+
+	if ( len(foldersToDelete) > 0):
+		print( "\n6. Delete Items");
+		storageHelper.Apply( foldersToDelete, aod.DeleteItems);
 
 if __name__ == "__main__":
     main()

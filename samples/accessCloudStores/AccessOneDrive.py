@@ -63,7 +63,7 @@ class AccessOneDrive:
 		collection = self.client.item(drive="me", id="root").children.request(top = topNLevels).get();
 		return collection;
 
-	def _printItem( self, index, item):
+	def PrintItem( self, index, item):
 		if (item is None):
 			print(" No item was found");
 		else:
@@ -88,7 +88,7 @@ class AccessOneDrive:
 			count = 1;
 			for count, item in enumerate( items):
 				if (printItem):
-					self._printItem( basecount+count, item);
+					self.PrintItem( basecount+count, item);
 				itemList.append( item);
 
 			basecount = basecount + len(items);
@@ -184,14 +184,65 @@ class AccessOneDrive:
 
 		return allItems;
 
-	def PrintItems( self, items):
-		count = 1;
-		for count, item in enumerate( items):
-			self._printItem( count, item);
+	def DeleteItems( self, path, downloadRoot = u"."):
+		"""
+			Delete items from OneDrive after confirming that 
+				it is locally available
+				and local copy is same as Cloud copy
+		"""
+		print("\n--------------------------------------------------------")
+		print(" Deleting files for folder \"{}\"".format( path));
+		print("--------------------------------------------------------")
+		item = self.GetItemForPath( path);
+		if (self.fVerbose):
+			self.printItemWithPath( 0, item, path);
 
-	def Apply( self, list, applyFunction):
-		allItems = [];
-		for item in list:
-			foundItems = applyFunction( item);
-			allItems.extend( foundItems);
+		subItemsStart = self.GetItemsForId( item.id);
+		allItems = self.ListItems( subItemsStart, 0);
+
+		downloadPath = downloadRoot+ path + "/";
+
+		numFilesDeleted = 0;
+		numBytesDeleted = 0;
+		numFolders = 0;
+
+		confirmForAll = raw_input("Confirm delete for ALL Files? Y/N: ")
+		allItemsConfirmed = 0;
+		if (confirmForAll == 'Y'):
+			print(" You confirmed delete for ALL files here. No more detailed confirmation.");
+			allItemsConfirmed = 1;
+
+		# Now let us check and delete each item and save it away
+		for item in allItems:
+			if (item.folder):
+				print( "\tskipping folder: \{}\"".format(item.name));
+				numFolders += 1;
+			else:
+				fileName = downloadPath + item.name;
+				toDownload = self.storageHelper.IsDownloadRequired( item.name, item.size, fileName);
+
+				if ( toDownload):
+					print( u" Download Required for: {:15s} {:15s} {:,d} "
+						.format( item.name, item.id, item.size));
+				else:
+					print( u"******** Ready to delete : {:15s} {:15s} {:,d} "
+						.format( item.name, item.id, item.size));
+
+					confirmForItem = allItemsConfirmed;
+					if (confirmForItem == 0):
+						confirm = raw_input("Confirm delete? Y/N: ")
+						if (confirm == "Y"):
+							confirmForItem = 1;
+
+					if (confirmForItem == 1):
+						self.client.item( id = item.id).delete()
+						print( u"\t{:5,d}. Deleted file : {:s}".format( numFilesDeleted, item.name));
+						numFilesDeleted += 1;
+						numBytesDeleted += item.size;
+
+		print("\n Total of {:,d} files. Deleted {:,d} files of size {:,d} bytes"
+			.format( len(allItems), numFilesDeleted, numBytesDeleted));
+		print("\t Skipped {:,d} files".format( len(allItems) - numFilesDeleted));
+		print("\t Skipped {:,d} folders".format( numFolders));
+
 		return allItems;

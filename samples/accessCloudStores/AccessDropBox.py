@@ -59,7 +59,7 @@ class AccessDropBox:
 		"""
 		return (item["is_dir"]);
 
-	def _printItem( self, index, item):
+	def PrintItem( self, index, item):
 		if (item is None):
 			print(" No item was found");
 		else:
@@ -80,7 +80,7 @@ class AccessDropBox:
 		count = 1;
 		for count, item in enumerate( items):
 			if (printItem):
-				self._printItem( count + 1, item);
+				self.PrintItem( count + 1, item);
 			itemList.append( item);
 
 		return itemList;
@@ -186,17 +186,57 @@ class AccessDropBox:
 
 		self.storageHelper.CreateDirectory( downloadPath);
 
-		allItems = self.Apply( items, self.DownloadItem);
+		allItems = self.storageHelper.Apply( items, self.DownloadItem);
 		return allItems;
 
-	def PrintItems( self, items):
-		count = 1;
-		for count, item in enumerate( items):
-			self._printItem( count, item);
+	def DeleteItems( self, folderToDelete, downloadRoot = u"."):
+		"""
+			Delete items from Dropbox after confirming that 
+				it is locally available
+				and local copy is same as Cloud copy
+		"""
+		print("\n--------------------------------------------------------")
+		print(" Deleting files for folder \"{}\"".format( folderToDelete));
+		print("--------------------------------------------------------")
+		allItems = self.GetAndShowItems(folderToDelete);
 
-	def Apply( self, list, applyFunction):
-		allItems = [];
-		for item in list:
-			foundItems = applyFunction( item);
-			allItems.extend( foundItems);
+		confirmForAll = raw_input("Confirm delete for ALL Files? Y/N: ")
+		allItemsConfirmed = 0;
+		if (confirmForAll == 'Y'):
+			print(" You confirmed delete for ALL files here. No more detailed confirmation.");
+			allItemsConfirmed = 1;
+
+		numFilesDeleted = 0;
+		numBytesDeleted = 0;
+		numFolders = 0;
+
+		# Now let us check and delete each item and save it away
+		for item in allItems:
+				localFileName = downloadRoot + item["path"];
+				toDownload = self.storageHelper.IsDownloadRequired( item["path"], item["bytes"], localFileName);
+				if ( toDownload):
+					print( u"Download Required {:15s} {:40s} {:15s}"
+						.format( item["path"], item["rev"], item["size"]
+						));
+				else:
+					print( u"******** Ready to delete : {:15s} {:15s} {:s} "
+						.format( item["path"], item["rev"], item["size"]));
+
+					confirmForItem = allItemsConfirmed;
+					if (confirmForItem == 0):
+						confirm = raw_input("Confirm delete? Y/N: ")
+						if (confirm == "Y"):
+							confirmForItem = 1;
+
+					if (confirmForItem == 1):
+						self.client.file_delete( item["path"]);
+						print( u"\t{:5,d}. Deleted file : {:s}".format( numFilesDeleted, item["path"]));
+						numFilesDeleted += 1;
+						numBytesDeleted += item["bytes"];
+
+		print("\n Total of {:,d} files. Deleted {:,d} files of size {:,d} bytes"
+			.format( len(allItems), numFilesDeleted, numBytesDeleted));
+		print("\t Skipped {:,d} files".format( len(allItems) - numFilesDeleted));
+		print("\t Skipped {:,d} folders".format( numFolders));
+
 		return allItems;
