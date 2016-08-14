@@ -1,18 +1,24 @@
 #!/usr/bin/python
 
 #
-#  nyDropbox.py 
-#  -- script to help access files on Dropbox
+#  myCloudStorage.py 
+#  -- script to help access files on Cloud Storage
 #
 #  Dependencies
-#   -  DropBox SDK
+#   - DropBox SDK
+#	- OneDrive SDK
 #
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 __author__ = 'Murali Krishnan'
+__version__ = "v1.0.0"
 
 from optparse import OptionParser;
-import ConfigParser;
+
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Set up global configuration
+_CLOUD_STORE_TO_ACCESS='OneDrive';
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #  Load Command Line Arguments
@@ -20,7 +26,7 @@ import ConfigParser;
 usage = "Usage: %prog [options]";
 optParser = OptionParser(usage = usage, 
 				version="%prog 1.0",
-				description="List Configuration Information for One Drive Access.");
+				description="Access files on cloud storage.");
 optParser.add_option("-c", "--config", dest="configFile",
 					default = "myConfig.ini",
                  	help="Read configuration from FILE [default = %default]", 
@@ -31,6 +37,10 @@ optParser.add_option("-q", "--quiet",
 optParser.add_option("-v", "--verbose",
                   action="store_true", dest="verbose", default=False,
                   help="print status messages to stdout");
+optParser.add_option("-s", "--useStorage",
+					default = _CLOUD_STORE_TO_ACCESS,
+                  	dest="storageService",
+                  	help="access storage from service [default = %default]");
 
 (options, args) = optParser.parse_args()
 
@@ -38,21 +48,37 @@ optParser.add_option("-v", "--verbose",
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #	Import Section
 from AccessDropBox import AccessDropBox;
+from AccessOneDrive import AccessOneDrive;
+import ConfigParser;
 
 # ------------ MAIN Section starts here -----------------------
-import ConfigParser
 
 def main():
 	if (options.verbose):
 		print("\t Reading Config File %s" % options.configFile);
+
+	print("\n1. Creating the Object to access Dropbox");
+	if ( options.storageService == "Dropbox"):
+		accountType = "DropboxAccount";
+		aod = AccessDropBox( options.verbose);
+	elif (options.storageService == "OneDrive"):
+		accountType = "HotmailAccount";
+		aod = AccessOneDrive( options.verbose);
+	else:
+		optParser.error("ERROR: Unknown cloud storage service specified.");
+		exit();
+
+	if (options.verbose):
+		print(" Using Storage Service: {}".format(accountType));
+
+	print("\n2. Parse in the configuration file to fetch access details.");
 	Config = ConfigParser.ConfigParser()
 	Config.read( options.configFile);
 
 	if (len(Config.sections()) == 0):
-		optParser.error("Invalid Config File or no config sections found");
+		optParser.error("ERROR: Invalid Config File or no config sections found");
 		exit();
 
-	accountType = "DropboxAccount";
 	foldersToDownload = [];
 	if ( Config.has_option( accountType	, "FoldersToDownload")):
 		folders = Config.get( accountType	, "FoldersToDownload");
@@ -63,23 +89,27 @@ def main():
 		folders = Config.get( accountType	, "FoldersToList");
 		foldersToList = folders.split('\n');
 
-	client_token = Config.get( accountType	, "AccessToken");
-	redirect_uri = Config.get( accountType	, "WebRedirectUri");
-
-	print("\n1. Creating the Object to access Dropbox");
-	aod = AccessDropBox( options.verbose);
-
-	print( "\n2. Getting connected to Dropbox using my access token");
-	aod.Connect( client_token);
-
+	print( "\n3. Get connected to Storage Service using my access token");
+	if ( options.storageService == "Dropbox"):
+		client_token = Config.get( accountType	, "AccessToken");
+		redirect_uri = Config.get( accountType	, "WebRedirectUri");
+		aod.Connect( client_token);
+	elif (options.storageService == "OneDrive"):
+		client_id = Config.get( accountType, "AppId");
+		client_secret =  Config.get( accountType, "AppSecret");
+		redirect_uri = Config.get( accountType, "WebRedirectUri");
+		aod.Connect( client_id, redirect_uri, client_secret);
+	else:
+		optParser.error("ERROR: Unknown cloud storage service specified.");
+		exit();
 
 	if ( len(foldersToList) > 0): 
-		print( "\n3. Enumerate items in a given path");
+		print( "\n4. Enumerate items in a given path");
 		items = aod.Apply( foldersToList, aod.GetAndShowItems);
 		aod.PrintItems( items);
 
 	if ( len(foldersToDownload) > 0): 
-		print( "\n4. Download Items");
+		print( "\n5. Download Items");
 		aod.Apply( foldersToDownload, aod.DownloadItems);
 
 if __name__ == "__main__":

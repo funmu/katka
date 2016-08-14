@@ -16,9 +16,9 @@ __author__ = 'Murali Krishnan'
 #	Import Section
 import onedrivesdk;
 from onedrivesdk.helpers import GetAuthCodeServer;
+import StorageHelper as SH;
 
 from PIL import Image; # for image processing
-import os; # for file access
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #	AccessOneDrive - Class to access and use OneDrive
@@ -27,9 +27,11 @@ class AccessOneDrive:
 	fVerbpse = 0;
 	client = None;	
 	idPathDirectory = {};
+	storageHelper = None;
 
 	def __init__(self, verbose):
 		self.fVerbose = verbose;
+		self.storageHelper = SH.AccessStorageHelper( verbose);
 
 	def Connect( self, clientId, redirectUri, clientSecret):
 
@@ -93,7 +95,7 @@ class AccessOneDrive:
 
 			#get the next page of three elements, if none exist, returns None
 			items = None if items.next_page_request is None else items.next_page_request.get();
-			print( "\t .... fetched {} items".format( basecount));
+			print( "\t .... fetched {} items\n".format( basecount));
 		return itemList;
 
 	def GetItemsForId( self, itemId):
@@ -119,7 +121,7 @@ class AccessOneDrive:
 
 			count = 0
 			for count, item in enumerate( itemsInParent):
-				# add the to item to directory
+				# add the item to directory
 				subItemPath = parentPath + "/" + item.name;
 				self.idPathDirectory[subItemPath] = item;
 				if (self.fVerbose):
@@ -141,7 +143,7 @@ class AccessOneDrive:
 		allItems = self.ListItems( subItemsStart);
 		return allItems;
 
-	def DownloadItems( self, path):
+	def DownloadItems( self, path, downloadRoot = u"."):
 		print("\n--------------------------------------------------------")
 		print(" Downloading files for folder \"{}\"".format( path));
 		print("--------------------------------------------------------")
@@ -152,11 +154,8 @@ class AccessOneDrive:
 		subItemsStart = self.GetItemsForId( item.id);
 		allItems = self.ListItems( subItemsStart, 0);
 
-		parentPathEndsAt = path.rfind( '/');
-		downloadPath = path[parentPathEndsAt+1:] + "/";
-		if (not os.path.exists( downloadPath)):
-			print("\t Creating the directory {}".format(downloadPath));
-			createdDir = os.makedirs( downloadPath);
+		downloadPath = downloadRoot+ path + "/";
+		self.storageHelper.CreateDirectory( downloadPath);
 
 		numFilesDownloaded = 0;
 		numBytesDownloaded = 0;
@@ -168,21 +167,31 @@ class AccessOneDrive:
 				print( "\tskipping folder: \{}\"".format(item.name));
 				numFolders += 1;
 			else:
-				print( " get \"{:30}\" Id: {} size: {:,d}".format( item.name, item.id, item.size));
 				fileName = downloadPath + item.name;
-				if ( os.path.isfile( fileName) and (os.path.getsize( fileName) == item.size)):
-					print("\tskipping same sized file");
-				else:
+				toDownload = self.storageHelper.IsDownloadRequired( item.name, item.size, fileName);
+
+				if ( toDownload):
+					print( u"Downloading {:15s} {:15s} {:,d} "
+						.format( item.name, item.id, item.size));
 					self.client.item( id = item.id).content.request().download( fileName);
 					numFilesDownloaded += 1;
 					numBytesDownloaded += item.size;				
 
-		print("\n Total of {:,d} files. Downloaded {:,d} files of size {:,d} bytes".format( len(allItems), numFilesDownloaded, numBytesDownloaded));
+		print("\n Total of {:,d} files. Downloaded {:,d} files of size {:,d} bytes"
+			.format( len(allItems), numFilesDownloaded, numBytesDownloaded));
 		print("\t Skipped {:,d} files".format( len(allItems) - numFilesDownloaded));
 		print("\t Skipped {:,d} folders".format( numFolders));
 
 		return allItems;
 
+	def PrintItems( self, items):
+		count = 1;
+		for count, item in enumerate( items):
+			self._printItem( count, item);
+
 	def Apply( self, list, applyFunction):
+		allItems = [];
 		for item in list:
-			applyFunction( item);
+			foundItems = applyFunction( item);
+			allItems.extend( foundItems);
+		return allItems;

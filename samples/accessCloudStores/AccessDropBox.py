@@ -14,8 +14,7 @@ __author__ = 'Murali Krishnan'
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #	Import Section
 import dropbox;
-import os; # for file access
-from stat import *; # for file details
+import StorageHelper as SH;
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 class AccessDropBox:
@@ -26,9 +25,11 @@ class AccessDropBox:
 	fVerbose = 0;
 	client = None;	
 	idPathDirectory = {};
+	storageHelper = None;
 
 	def __init__(self, verbose):
 		self.fVerbose = verbose;
+		self.storageHelper = SH.AccessStorageHelper( verbose);
 
 	def Connect( self, access_token):
 
@@ -44,6 +45,8 @@ class AccessDropBox:
 		"""
 			Get the files and folders at the 'folderPath'
 		"""
+		if (self.fVerbose):
+			print( "\t  Getting metadata for folder: {}".format( folderPath));
 
 		folder_metadata = self.client.metadata( folderPath);
 		# print 'metadata: ', folder_metadata
@@ -128,16 +131,9 @@ class AccessDropBox:
 			.format(numItems, numFolders, numFiles));
 		return allItems;
 
-	def _createDirectory( self, outputFolderName):
-		try:
-			os.makedirs( outputFolderName);
-			print( u"\t Creating the directory {}".format(outputFolderName));
-		except:
-			print("\t Skipping Directory (possibly it exists): {}".format( outputFolderName));
-
 	def _downloadFile( self, path, outputFileName):
 		f = self.client.get_file( path);
-		print( u"Donwload file {:30s} to {:40s}"
+		print( u"Download file {:30s} to {:40s}"
 			.format( path, outputFileName));
 		out = open( outputFileName, 'wb');
 		out.write(f.read());
@@ -157,44 +153,46 @@ class AccessDropBox:
 
 			outputFileName = destRoot + item["path"];
 			if ( self.isFolder( item)):
-				self._createDirectory( outputFileName);
+				self.storageHelper.CreateDirectory( outputFileName);
 			else:
-				toDownload = 0;
-				try:
-					localFileInfo = os.stat( outputFileName);
-					toDownload = (localFileInfo.st_size != item["bytes"]);
-					if (self.fVerbose):
-						print( u" sizes for {} DP = {:,d}  local = {:,d}"
-							.format( item["path"], item["bytes"], localFileInfo.st_size));
-				except:
-					print( u" couldn't get stat for file {}"
-						.format( outputFileName));
-					toDownload = 1;
+				toDownload = self.storageHelper.IsDownloadRequired( item["path"], item["bytes"], outputFileName);
 
 				if ( toDownload):
 					print( u"Downloading {:15s} {:15s} {:40s} "
 						.format( item["rev"], item["size"], item["path"]
 						));
 					self._downloadFile( item["path"], outputFileName);
-				else:
-					print( u"\t skipping file: {}".format( item["path"]));
 
 			savedList = [ outputFileName];
 
 		return savedList;
 
-	def DownloadItems( self, foldersToDownload, downloadPath = u"."):
+	def DownloadItemsForPaths( self, foldersToDownload, downloadPath = u"."):
 		print("\n--------------------------------------------------------")
 		print(" Downloading files for folder \"{}\"".format( foldersToDownload));
 		print("--------------------------------------------------------")
 		items = self.Apply( foldersToDownload, self.GetAndShowItems);
 
-		if (not os.path.exists( downloadPath)):
-			print("\t Creating the directory {}".format(downloadPath));
-			createdDir = os.makedirs( downloadPath);
+		self.storageHelper.CreateDirectory( downloadPath);
 
 		allItems = self.Apply( items, self.DownloadItem);
 		return allItems;
+
+	def DownloadItems( self, folderToDownload, downloadPath = u"."):
+		print("\n--------------------------------------------------------")
+		print(" Downloading files for folder \"{}\"".format( folderToDownload));
+		print("--------------------------------------------------------")
+		items = self.GetAndShowItems(folderToDownload);
+
+		self.storageHelper.CreateDirectory( downloadPath);
+
+		allItems = self.Apply( items, self.DownloadItem);
+		return allItems;
+
+	def PrintItems( self, items):
+		count = 1;
+		for count, item in enumerate( items):
+			self._printItem( count, item);
 
 	def Apply( self, list, applyFunction):
 		allItems = [];
