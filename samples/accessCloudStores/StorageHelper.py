@@ -106,8 +106,62 @@ class AccessStorageHelper:
 
 		print("\nBegin Downloading files ...\n");
 		downloadItemsFuncWithPath = lambda x: downloadItemsFunc(x, downloadPath);
-		downloadedItems = self.Apply( items, downloadItemsFuncWithPath);
-		return downloadedItems;
+		downloadedStats = self.Apply( items, downloadItemsFuncWithPath);
+
+		downloadInfo = { "folder": 0, "file": 0, "bytes": 0, "skipped": 0 }
+
+		for stat in downloadedStats:
+			downloadInfo["folder"] 	+= stat["folder"];
+			downloadInfo["file"] 	+= stat["file"];
+			downloadInfo["bytes"] 	+= stat["bytes"];
+			downloadInfo["skipped"]	+= stat["skipped"];
+		print("\n Total of {:,d} files downloaded of size {:,d} bytes."
+			.format( downloadInfo["file"], downloadInfo["bytes"]));
+		print("\t Skipped {:,d} files".format( downloadInfo["skipped"]));
+		print("\t Skipped {:,d} folders".format( downloadInfo["folder"]));
+
+		return downloadInfo;
+
+
+	def DeleteItems( self, foldersToDelete, getItemsFunc, deleteItemsFunc, downloadPath = u"."):
+		"""
+			Delete items from after confirming that 
+				it is locally available
+				and local copy is same as Cloud copy
+		"""
+		print("\n--------------------------------------------------------")
+		print(" Deleting files for folder \"{}\"".format( foldersToDelete));
+		print("--------------------------------------------------------")
+		self.CreateDirectory( downloadPath);
+		items = self.Apply( foldersToDelete, getItemsFunc);
+
+		for folder in foldersToDelete:
+			outputFolder = downloadPath +  folder;
+			self.CreateDirectory( outputFolder);
+
+		confirmForAll = raw_input("Confirm delete for ALL Files? Y/N: ")
+		allItemsConfirmed = 0;
+		if (confirmForAll == 'Y'):
+			print(" You confirmed delete for ALL files here. No more detailed confirmation.");
+			allItemsConfirmed = 1;
+
+		print("\nBegin Check and Delete files ...\n");
+		deleteItemsFuncWithPath = lambda x: deleteItemsFunc(x, allItemsConfirmed, downloadPath);
+		deleteStats = self.Apply( items, deleteItemsFuncWithPath);
+
+		deleteInfo = { "folder": 0, "file": 0, "bytes": 0, "download": 0 }
+
+		for stat in deleteStats:
+			deleteInfo["folder"] 	+= stat["folder"];
+			deleteInfo["file"] 		+= stat["file"];
+			deleteInfo["bytes"] 	+= stat["bytes"];		
+			deleteInfo["download"] 	+= stat["download"];		
+		print("\n Total of {:,d} files deleted. Downloaded {:,d} files of size {:,d} bytes"
+			.format( deleteInfo["file"], deleteInfo["download"], deleteInfo["bytes"]));
+		print("\t Skipped {:,d} files".format( len(items) - deleteInfo["file"]));
+		print("\t Skipped {:,d} folders".format( deleteInfo["folder"]));
+
+		return deleteInfo;
 
 	def PrintItems( self, items):
 		print("\n\n-------------------------------------------");

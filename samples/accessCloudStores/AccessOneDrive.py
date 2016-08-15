@@ -183,128 +183,80 @@ class AccessOneDrive:
 
 	def _downloadFile( self, item, outputFileName):
 		# We need to make sure that any parent directories exist beforehand
+		succeeded = 1;
 		try:
 			self.client.item( id = item.id).content.request().download( outputFileName);
 		except:
 			print( "\n~~~~~~ ERROR: unable to download item");
 			item.PrintItem();
-		return;
+			succeeded = 0;
+		return succeeded;
 
 	def DownloadItem( self, item, destRoot = u"."):
 		"""
 			Download the items locally within the destination root path given
 
 		"""
-		downloadInfo = { "folder": 0, "file": 0, "size": 0 }
+		downloadInfo = { "folder": 0, "file": 0, "bytes": 0, "skipped" : 0 }
 
-		if (item is None):
-			print(" No item was found");
+		outputFileName = destRoot +  item.path;
+		if ( item.isFolder()):
+			self.storageHelper.CreateDirectory( outputFileName);
+			self.storageHelper.DownloadItems( [item.path], 
+				self.GetAndShowItems,
+				self.DownloadItem, 
+				destRoot);
+			downloadInfo["folder"] += 1;								
 		else:
-			outputFileName = destRoot +  item.path;
-			if ( item.isFolder()):
-				self.storageHelper.CreateDirectory( outputFileName);
-				self.storageHelper.DownloadItems( [item.path], 
-					self.GetAndShowItems,
-					self.DownloadItem, 
-					destRoot);
-				downloadInfo["folder"] += 1;								
+			toDownload = self.storageHelper.IsDownloadRequired( item.path, item.num_bytes, outputFileName);
+
+			if ( toDownload):
+				print( u"Downloading {:15,d} {:40s} rev:{:15s} to {:40s}"
+					.format( item.num_bytes, item.path, item.revision, 
+						outputFileName
+					));
+				if (not self._downloadFile( item, outputFileName)):
+					downloadInfo["skipped"]	= 1;
+				downloadInfo["bytes"] = item.num_bytes;
+				downloadInfo["file"] = 1;
 			else:
-				toDownload = self.storageHelper.IsDownloadRequired( item.path, item.num_bytes, outputFileName);
+				downloadInfo["skipped"]	= 1;
 
-				if ( toDownload):
-					print( u"Downloading {:15,d} {:40s} rev:{:15s} to {:40s}"
-						.format( item.num_bytes, item.path, item.revision, 
-							outputFileName
-						));
-					self._downloadFile( item, outputFileName);
-					downloadInfo["size"] = item.num_bytes;
-					downloadInfo["file"] = 1;
-		return downloadInfo;
+		return [downloadInfo];
 
-	def DownloadItems( self, path, downloadRoot = u"."):
-		print("\n--------------------------------------------------------")
-		print(" Downloading files for folder \"{}\"".format( path));
-		print("--------------------------------------------------------")
-		item = self.GetItemForPath( path);
-		allItems = [item] if item.children is None else item.children;
-
-		downloadPath = downloadRoot+ path + "/";
-		self.storageHelper.CreateDirectory( downloadPath);
-
-		numFilesDownloaded = 0;
-		numBytesDownloaded = 0;
-		numFolders = 0;
-
-		# Now let us really download each item and save it away
-		for item in allItems:
-			dli = self.DownloadItem( item, downloadPath);
-
-			numFolders += dli["folder"];
-			numFilesDownloaded += dli["file"];
-			numBytesDownloaded += dli["size"];
-
-		print("\n Total of {:,d} files. Downloaded {:,d} files of size {:,d} bytes"
-			.format( len(allItems), numFilesDownloaded, numBytesDownloaded));
-		print("\t Skipped {:,d} files".format( len(allItems) - numFilesDownloaded));
-		print("\t Skipped {:,d} folders".format( numFolders));
-
-		return allItems;
-
-	def DeleteItems( self, path, downloadRoot = u"."):
+	def DeleteItem( self, item, deleteConfirmed, destRoot = u"."):
 		"""
-			Delete items from OneDrive after confirming that 
-				it is locally available
-				and local copy is same as Cloud copy
+			Check and Delete an item
+
 		"""
-		print("\n--------------------------------------------------------")
-		print(" Deleting files for folder \"{}\"".format( path));
-		print("--------------------------------------------------------")
-		item = self.GetItemForPath( path);
-		allItems = self.GetAllItemsForId( item.id, path);
+		deleteInfo = { "folder": 0, "file": 0, "bytes": 0, "download": 0 }
 
-		downloadPath = downloadRoot+ path + "/";
+		if (item.isFolder()):
+			print( "\tskipping folder: \{}\"".format(item.name));
+			deleteInfo["folder"] += 1;
+		else:
+			fileName = destRoot + item.path;
+			toDownload = self.storageHelper.IsDownloadRequired( item.path, item.num_bytes, fileName);
 
-		numFilesDeleted = 0;
-		numBytesDeleted = 0;
-		numFolders = 0;
-
-		confirmForAll = raw_input("Confirm delete for ALL Files? Y/N: ")
-		allItemsConfirmed = 0;
-		if (confirmForAll == 'Y'):
-			print(" You confirmed delete for ALL files here. No more detailed confirmation.");
-			allItemsConfirmed = 1;
-
-		# Now let us check and delete each item and save it away
-		for item in allItems:
-			if (item.folder):
-				print( "\tskipping folder: \{}\"".format(item.name));
-				numFolders += 1;
+			if ( toDownload):
+				print( u" Download Required for: {:15s} {:15s} {:,d} "
+					.format( item.name, item.id, item.num_bytes));
 			else:
-				fileName = downloadPath + item.name;
-				toDownload = self.storageHelper.IsDownloadRequired( item.name, item.size, fileName);
+				print( u"******** Ready for deletion : {:15s} {:15s} {:,d} "
+					.format( item.name, item.id, item.num_bytes));
 
-				if ( toDownload):
-					print( u" Download Required for: {:15s} {:15s} {:,d} "
-						.format( item.name, item.id, item.size));
-				else:
-					print( u"******** Ready to delete : {:15s} {:15s} {:,d} "
-						.format( item.name, item.id, item.size));
+				confirmForItem = deleteConfirmed;
+				if (confirmForItem == 0):
+					confirm = raw_input("Confirm delete? Y/N: ")
+					if (confirm == "Y"):
+						confirmForItem = 1;
 
-					confirmForItem = allItemsConfirmed;
-					if (confirmForItem == 0):
-						confirm = raw_input("Confirm delete? Y/N: ")
-						if (confirm == "Y"):
-							confirmForItem = 1;
+				if (confirmForItem == 1):
+					self.client.item( id = item.id).delete()
+					print( u"\tDeleted file : {:s}".format( item.name));
+					deleteInfo["file"] += 1;
+					deleteInfo["download"] += 1;
+					deleteInfo["bytes"] += item.num_bytes;
 
-					if (confirmForItem == 1):
-						self.client.item( id = item.id).delete()
-						print( u"\t{:5,d}. Deleted file : {:s}".format( numFilesDeleted, item.name));
-						numFilesDeleted += 1;
-						numBytesDeleted += item.size;
+		return [deleteInfo];
 
-		print("\n Total of {:,d} files. Deleted {:,d} files of size {:,d} bytes"
-			.format( len(allItems), numFilesDeleted, numBytesDeleted));
-		print("\t Skipped {:,d} files".format( len(allItems) - numFilesDeleted));
-		print("\t Skipped {:,d} folders".format( numFolders));
-
-		return allItems;

@@ -130,7 +130,11 @@ def main():
 	
 	if ( len(foldersToDelete) > 0):
 		print( "\n6. Delete Items");
-		storageHelper.Apply( foldersToDelete, aod.DeleteItems);
+#		storageHelper.Apply( foldersToDelete, aod.DeleteItems);
+		storageHelper.DeleteItems( foldersToDelete,
+			aod.GetAndShowItems,
+			aod.DeleteItem,
+			downloadPath);
 
 if __name__ == "__main__":
     main()
