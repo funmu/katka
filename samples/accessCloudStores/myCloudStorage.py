@@ -112,14 +112,22 @@ def main():
 		exit();
 
 	if ( len(foldersToList) > 0): 
-		print( "\n4. Enumerate items in a given path");
+		print( "\n4. Enumerate items in given paths");
 		items = storageHelper.Apply( foldersToList, aod.GetAndShowItems);
-		storageHelper.PrintItems( items, aod.PrintItem);
+		storageHelper.PrintItems( items);
 
 	if ( len(foldersToDownload) > 0): 
-		print( "\n5. Download Items");
-		storageHelper.Apply( foldersToDownload, aod.DownloadItems);
+		if ( Config.has_option( accountType	, "DownloadPath")):
+			downloadPath = Config.get( accountType	, "DownloadPath");
+		else:
+			downloadPath = u".";
 
+		print( "\n5. Download Items");
+		storageHelper.DownloadItems( foldersToDownload, 
+			aod.GetAndShowItems,
+			aod.DownloadItem, 
+			downloadPath);
+	
 	if ( len(foldersToDelete) > 0):
 		print( "\n6. Delete Items");
 		storageHelper.Apply( foldersToDelete, aod.DeleteItems);

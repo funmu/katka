@@ -51,39 +51,18 @@ class AccessDropBox:
 		folder_metadata = self.client.metadata( folderPath);
 		# print 'metadata: ', folder_metadata
 		collection = folder_metadata["contents"];
-		return collection;
+		items = [];
+		for item in collection:
+			newStorageItem = SH.AccessStorageItem(self.fVerbose);
+			newStorageItem.name 	= item["path"];
+			newStorageItem.path 	= item["path"];
+			newStorageItem.num_bytes= item["bytes"];
+			newStorageItem.is_dir	= item["is_dir"];
+			newStorageItem.modified_date = item["modified"];
+			newStorageItem.revision	= item["rev"];
+			items.append( newStorageItem);
 
-	def isFolder(self, item):
-		"""
-			Check if the given item is a folder
-		"""
-		return (item["is_dir"]);
-
-	def PrintItem( self, index, item):
-		if (item is None):
-			print(" No item was found");
-		else:
-			# itemFullName = item.name if not self.isFolder(item) else "/"+item.name;
-			print( u"{:4d}. {:15s} {:15s} {:40s} "
-				.format( index, item["rev"], 
-					"Folder" if self.isFolder(item) else item["size"],
-					item["path"]
-				));
-
-	def ListItems( self, items, printItem = 1):
-		"""
-			List the items to cosole
-		"""		
-		itemList = [];
-
-		# Dropbox provides a full list without pagination
-		count = 1;
-		for count, item in enumerate( items):
-			if (printItem):
-				self.PrintItem( count + 1, item);
-			itemList.append( item);
-
-		return itemList;
+		return items;
 
 	def GetAndShowItems( self, path, goDeep = 1):
 		"""
@@ -98,7 +77,7 @@ class AccessDropBox:
 		subItemsStart = self.GetCollection( path);
 		allItems = subItemsStart;
 
-		subFoldersList = [folder for folder in subItemsStart if self.isFolder(folder)];
+		subFoldersList = [item for item in subItemsStart if item.isFolder()];
 
 		numItems = len(subItemsStart);
 		numFolders = len(subFoldersList);
@@ -111,13 +90,13 @@ class AccessDropBox:
 		if ( goDeep ):
 			for folder in subFoldersList:
 				if (self.fVerbose):
-					print("\n --- Enumerating Folder {:30s}".format(folder["path"]));
-				subItems = self.GetCollection( folder["path"]);
+					print("\n --- Enumerating Folder {:30s}".format( folder.path));
+				subItems = self.GetCollection( folder.path);
 				numInFolder = len(subItems);
 				allItems.extend( subItems);
 
 				numItems += numInFolder;
-				foldersHere = [folder for folder in subItems if self.isFolder(folder)];
+				foldersHere = [folder for folder in subItems if  folder.path];
 				numFoldersHere = len(foldersHere);
 				numFilesHere = numInFolder - numFoldersHere;
 
@@ -125,7 +104,7 @@ class AccessDropBox:
 				numFiles += numFilesHere;
 				if (self.fVerbose):
 					print("\t ---- Folder {:30s} has {:,d} folders and {:,d} files"
-						.format( folder["path"], numFoldersHere, numFilesHere)); 
+						.format(  folder.path, numFoldersHere, numFilesHere)); 
 
 		print( "\nTotal of {:10d} items: {:10d} folders and {:10d} items\n"
 			.format(numItems, numFolders, numFiles));
@@ -151,45 +130,23 @@ class AccessDropBox:
 			print(" No item was found");
 		else:
 
-			outputFileName = destRoot + item["path"];
-			if ( self.isFolder( item)):
+			outputFileName = destRoot +  item.path;
+			if ( item.isFolder()):
 				self.storageHelper.CreateDirectory( outputFileName);
 			else:
-				toDownload = self.storageHelper.IsDownloadRequired( item["path"], item["bytes"], outputFileName);
+				toDownload = self.storageHelper.IsDownloadRequired( item.path, item.num_bytes, outputFileName);
 
 				if ( toDownload):
-					print( u"Downloading {:15s} {:15s} {:40s} "
-						.format( item["rev"], item["size"], item["path"]
+					print( u"Downloading {:15s} {:15,d} {:40s} "
+						.format( item.revision, item.num_bytes, item.path
 						));
-					self._downloadFile( item["path"], outputFileName);
+					self._downloadFile( item.path, outputFileName);
 
 			savedList = [ outputFileName];
 
 		return savedList;
 
-	def DownloadItemsForPaths( self, foldersToDownload, downloadPath = u"."):
-		print("\n--------------------------------------------------------")
-		print(" Downloading files for folder \"{}\"".format( foldersToDownload));
-		print("--------------------------------------------------------")
-		items = self.Apply( foldersToDownload, self.GetAndShowItems);
-
-		self.storageHelper.CreateDirectory( downloadPath);
-
-		allItems = self.Apply( items, self.DownloadItem);
-		return allItems;
-
-	def DownloadItems( self, folderToDownload, downloadPath = u"."):
-		print("\n--------------------------------------------------------")
-		print(" Downloading files for folder \"{}\"".format( folderToDownload));
-		print("--------------------------------------------------------")
-		items = self.GetAndShowItems(folderToDownload);
-
-		self.storageHelper.CreateDirectory( downloadPath);
-
-		allItems = self.storageHelper.Apply( items, self.DownloadItem);
-		return allItems;
-
-	def DeleteItems( self, folderToDelete, downloadRoot = u"."):
+	def DeleteItems( self, folderToDelete, deleteRoot = u"."):
 		"""
 			Delete items from Dropbox after confirming that 
 				it is locally available
@@ -212,15 +169,16 @@ class AccessDropBox:
 
 		# Now let us check and delete each item and save it away
 		for item in allItems:
-				localFileName = downloadRoot + item["path"];
-				toDownload = self.storageHelper.IsDownloadRequired( item["path"], item["bytes"], localFileName);
+				localFileName = deleteRoot + item.path;
+				toDownload = self.storageHelper.IsDownloadRequired( item.path, item.num_bytes, localFileName);
+
 				if ( toDownload):
-					print( u"Download Required {:15s} {:40s} {:15s}"
-						.format( item["path"], item["rev"], item["size"]
+					print( u"Download Required {:40s} {:15s} {:15,d}"
+						.format( item.path, item.revision, item.num_bytes
 						));
 				else:
-					print( u"******** Ready to delete : {:15s} {:15s} {:s} "
-						.format( item["path"], item["rev"], item["size"]));
+					print( u"******** Ready to delete : {:40s} {:15s} {:15,d}"
+						.format( item.path, item.revision, item.num_bytes));
 
 					confirmForItem = allItemsConfirmed;
 					if (confirmForItem == 0):
@@ -229,8 +187,8 @@ class AccessDropBox:
 							confirmForItem = 1;
 
 					if (confirmForItem == 1):
-						self.client.file_delete( item["path"]);
-						print( u"\t{:5,d}. Deleted file : {:s}".format( numFilesDeleted, item["path"]));
+						self.client.file_delete( item.path);
+						print( u"\t{:5,d}. Deleted file : {:s}".format( numFilesDeleted, item.path));
 						numFilesDeleted += 1;
 						numBytesDeleted += item["bytes"];
 
