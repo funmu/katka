@@ -84,36 +84,36 @@ class AccessDropBox:
 		numFiles = numItems - numFolders;
 
 		if (self.fVerbose):
-			print("\t ---- Folder {:30s} has {:,d} folders and {:,d} files"
-				.format( path, numFolders, numItems));
+			print("\t ---- Folder \"{:30s}\" has {:,d} folders and {:,d} files"
+				.format( path, numFolders, inumFiles));
 
 		if ( goDeep ):
 			for folder in subFoldersList:
 				if (self.fVerbose):
 					print("\n --- Enumerating Folder {:30s}".format( folder.path));
-				subItems = self.GetCollection( folder.path);
-				numInFolder = len(subItems);
-				allItems.extend( subItems);
+				subItemsStart = self.GetAndShowItems( folder.path, goDeep);
 
-				numItems += numInFolder;
-				foldersHere = [folder for folder in subItems if  folder.path];
-				numFoldersHere = len(foldersHere);
-				numFilesHere = numInFolder - numFoldersHere;
-
-				numFolders += numFoldersHere;
-				numFiles += numFilesHere;
+				subsubFoldersList = [item for item in subItemsStart if item.isFolder()];
+				inumItems = len(subItemsStart);
+				inumFolders = len(subsubFoldersList);
+				inumFiles = numItems - numFolders;
+				allItems.extend( subItemsStart);
+		
 				if (self.fVerbose):
-					print("\t ---- Folder {:30s} has {:,d} folders and {:,d} files"
-						.format(  folder.path, numFoldersHere, numFilesHere)); 
+					print("\t   ####  Folder \"{:30s}\" has {:,d} folders and {:,d} files"
+						.format( folder.path, inumFolders, inumFiles));
+				numFiles += inumFiles;
+				numFolders += inumFolders;
 
 		print( "\nTotal of {:10d} items: {:10d} folders and {:10d} items\n"
 			.format(numItems, numFolders, numFiles));
 		return allItems;
 
-	def _downloadFile( self, path, outputFileName):
-		f = self.client.get_file( path);
-		print( u"Download file {:30s} to {:40s}"
-			.format( path, outputFileName));
+
+	def _downloadFile( self, item, outputFileName):
+		print( u" .... about to download file {:30s} to {:40s}"
+			.format( item.path, outputFileName));
+		f = self.client.get_file( item.path);
 		out = open( outputFileName, 'wb');
 		out.write(f.read());
 		out.close();
@@ -125,6 +125,7 @@ class AccessDropBox:
 
 		"""
 		savedList = [];
+		downloadInfo = { "folder": 0, "file": 0, "bytes": 0, "skipped" : 0 }		
 
 		if (item is None):
 			print(" No item was found");
@@ -133,6 +134,7 @@ class AccessDropBox:
 			outputFileName = destRoot +  item.path;
 			if ( item.isFolder()):
 				self.storageHelper.CreateDirectory( outputFileName);
+				downloadInfo["folder"] += 1;								
 			else:
 				toDownload = self.storageHelper.IsDownloadRequired( item.path, item.num_bytes, outputFileName);
 
@@ -140,11 +142,17 @@ class AccessDropBox:
 					print( u"Downloading {:15s} {:15,d} {:40s} "
 						.format( item.revision, item.num_bytes, item.path
 						));
-					self._downloadFile( item.path, outputFileName);
+					if (not self._downloadFile( item, outputFileName)):
+						downloadInfo["skipped"]	= 1;
+					downloadInfo["bytes"] = item.num_bytes;
+					downloadInfo["file"] = 1;
+				else:
+					downloadInfo["skipped"]	= 1;
 
 			savedList = [ outputFileName];
 
-		return savedList;
+		# return savedList;
+		return [downloadInfo];
 
 	def DeleteItems( self, folderToDelete, deleteRoot = u"."):
 		"""
