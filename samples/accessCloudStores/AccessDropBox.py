@@ -103,10 +103,11 @@ class AccessDropBox:
 					print("\t   ####  Folder \"{:30s}\" has {:,d} folders and {:,d} files"
 						.format( folder.path, inumFolders, inumFiles));
 				numFiles += inumFiles;
+				numItems += inumItems;
 				numFolders += inumFolders;
 
-		print( "\nTotal of {:10d} items: {:10d} folders and {:10d} items\n"
-			.format(numItems, numFolders, numFiles));
+		print( "\n{:10d} items: {:10d} folders and {:10d} items in \"{:30s}\"\n"
+			.format( numItems, numFolders, numFiles, path));
 		return allItems;
 
 
