@@ -18,13 +18,11 @@ import onedrivesdk;
 from onedrivesdk.helpers import GetAuthCodeServer;
 import StorageHelper as SH;
 
-from PIL import Image; # for image processing
-
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #	AccessOneDrive - Class to access and use OneDrive
 class AccessOneDrive:
 
-	fVerbpse = 0;
+	fVerbose = 0;
 	client = None;	
 	idPathDirectory = {};
 	storageHelper = None;
