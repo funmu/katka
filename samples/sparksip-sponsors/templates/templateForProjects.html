@@ -1,0 +1,56 @@
+<HTML>
+
+<HEAD>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <meta name="keywords" content="Summer internship, high school internship, seattle internship" />
+    <meta property="og:type" content="article" />
+    <meta name="title" content="{ProjectTitle}" />
+    <meta property="og:title" content="SPARK Internship - {ProjectTitle}" />
+    <meta property="og:description" content="{DESCRIPTION}" />
+    <meta name="description" content="{DESCRIPTION}" />
+    <title>SPARK Internship - {ProjecTitle}</title>
+    <link rel="stylesheet" href="sparksip-projects.css" type="text/css" />
+</HEAD>
+
+<body>
+    <!-- Item text -->
+    <div class="project-all">
+        <h2 class="project-title">{ProjectTitle}</h2>
+
+        <h3>Description</h3>
+
+        <p>{Description}</p>
+
+        <h3>Research</h3>
+        <p>{ResearchDescription}</p>
+
+        <h3>Sponsored By</h3>
+        <p>
+            <span class="project-sponsor">
+                <span class="project-bold">{ContactName}, &nbsp;</span>
+                <span class="project-sponsor-title">{ContactTitle}&nbsp;</span>
+            <br/>
+            <span class="project-sponsor-org">{Organization}&nbsp;</span>
+            <span class="project-sponsor-orgsite">
+                <a href="{OrganziationWebsite}">{OrganizationWebsite}</a>
+                &nbsp;
+            </span>
+        </p>
+
+        <h3>Qualifications</h3>
+        <p>{Qualifications}</p>
+
+        <h3>Project Details</h3>
+        <p><span class="project-bold">Stipend: </span> &nbsp; {Stipend}</p>
+        <p><span class="project-bold">Length of Internship: </span> &nbsp; {Length}</p>
+        <p><span class="project-bold">Hours Per Week: </span> &nbsp; {HoursPerWeek}</p>
+
+        <h3>Apply Now </h3>
+        <p>
+            <a href="/internships/2017/{ProjectId}.html" target="_blank"><img class="project-application" 
+                src="http://sparksip.org/images/apply2.gif" alt="Click to Apply" width="300" height="92" />
+            </a>
+        </p> 
+    </div>
+</body>
+</HTML>

@@ -1,0 +1,19 @@
+[
+  {
+    "Timestamp" : "2017-02-05T20:09:04.252Z",
+    "ContactEmail" : "muralirk@gmail.com",
+    "ContactName" : "Murali Krishnan",
+    "ContactTitle": "Advisor",
+    "ProjectTitle" : "Prepare SparkSIP Internship Matcher",
+    "Organization" : "Spark SIP",
+    "OrganizationWebsite" : "http://www.sparksip.org/",    
+    "Contact" : "muralirk@gmail.com",
+    "Length" : "8 weeks",
+    "HoursPerWeek" : "30 hours",
+    "Stipend" : "Maybe",
+    "Description" : "Design and develop the Spark SIP intern matching system. You will use data science methods to analyze and prepare an automated matching recommendations for assigning students to internships.",
+    "Qualifications" : "Ability to work independently with data. Ability to program in Python, JavaScript and HTML.",
+    "HasResearch" : "Yes",
+    "ResearchDescription" : "You will research about text analysis and scoring techniques to create a scoring method for each potential pairing. You will use text processing and search engine ranking techniques to rank the results to identify the best matches."
+  }
+]
