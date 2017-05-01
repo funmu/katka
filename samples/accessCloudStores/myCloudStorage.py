@@ -22,6 +22,11 @@ _CLOUD_STORE_TO_ACCESS='OneDrive';
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #  Load Command Line Arguments
+#
+# Simple Usage
+#	python myCloudStorage.py -c $CONFIGFILE -s Dropbox
+#	python myCloudStorage.py -c $CONFIGFILE -s OneDrive
+#
 
 usage = "Usage: %prog [options]";
 optParser = OptionParser(usage = usage, 

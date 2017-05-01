@@ -1,5 +1,5 @@
 /*
- *	xformSparksip.js - Get bogle board
+ *	xformSparksip.js - Generate Sparksip Projects List
  *
  *  Created: muralirk@gmail.com - March 12, 2017
  */

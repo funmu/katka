@@ -1,0 +1,83 @@
+[
+	{
+		"neighborhood": "Bellevue Downtown",
+		"maplocation": "https://goo.gl/maps/FVS6K222E5E2",
+		"budget": "$2500 - $4000",
+		"commuteTime": 5,
+		"lifestyle": "* * * * *",
+		"safety": "* * * * *"
+	},
+	{
+		"neighborhood": "Kirkland Downtown",
+		"maplocation": "https://goo.gl/maps/NGjQrd7kZmG2",
+		"budget": "$2000 - $3000",
+		"commuteTime": 15,
+		"lifestyle": "* * * * *",
+		"safety": "* * * * *"
+	},
+	{
+		"neighborhood": "Redmond Downtown",
+		"maplocation": "https://goo.gl/maps/6SCDDxX1KsT2",
+		"budget": "$2000 - $2500",
+		"commuteTime": 15,
+		"lifestyle": "* * * *",
+		"safety": "* * * * *"
+	},
+	{
+		"neighborhood": "Mercer Island Downtown",
+		"maplocation": "https://goo.gl/maps/SyMoZaFhYnx",
+		"budget": "$2000 - $2500",
+		"commuteTime": 15,
+		"lifestyle": "* * * *",
+		"safety": "* * * *"
+	},
+	{
+		"neighborhood": "University District #1",
+		"maplocation": "https://goo.gl/maps/VptzHYTr44D2",
+		"budget": "$2000 - $3000",
+		"commuteTime": 20,
+		"lifestyle": "* * * *",
+		"safety": "* * * *"
+	},
+	{
+		"neighborhood": "Alki Beach Area",
+		"maplocation": "https://goo.gl/maps/LQVpyr6ZnCJ2",
+		"budget": "$2000 - $3000",
+		"commuteTime": 45,
+		"lifestyle": "* * * *",
+		"safety": "* * *"
+	},
+	{
+		"neighborhood": "Bellevue Crossroads",
+		"maplocation": "https://goo.gl/maps/1seJ2VrZDHo",
+		"budget": "$1800 - $2500",
+		"commuteTime": 10,
+		"lifestyle": "* * *",
+		"safety": "* * * *"
+	},
+	{
+		"neighborhood": "University Avenue (near University)",
+		"maplocation": "https://goo.gl/maps/dvNEYWTTzA82",
+		"budget": "$2000 - $3000",
+		"commuteTime": 20,
+		"lifestyle": "* * *",
+		"safety": "* * *"
+	},
+	{
+		"neighborhood": "Renton Landing",
+		"maplocation": "https://goo.gl/maps/ta1wnKgGJPm",
+		"budget": "$1500 - $2000",
+		"commuteTime": 20,
+		"lifestyle": "* * *",
+		"safety": "* * *"
+	},
+	{
+		"neighborhood": "Renton Downtown",
+		"maplocation": "https://goo.gl/maps/4NFdVeGrGyE2",
+		"budget": "$1500 - $2000",
+		"commuteTime": 40,
+		"lifestyle": "* * *",
+		"safety": "* * *"
+	}
+
+]

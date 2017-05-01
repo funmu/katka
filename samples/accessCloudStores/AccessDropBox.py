@@ -85,7 +85,7 @@ class AccessDropBox:
 
 		if (self.fVerbose):
 			print("\t ---- Folder \"{:30s}\" has {:,d} folders and {:,d} files"
-				.format( path, numFolders, inumFiles));
+				.format( path, numFolders, numFiles));
 
 		if ( goDeep ):
 			for folder in subFoldersList:

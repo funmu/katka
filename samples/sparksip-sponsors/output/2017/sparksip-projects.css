@@ -1,0 +1,125 @@
+/*
+  sparksip-projects.css
+
+*/
+
+body {
+  padding-top: 10px;
+  padding-bottom: 10px;
+  background-color: lightblue;
+  font-family:'times new roman';
+  width: 600;
+  margin-left: 100px;
+}
+
+header {
+    background-color: orange;
+}
+
+footer {
+    background-color: silver;
+}
+
+.project-all {
+
+}
+
+.project-title {
+  text-align: center;
+  text-decoration: underline;
+  color: black;
+  font-size: 2em;
+  font-weight: bolder;
+}
+
+h3 {
+  text-align: justify;
+  text-decoration: underline;
+  font-size: 1.3em;
+}
+
+.project-application {
+  display: block; 
+  margin: 5px auto;
+}
+
+.project-bold {
+  font-weight: bolder;
+}
+
+
+.persona {
+    background-color: darkorange;
+}
+.form-signin {
+  max-width: 330px;
+  padding: 15px;
+  margin: 0 auto;
+}
+
+.form-signin .form-signin-heading,
+.form-signin .checkbox {
+  margin-bottom: 10px;
+}
+
+.form-signin .checkbox {
+  font-weight: normal;
+}
+
+.form-signin .form-control {
+  position: relative;
+  height: auto;
+  -webkit-box-sizing: border-box;
+     -moz-box-sizing: border-box;
+          box-sizing: border-box;
+  padding: 10px;
+  font-size: 16px;
+}
+
+.form-group {
+    padding: 10px;
+}
+.form-signin .form-control:focus {
+  z-index: 2;
+}
+
+.form-signin input[type="email"] {
+  margin-bottom: -1px;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.form-signin input[type="password"] {
+  margin-bottom: 10px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.sessionLabel {
+    width: 80px;
+}
+.classinfo {
+    display: none;
+}
+.student {
+    width: 200px;
+    height: 200px;
+    margin-top: 5px;
+    margin-left: 5px;
+    margin-right: 5px;
+    margin-bottom: 5px;
+    background-color: gray;
+}
+.attended {
+    background-color: aqua;
+}
+.waitForPickup {
+    background-color: lime;
+}
+.absentee {
+    background-color: red   
+}
+.name {
+    font-weight: bold;
+    font-size: 1.3em;
+}

@@ -1,16 +1,39 @@
 /* style.css for Personal Information Project */
 
-body {
-	background: linen;
-	width: 1200px;
-	margin: auto;
-	font-family: 'Dosis', sans-serif;
+html, body {
+  height: 100%;
 }
-
 
 header, main, footer {
 	min-width: 400px;
 } 
+
+#wrap {
+  min-height: 100%;
+}
+
+#main {
+  overflow:auto;
+  padding-bottom:150px; /* this needs to be bigger than footer height*/
+}
+
+body {
+	background: linen;
+	width: 1200px;
+	margin: auto;
+    padding-top:50px
+	font-family: 'Dosis', sans-serif;
+}
+
+.glyphicon-remove:hover {
+  cursor:pointer
+}
+
+table.test {
+  border-collapse: separate;
+  border-spacing: 10px;
+  *border-collapse: expression('separate', cellSpacing = '10px');
+}
 
 header {
 	background: orange;
@@ -48,11 +71,18 @@ h3.meme {
 
 footer {
 	clear: both;
-	background: lightgray;
 }
 
+.footer {
+  background: lightgray;
+  position: relative;
+  margin-top: -200px; /* negative value of footer height */
+  height: 200px;
+  padding-top:20px;
+} 
+
 footer div.contact {
-	padding-left: 100px;
+	padding-left: 50px;
 	float: left;
 	width: 500px;
 }
@@ -63,7 +93,7 @@ footer div.sitemap {
 }
 
 footer div.copyright {
-	padding-left: 100px;
+	padding-left: 50px;
 	float: left;
 	clear: both;
 	font-size: 0.8em;
@@ -156,8 +186,8 @@ span.ulabel {
 }
 
 .content {
-	padding: 0px;
-	margin: 0px;
+	padding-top: 50px;
+	margin: 10px;
 	display: none;
 }
 
@@ -219,4 +249,37 @@ button.refreshButton {
 
 section.formClass {
 	padding: 50px;
+}
+
+
+/* ---------------------------------------- */
+/*  Happy Homes Table Style                 */
+/* ---------------------------------------- */
+table.placeslist {
+	font-family: Lato;
+	font-size: 15px;
+	margin-top: 50px;
+	padding: 50px;
+	border: 1;
+}
+
+table.placeslist tr {
+}
+
+table.placeslist th {
+	padding-top: 10px;
+	padding-left: 10px;
+	background-color: orange;
+	width: 200px;
+}
+
+table.placeslist td {
+	padding-top: 10px;
+	padding-left: 10px;
+	background-color: lightgray;
+	width: 200px;
+}
+
+div.p {
+	padding-top: 10px;
 }

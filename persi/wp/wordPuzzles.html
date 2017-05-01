@@ -1,0 +1,137 @@
+<html>
+<head>
+	<title>WordMagix Puzzles Home</title>
+	<link href="word_magix.css" rel="stylesheet"/>
+ 	<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+
+</head>
+<body>
+	<div class="puzzle_header">
+		<a href="wordPuzzles.html?showGroups">Show Puzzles in Groups</a>
+		<a href="wordPuzzles.html?showItems">Show Puzzles Individually</a>
+	</div>
+	<div id="wordPuzzleGroup" class="word_puzzle_group">
+	</div>
+	<div id="wordPuzzle" class="word_puzzle">
+	</div>
+
+    <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/d3/3.4.1/d3.min.js"></script>
+ 	<script src="http://hemocoel.com/scripts/MavexUtils.js"></script>
+ 	<script src="http://hemocoel.com/scripts/puzzle_renderer.js"></script>
+
+	<script>
+
+		var mutils = new MavexUtils();
+		var urlParams = mutils.ParseURLParams( window.location.search);
+		console.log( urlParams);
+
+		showCrossword = (urlParams["crossword"] != null? true: false);
+		showWordSearch = (urlParams["wordsearch"] != null? true: false);
+		if ( !showWordSearch && !showCrossword) {
+			showWordSearch = true;
+		}
+
+		showGroups = (urlParams["showGroups"] != null? true: false);
+		showItems = (urlParams["showItems"] != null? true: false);
+		if ( !showGroups && !showItems) {
+			showGroups = true;	// show groups by default
+		}
+
+		var pnum = urlParams["pn"];
+		if ( pnum == null) {
+			pnum = 1;
+		} else {
+			pnum = parseInt( pnum);
+		}
+
+		var startNum = (urlParams["start"] != null? parseInt(urlParams["start"]): pnum);
+		var endNum = (urlParams["end"] != null? parseInt(urlParams["end"]): pnum);
+
+		function doEndCaps( num, minRange, maxRange) 
+		{
+			if (num < minRange) { num = minRange;}
+			if (num > maxRange) { num = maxRange; }
+			return num;
+		}
+
+		console.log( "Before doEndCaps", startNum, endNum);
+
+		if (startNum == endNum) {
+			startNum = 1;
+			endNum = 100;
+		} else {
+			startNum = doEndCaps( startNum, 1, 100);
+			endNum = doEndCaps( endNum, 1, 100);
+		}
+
+		console.log( "After doEndCaps", startNum, endNum);
+
+		function _range(lowEnd,highEnd)
+		{
+		    var arr = [],
+		    c = highEnd - lowEnd + 1;
+		    while ( c-- ) {
+		        arr[c] = highEnd--
+		    }
+		    return arr;
+		}
+
+		function _genGroupList( lowEnd, highEnd)
+		{
+		    var arr = [],
+		    c = highEnd - lowEnd + 10;
+		    for( c = lowEnd; c < highEnd; c += 10)
+		    {
+		    	var groupItem = {};
+		    	groupItem.startNum = c;
+		    	groupItem.endNum = ( c + 10 <= highEnd) ? c + 9 : highEnd;
+		    	console.log( "added group item: ", groupItem);
+		    	arr.push( groupItem);
+		    }
+		    return arr;
+		}
+
+
+		var hrefShowPuzzle = "showPuzzle.html?";
+
+		if (showCrossword) {
+			hrefShowPuzzle = hrefShowPuzzle + "&crossword";
+		}
+
+		if (showWordSearch) {
+			hrefShowPuzzle = hrefShowPuzzle + "&wordsearch";
+		}
+
+		function CreateListToShow( puzzleRenderer, anchor, startIndex, endIndex)
+		{
+	 		var d3selector = d3.select( anchor);
+			var ar = _range( startIndex, endIndex);
+			console.log( "Puzzles to Show are indexed as: ", ar);	 		
+			puzzleRenderer.RenderList( d3selector, "Puzzles", "", ar, "puzzlet", 
+				puzzleRenderer.RenderPuzzleLink.bind(puzzleRenderer, hrefShowPuzzle));
+		}
+
+		function CreateGroupListToShow( puzzleRenderer, anchor, startIndex, endIndex)
+		{
+	 		var d3selector = d3.select( anchor);
+			var ar = _genGroupList( startIndex, endIndex);
+			console.log( "Puzzles to Show are indexed as: ", ar);		
+			puzzleRenderer.RenderList( d3selector, "Puzzles Group", "", ar, "puzzlet", 
+				puzzleRenderer.RenderPuzzleGroupLink.bind(
+					puzzleRenderer, hrefShowPuzzle));
+		}
+
+		var puzzleRender1 = new PuzzleRenderer( 1);
+
+		if (showGroups) {
+
+			CreateGroupListToShow( puzzleRender1, "#wordPuzzleGroup", startNum, endNum);
+		}
+
+		if (showItems) {
+			CreateListToShow( puzzleRender1, "#wordPuzzle", startNum, endNum);		
+		}
+		
+</script>	
+</body>
+</html>

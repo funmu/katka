@@ -1,0 +1,68 @@
+<html>
+<head>
+	<title>WordMagix Show Puzzle</title>
+	<link href="word_magix.css" rel="stylesheet"/>	
+ 	<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+
+</head>
+<body>
+	<div id="wordPuzzle" class="word_puzzle">
+	</div>
+
+    <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/d3/3.4.1/d3.min.js"></script>
+ 	<script src="http://hemocoel.com/scripts/MavexUtils.js"></script>
+ 	<script src="http://hemocoel.com/scripts/puzzle_renderer.js"></script>
+
+	<script>
+
+		var mutils = new MavexUtils();
+		var urlParams = mutils.ParseURLParams( window.location.search);
+		console.log( urlParams);
+
+		showCrossword = (urlParams["crossword"] != null? true: false);
+		showWordSearch = (urlParams["wordsearch"] != null? true: false);
+		if ( !showWordSearch && !showCrossword) {
+			showWordSearch = true;
+		}
+
+		var pnum = urlParams["pn"];
+		if ( pnum == null) {
+			pnum = 1;
+		} else {
+			pnum = parseInt( pnum);
+		}
+
+		var startNum = (urlParams["start"] != null? parseInt(urlParams["start"]): pnum);
+		var endNum = (urlParams["end"] != null? parseInt(urlParams["end"]): pnum);
+
+		function doEndCaps( num, minRange, maxRange) 
+		{
+			if (num < minRange) { num = minRange;}
+			if (num > maxRange) { num = maxRange; }
+			return num;
+		}
+
+		console.log( "Before doEndCaps", startNum, endNum);
+
+		startNum = doEndCaps( startNum, 1, 100);
+		endNum = doEndCaps( endNum, 1, 100);
+
+		console.log( "After doEndCaps", startNum, endNum);
+
+		// Render the puzzle pages
+		var puzzleRender1 = new PuzzleRenderer( 1);
+		for ( numToRender = startNum; numToRender <= endNum; numToRender+= 1) {
+
+			console.log( "About to render ... ", numToRender);
+			var puzzleToRender = puzzleRender1.GetPuzzleFilePath( numToRender);
+
+			d3.json( puzzleToRender, function(error, puzzleInfo) {
+
+				if (error) return console.warn(error);
+				puzzleRender1.RenderWordPuzzle( "#wordPuzzle", puzzleInfo);
+			});			
+		}
+
+</script>	
+</body>
+</html>
