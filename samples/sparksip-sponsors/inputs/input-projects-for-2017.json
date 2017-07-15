@@ -185,5 +185,39 @@
     "Qualifications" : "Ability to work independently with data. Ability to program in Python, JavaScript and HTML.",
     "HasResearch" : "Yes",
     "ResearchDescription" : "You will research about text analysis and scoring techniques to create a scoring method for each potential pairing. You will use text processing and search engine ranking techniques to rank the results to identify the best matches."
-  }
+  },
+{
+  "Timestamp" : "2017-03-21T23:49:06.936Z",
+    "ContactEmail" : "praveen@appsheet.com",
+    "ContactName" : "Praven Seshadri",
+    "ContactTitle": "CEO",
+    "ProjectTitle" : "Software Engineer Intern",
+    "Organization" : "AppSheet",
+    "OrganizationWebsite" : "http://www.appsheet.com/",    
+    "Contact" : "praveen@appsheet.com",
+    "Length" : "8 weeks",
+    "HoursPerWeek" : "Flexible",
+    "Stipend" : "Yes",
+    "Description" : " AppSheet is a technology startup company in Seattle. We would welcome an intern familiar with software who wants to learn more about how a software company works. The purpose of the internship is learning with a side-effect being to generate something useful for the company.",
+    "Qualifications" : "Eager to learn, able to discuss ideas confidently, know some introductory programming, travel to Seattle where our office is located.",
+    "HasResearch" : "Maybe",
+    "ResearchDescription" : "Most work in a startup company is exploratory in nature. You have a hypothesis that something will be useful for your customers. You try to evaluate if the hypothesis is valid. Then you try it out. Then again you measure if the effort was useful. Depending on the intern and the specific project, the research component may vary in scope."
+},
+{
+    "Timestamp" : "2017-03-31T04:03:12.268Z",
+    "ContactEmail" : "syed@quantyzd.com",
+    "ContactName" : "Syed Hamid",
+    "ContactTitle": "CEO",    
+    "ProjectTitle" : "Software Engineer Intern",
+    "Organization" : "Quantyzd",
+    "OrganizationWebsite" : "http://www.sofy.AI/",    
+    "Contact" : "syed@quantyzd.com",
+    "Length" : "6 weeks",
+    "HoursPerWeek" : "20 hours",
+    "Stipend" : "No",
+    "Description" : "As an intern you will help to build and run J.A.R.V.I.S - yes iron man assitant for software engineers. The smart software will assist software teams to ensure high quality applications go to their customers. These software BOTS can be to do additional work. Check out http://sofy.ai.",
+    "Qualifications" : "basic programming skills, eager to learn and ability to break applications on cell phones ( yes - we have quite a few cell phones.)",
+    "HasResearch" : "Maybe",
+    "ResearchDescription" : "Ability to research about new cell phone devices and applications, install new software and try to break mobile applications"
+    }
 ]
