@@ -1,0 +1,135 @@
+/*
+ *  assets/styles-1.css
+ *     CSS File for the first set of class / items
+ * Version: 1.0
+ * Author: Murali
+ * Website: http://hemocoel.com
+ * Twitter: @muralirk
+ */
+
+/* ======= Main Body ======= */
+body { 
+  padding-top:50px; 
+  padding-bottom: 5px;
+}
+.form-cover  { background-color: lightgreen; }        
+
+/* ======= MAIN Container ======= */
+div.main_container {
+
+  padding-top:60px; 
+  background-color: wheat;
+}
+
+/* ======= Header ======= */
+.header {
+  padding: 10px 0;
+  background: olive;
+
+  color: orange;
+  position: fixed;
+  width: 100%;
+}
+.header.navbar-fixed-top {
+  background: #fff;
+  z-index: 9999;
+  -webkit-box-shadow: 0 0 4px rgba(0, 0, 0, 0.4);
+  -moz-box-shadow: 0 0 4px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.4);
+}
+.header.navbar-fixed-top .logo a {
+  color: #b4ca65;
+}
+.header.navbar-fixed-top .main-nav .nav .nav-item a {
+  color: #666666;
+}
+.header .logo {
+  margin: 0;
+  font-size: 26px;
+  padding-top: 10px;
+}
+.header .logo a {
+  color: #fff;
+}
+.header .logo a:hover {
+  text-decoration: none;
+}
+.header .main-nav button {
+  background: #607026;
+  color: #fff !important;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  -ms-border-radius: 4px;
+  -o-border-radius: 4px;
+  border-radius: 4px;
+  -moz-background-clip: padding;
+  -webkit-background-clip: padding-box;
+  background-clip: padding-box;
+}
+.header .main-nav button:focus {
+  outline: none;
+}
+.header .main-nav button .icon-bar {
+  background-color: #fff;
+}
+.header .main-nav .navbar-collapse {
+  padding: 0;
+}
+.header .main-nav .nav .nav-item {
+  font-weight: normal;
+  margin-right: 30px;
+  font-family: 'Montserrat', sans-serif;
+}
+.header .main-nav .nav .nav-item.active a {
+  color: #b4ca65;
+  background: none;
+}
+.header .main-nav .nav .nav-item a {
+  color: #809633;
+  -webkit-transition: none;
+  -moz-transition: none;
+  -ms-transition: none;
+  -o-transition: none;
+  font-size: 14px;
+  padding: 15px 10px;
+}
+.header .main-nav .nav .nav-item a:hover {
+  color: #607026;
+  background: none;
+}
+.header .main-nav .nav .nav-item a:focus {
+  outline: none;
+  background: none;
+}
+.header .main-nav .nav .nav-item a:active {
+  outline: none;
+  background: none;
+}
+.header .main-nav .nav .nav-item.active {
+  color: #b4ca65;
+}
+.header .main-nav .nav .nav-item.last {
+  margin-right: 0;
+}
+.header a {
+	color: white;
+}
+
+/* ======= Footer ======= */
+.footer {
+  padding: 15px 0;
+  background: olive;
+  color: #fff;
+}
+.footer a {
+  color: #fff;
+  text-decoration: underline;
+}
+.footer .copyright {
+  -webkit-opacity: 0.8;
+  -moz-opacity: 0.8;
+  opacity: 0.8;
+}
+.footer .fa-heart {
+  color: #bf225a;
+}

@@ -7,57 +7,56 @@
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css"> <!-- load bootstrap css -->
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css"> <!-- load fontawesome -->
 
-    <style>
-        body        { padding-top:80px; }
-        .form-cover  { background-color: lightgreen; }        
-    </style>
+    <link rel="stylesheet" href="assets/styles-1.css"> <!-- load stylesheet -->
 </head>
 
 <body>
-    <div class="container">
-        <div class="page-header text-center">
-            <h1><span class="fa fa-anchor"></span> Profile Page</h1>
-            <a href="/logout" class="btn btn-default btn-sm">Logout</a>
-        </div>
+    <%- include('header'); %>
 
-        <div class="row">
-
-            <!-- LOCAL INFORMATION -->
-            <div class="col-sm-6">
-                <div class="well form-cover">
-                    <h3><span class="fa fa-user"></span> Local</h3>
-
-                        <p>
-                            <strong>id</strong>: <%= user._id %><br>
-                            <strong>email</strong>: <%= user.local.email %><br>
-                            <strong>password</strong>: <%= user.local.password %>
-                        </p>
-
-                </div>
+    <div class="main_container">
+        <div class="container">
+            <div class="page-header text-center">
+                <h1><span class="fa fa-anchor"></span> Profile Page</h1>
             </div>
 
-        </div>
+            <div class="row">
 
-        <div class="row">
+                <!-- LOCAL INFORMATION -->
+                <div class="col-sm-8">
+                    <div class="well form-cover">
+                        <h3><span class="fa fa-user"></span> Local</h3>
 
-            <!-- GOOGLE INFORMATION -->
-            <div class="col-sm-6">
-                <div class="well">
-                    <h3 class="text-danger"><span class="fa fa-google-plus"></span> Google</h3>
+                            <p>
+                                <strong>id</strong>: <%= user._id %><br>
+                                <strong>email</strong>: <%= user.local.email %><br>
+                                <strong>password</strong>: <%= user.local.password %>
+                            </p>
 
-                        <p>
-                            <strong>id</strong>: <%= user.google.id %><br>
-                            <strong>token</strong>: <%= user.google.token %><br>
-                            <strong>email</strong>: <%= user.google.email %><br>
-                            <strong>name</strong>: <%= user.google.name %>
-                        </p>
-
+                    </div>
                 </div>
+
             </div>
 
+            <div class="row">
+
+                <!-- GOOGLE INFORMATION -->
+                <div class="col-sm-8">
+                    <div class="well">
+                        <h3 class="text-danger"><span class="fa fa-google-plus"></span> Google</h3>
+
+                            <p>
+                                <strong>id</strong>: <%= user.google.id %><br>
+                                <strong>token</strong>: <%= user.google.token %><br>
+                                <strong>email</strong>: <%= user.google.email %><br>
+                                <strong>name</strong>: <%= user.google.name %>
+                            </p>
+
+                    </div>
+                </div>
+            </div>
         </div>
-
-
     </div>
+
+    <%- include('footer'); %>
 </body>
 </html>

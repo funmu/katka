@@ -8,6 +8,8 @@
 ## Options:
 ##  -h, --help      Display this message.
 ##  -n, --dryrun    Dry-run; Shows only what will be done.
+##  -d, --directory Prepare the directories for copying files into.
+##  -p, --package   Prepare the packages for nodejs app
 ##
 ## Description:
 ##  Prepares the folders and files for an application given the app name
@@ -34,6 +36,8 @@ while [ $# -gt 0 ]; do
     case $1 in
         (-n) DRY_RUN=1; shift;;
         (-h|-\?|--help) usage ; shift;;
+        (-d|--directory) PREP_DIRECTORY=1; shift;;
+        (-p|--package) PREP_PACKAGE=1; shift;;
         (-*) usage "$1: unknown option";;
         (*) APP_NAME_FOR_CREATION=$1; shift;;
     esac
@@ -143,6 +147,7 @@ CreateFilesFromTemplate() {
 
     CopyFromTemplate "app.server.js" "server.js";
     CopyFromTemplate "app.routes.js" "app/routes.js";
+    CopyFromTemplate "assets.styles-1.css" "public/assets/styles-1.css";
 
     CopyFromTemplate "app.models.user.json" "app/models/user.json";
     CopyFromTemplate "app.models.modelloader.js" "app/models/modelloader.js";
@@ -151,6 +156,8 @@ CreateFilesFromTemplate() {
     CopyFromTemplate "config.passport.js" "config/passport.js";
 
     CopyFromTemplate "views.index.ejs" "views/index.ejs";
+    CopyFromTemplate "views.header.ejs" "views/header.ejs";
+    CopyFromTemplate "views.footer.ejs" "views/footer.ejs";
     CopyFromTemplate "views.profile.ejs" "views/profile.ejs";
     CopyFromTemplate "views.login.ejs" "views/login.ejs";
     CopyFromTemplate "views.signup.ejs" "views/signup.ejs";
@@ -183,7 +190,10 @@ echo
 FOLDERS_FOR_NODE_WITH_AUTHENTICATION=( 
     "app"
     "app/models"
+    "assets"    
     "config"
+    "public"
+    "public/assets"
     "views"    
     )
 
@@ -219,13 +229,19 @@ NODE_PACKAGES_FOR_APP=(
     "express-session"   # Express 4.x session management
     )
 
-echo  Set up Node Server with Authentication for: $APP_NAME_FOR_CREATION
-echo ----------------------------------------------------------
-CreateFoldersForServer $APP_NAME_FOR_CREATION ${FOLDERS_FOR_NODE_WITH_AUTHENTICATION[@]};
+if [ ! -z $PREP_DIRECTORY ]; then
 
-echo  Create package.json for: $APP_NAME_FOR_CREATION
-echo ----------------------------------------------------------
-CreatePackageJSON ${NODE_PACKAGES_FOR_APP[@]};
+    echo  Set up Node Server with Authentication for: $APP_NAME_FOR_CREATION
+    echo ----------------------------------------------------------
+    CreateFoldersForServer $APP_NAME_FOR_CREATION ${FOLDERS_FOR_NODE_WITH_AUTHENTICATION[@]};
+fi
+
+if [ ! -z $PREP_PACKAGE ]; then
+
+    echo  Create package.json for: $APP_NAME_FOR_CREATION
+    echo ----------------------------------------------------------
+    CreatePackageJSON ${NODE_PACKAGES_FOR_APP[@]};
+fi
 
 echo  Create basic set of files from template
 echo ----------------------------------------------------------

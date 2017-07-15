@@ -7,30 +7,39 @@
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css"> <!-- load bootstrap css -->
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css"> <!-- load fontawesome -->
 
+    <link rel="stylesheet" href="assets/styles-1.css"> <!-- load stylesheet -->
+
     <style>
-        body        { padding-top:80px; }
+        body         { padding-top:2px; padding-bottom: 5px }
         .form-cover  { background-color: lightgreen; }        
     </style>
 </head>
 
 <body>
-    <div class="container">
+    <%- include('header'); %>
 
-        <div class="jumbotron text-center form-cover">
-            <h1><span class="fa fa-lock"></span> App: {TEMPLATE_APP_NAME_GOES_HERE}</h1>
+    <div class="main_container">
+        <div class="container">
 
-            <h2>Login with:</h2>
-            <a href="/auth/google" class="btn btn-danger">
-                <span class="fa fa-google-plus"></span> Google</a>
+            <div class="jumbotron text-center form-cover">
+                <h1><span class="fa fa-lock"></span> {TEMPLATE_APP_NAME_GOES_HERE}</h1>
 
-            <hr/>
-            <p>Login or Register with:</p>
+                <h2>Login with:</h2>
+                <a href="/auth/google" class="btn btn-danger">
+                    <span class="fa fa-google-plus"></span> Google</a>
 
-            <a href="/login" class="btn btn-default"><span class="fa fa-user"></span> Local Login</a>
-            <a href="/signup" class="btn btn-default"><span class="fa fa-user"></span> Local Signup</a>
+                <hr/>
+                <p>Login with:</p>
 
+                <a href="/login" class="btn btn-default"><span class="fa fa-user"></span> Local Login</a>
+
+                <p>Register with:</p>
+                <a href="/signup" class="btn btn-default"><span class="fa fa-user"></span> Local Signup</a>
+
+            </div>
         </div>
-
     </div>
+
+    <%- include('footer'); %>
 </body>
 </html>

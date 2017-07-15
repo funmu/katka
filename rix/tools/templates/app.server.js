@@ -52,6 +52,9 @@
 
 
 	// routes ======================================================================
+	console.log( "Static Files to come from: ", __dirname + '/public');
+	app.use(express.static(__dirname + '/public'));	
+	
 	require('./app/routes.js')(app, passport); // load our routes and pass in our app and fully configured passport
 
 	// launch ======================================================================
