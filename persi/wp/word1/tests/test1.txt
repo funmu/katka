@@ -1,0 +1,9 @@
+ace
+car
+ere
+log
+nil
+odd
+pod
+two
+army

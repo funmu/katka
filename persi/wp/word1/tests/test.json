@@ -1,0 +1,51 @@
+{
+    "wordsFinder": "s u f j j w x o m a s s a g e u \nu p z q a q f e w c x o g t e j \np k p q z w h q i c e q q x q z \ne a r t h q u a k e w x y s i z \nr j e a f i n y k p v a a t z h \na o t r a n i m a t i o n e j h \nb d z w k x p m d a f j m j n a \nu u e x q b y b w n a f b c s q \nn i l j h r a d i c a l s p s y \nd c h k k o x d i e l i u e s g \na v w y d d z l d y d b l s c n \nn e o s f e n l x e i r o v h n \nt h j h f o e t i j g a a e z u \nd t e r x z j r f l o r a u r l \nd f l v f g k v d c d y c w c w \nk u j t x y v i p n j b j y u d \n", 
+    "legend": "1. (1,1) down: most excessively abundant\n2. (1,4) across: shaking and vibration at the surface of the earth resulting from underground movement along a fault plane or from volcanic activity\n3. (3,3) down: glazed and salted cracker typically in the shape of a loose knot\n4. (9,1) across: manually manipulate (someone's body\n5. (10,1) down: the mental attitude that something is believable and should be accepted as true\n6. (5,6) across: the condition of living or the state of being alive\n7. (6,9) across: (used of opinions and actions\n7. (6,9) down: an exhibition of cowboy skills\n8. (12,9) down: a room where books are kept\n9. (9,14) across: all the plant life in a particular region or period\n", 
+    "wordsBank": "rodeo\nanimation\nacceptance\nearthquake\nsuperabundant\nlibrary\npretzel\nflora\nradical\nmassage\n", 
+    "wordsCrossword": "1 - - - - - - - 4 5           - \n  - - - - - - - -   - - - - - - \n  - 3 - - - - - -   - - - - - - \n2                   - - - - - - \n  -   - - - - - -   - - - - - - \n  -   - 6                 - - - \n  -   - - - - - -   - - - - - - \n  -   - - - - - -   - - - - - - \n  -   - - 7           8 - - - - \n  - - - -   - - -   -   - - - - \n  - - - -   - - - - -   - - - - \n  - - - -   - - - - -   - - - - \n  - - - -   - - - - -   - - - - \n- - - - - - - - 9         - - - \n- - - - - - - - - - -   - - - - \n- - - - - - - - - - - - - - - - \n", 
+    "generatedWords": "'[superabundant, earthquake, acceptance, animation, pretzel, massage, radical, library, rodeo, flora]'", 
+    "wordsFinderSolution": "s - - - - - - - m a s s a g e - \nu - - - - - - - - c - - - - - - \np - p - - - - - - c - - - - - - \ne a r t h q u a k e - - - - - - \nr - e - - - - - - p - - - - - - \na - t - a n i m a t i o n - - - \nb - z - - - - - - a - - - - - - \nu - e - - - - - - n - - - - - - \nn - l - - r a d i c a l - - - - \nd - - - - o - - - e - i - - - - \na - - - - d - - - - - b - - - - \nn - - - - e - - - - - r - - - - \nt - - - - o - - - - - a - - - - \n- - - - - - - - f l o r a - - - \n- - - - - - - - - - - y - - - - \n- - - - - - - - - - - - - - - - \n", 
+    "wordsList": [
+        [
+            "library", 
+            "a room where books are kept"
+        ], 
+        [
+            "superabundant", 
+            "most excessively abundant"
+        ], 
+        [
+            "animation", 
+            "the condition of living or the state of being alive"
+        ], 
+        [
+            "radical", 
+            "(used of opinions and actions"
+        ], 
+        [
+            "massage", 
+            "manually manipulate (someone's body"
+        ], 
+        [
+            "flora", 
+            "all the plant life in a particular region or period"
+        ], 
+        [
+            "pretzel", 
+            "glazed and salted cracker typically in the shape of a loose knot"
+        ], 
+        [
+            "earthquake", 
+            "shaking and vibration at the surface of the earth resulting from underground movement along a fault plane or from volcanic activity"
+        ], 
+        [
+            "acceptance", 
+            "the mental attitude that something is believable and should be accepted as true"
+        ], 
+        [
+            "rodeo", 
+            "an exhibition of cowboy skills"
+        ]
+    ], 
+    "problemNumber": 1
+}
