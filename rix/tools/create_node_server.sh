@@ -110,9 +110,9 @@ CreatePackageJSON() {
     popd    
 }
 
-CopyFromTemplate() {
+CopyFromSourceToDest() {
 
-    SOURCE_FILE=templates/$1
+    SOURCE_FILE=$1      # do not escape the first file
     DEST_FILE=$APP_NAME_FOR_CREATION/$2
     TEMPLATE_TO_REPLACE={TEMPLATE_APP_NAME_GOES_HERE}
     REPLACE_SED_COMMAND="s/$TEMPLATE_TO_REPLACE/$APP_NAME_FOR_CREATION/g"    
@@ -133,15 +133,32 @@ CopyFromTemplate() {
     echo
 }
 
+CopyFromTemplate() {
+
+    SOURCE_FILE=templates/$1
+    CopyFromSourceToDest $SOURCE_FILE $2
+}
+
 CreateFilesFromTemplate() {
 
     CopyFromTemplate "app.server.js" "server.js";
-    CopyFromTemplate "config.database.js" "config/database.js";
     CopyFromTemplate "app.routes.js" "app/routes.js";
+
+    CopyFromTemplate "app.models.user.json" "app/models/user.json";
+    CopyFromTemplate "app.models.modelloader.js" "app/models/modelloader.js";
+
+    CopyFromTemplate "config.database.js" "config/database.js";
+    CopyFromTemplate "config.passport.js" "config/passport.js";
+
     CopyFromTemplate "views.index.ejs" "views/index.ejs";
+    CopyFromTemplate "views.profile.ejs" "views/profile.ejs";
     CopyFromTemplate "views.login.ejs" "views/login.ejs";
     CopyFromTemplate "views.signup.ejs" "views/signup.ejs";
+
+    # Get Special files from special locations
+    CopyFromSourceToDest "$HOME/src/code/tools/AccountSecrets/config.auth.js" "config/auth.js";
 }
+
 
 
 
@@ -191,7 +208,7 @@ NODE_PACKAGES_FOR_APP=(
     "passport"          # framework for authenticating with different methods
     "connect-flash"     # allows us passing session flashdata messages.
     "bcrypt-nodejs"     # gives us the ability to hash the password.
-    "passport-local"    # passport strategy for local database
+    "passport-local"    # passport strategy for local database    
 #    "passport-facebook" # passport strategy for facebook
     "passport-twitter"  # passport strategy for twitter
     "passport-google-oauth" # passport strategy for google OAuth

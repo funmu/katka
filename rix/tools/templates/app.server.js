@@ -42,7 +42,7 @@
 	var configDB = require('./config/database.js');
 	mongoose.connect(configDB.url); // connect to our database
 
-	// require('./config/passport')(passport); // pass passport for configuration
+	require('./config/passport')(passport); // pass passport for configuration
 
 	// required for passport
 	app.use(session({ secret: 'trial_and_error_in_2017_from_1994' })); // session secret
