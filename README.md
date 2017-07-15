@@ -3,6 +3,11 @@ Project and files related to **learning** new technology
 
 > Continuous Learning is great for us!
 
+##My Folders##
+ * [Personal Information Exploration](persi/)
+ * [Rapid Infomration Exchange](rix/)
+ * [Samples](samples/)
+
 ##References##
  * Problems
   * [Project Euler](http://projecteuler.net)

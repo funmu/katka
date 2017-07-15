@@ -1,0 +1,153 @@
+<!doctype html>
+<html>
+ <head>
+	<link href='https://fonts.googleapis.com/css?family=Dosis' rel='stylesheet' type='text/css'>
+
+ 	<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js" integrity="sha256-Sk3nkD6mLTMOF0EOpNtsIry+s1CsaqQC1rVLTAy+0yc= sha512-K1qjQ+NcF2TYO/eI3M6v8EiNYZfA95pQumfvcVrTHtwQVDG+aHRqLi/ETn2uB+1JqwYqVG3LIvdm9lj6imS/pQ==" crossorigin="anonymous"></script>
+
+	<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet" integrity="sha256-MfvZlkHCEqatNoGiOXveE8FIwMzZg4W85qfrfIFBfYc= sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
+
+ 	<link href="../styles/pestyle.css" rel="stylesheet" type="text/css"/>
+ 	<title>Twitter and Persi </title>
+ </head>
+
+ <body>
+ 	<header class="navbar navbar-static-top bs-docs-nav" role="banner">
+ 		<h1><span id="perserFor"></span></h1>	
+ 		<nav>
+ 			<a href="#">Signup</a> |
+ 			<a href="#">Login</a> |
+ 			<a href="../index.html">Home</a> |
+	 		<a class="twitter-follow-button"
+			  href="https://twitter.com/muralirk"
+			  data-show-count="false">
+			Follow @muralirk</a>
+ 		</nav>
+ 		<div class="row" id="allUsers">
+		</div>
+ 	</header>
+
+ 	<main>
+ 			<div class="row col-sm-12 col-lg-12">
+				<div class="tabs">
+	 				<!-- Tabs are auto generated as per scripts + dynamic data -->
+	 			</div>
+	 		</div>
+	 		
+ 			<div class="row content Favorites" id="favoritesTab">
+ 			</div>
+
+ 			<div class="row content About" id="personalProfile">
+ 			</div>
+ 	</main>
+
+ 	<div class="row" id="twcontainer">
+ 	</div>
+ 	<footer>
+ 		<hr/>
+ 		<div class="container">
+	 		<div class="contact">
+	 			<h4>Persi</h4>
+	 			<p>Bellevue, WA</p>
+	 		</div>
+
+	 		<div class="sitemap">
+	 			<h4>Site Map</h4>
+	 			<ul>
+	 				<li><a href="../index.html">Home</a></li>
+	 				<li><a href="../about.html">About</a></li>
+	 				<li><a href="../faq.html">FAQ</a></li>
+	 			</ul>
+	 		</div>
+
+	 		<div class="copyright">
+		 		<p>Copyright (c) Persi 2015</p>
+		 	</div>
+		 </div>
+ 	</footer>	
+ 	<script src="../scripts/MavexUtils.js"></script>
+
+	<script>window.twttr = (function(d, s, id) {
+	  var js, fjs = d.getElementsByTagName(s)[0],
+	    t = window.twttr || {};
+	  if (d.getElementById(id)) return t;
+	  js = d.createElement(s);
+	  js.id = id;
+	  js.src = "https://platform.twitter.com/widgets.js";
+	  fjs.parentNode.insertBefore(js, fjs);
+	 
+	  t._e = [];
+	  t.ready = function(f) {
+	    t._e.push(f);
+	  };
+	 
+	  return t;
+	}(document, "script", "twitter-wjs"));</script>
+
+ 	<script src="../scripts/PersonalProfilesManager.js"></script>
+    <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/d3/3.4.1/d3.min.js"></script>
+   	<script src="../scripts/tabManager.js"></script>
+
+	<script>
+
+		// setup for twitter
+		// twttr.widgets.load( document.getElementById("twcontainer"));
+
+	 	// 1. Find the name of user
+		// ToDo: Use Cookies or query string to find the name of the user
+		var mutils = new MavexUtils();
+		var urlParams = mutils.ParseURLParams( window.location.search);
+		var perserName = urlParams["user"];
+		console.log( "Name: %s", perserName);
+
+ 		$("main .content").hide();
+
+	 	// Pull tab content as metadata
+	 	var tabContent = [
+	 		{ tabNum : 1, category: "Favorites", contentClass: ".Favorites" },
+	 		{ tabNum : 2, category: "About", contentClass: ".About" }
+	 	];
+
+	 	var tb = new tabManager( tabContent, true);
+		tb.setupTabs( ".tabs");
+
+		// 2. Load up profile and render
+	 	var ppm = new PersonalProfilesManager( window.location, true);
+
+ 		// 3. Load config to find the perser name
+	 	ppm.loadConfig( function( err, config) {
+
+	 		if (err) {
+	 			console.log( "ERROR: Unable to load configuration. So no profiles");
+	 		} else {
+
+	 			if (undefined == perserName) {
+	 				console.log( " Setting the persername from config as: %s", config.primaryPerser);
+	 				perserName = config.primaryPerser;
+	 			}
+
+	 			// ToDo: get full name and use it here ...
+	 			$("#perserFor").text( perserName);
+	 			ppm.linkToAllUsers( "#allUsers", config);
+	 			ppm.loadProfile( "#personalProfile", perserName);
+				ppm.ProcessSiteInfo( "#favoritesTab", perserName);
+	 		}
+	 	});
+
+	 	tb.setActiveTab(1);
+
+
+	 // -------------- Track Page Usage -------------------------------------
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-68421266-1', 'auto');
+      ga('send', 'pageview');
+
+ 	</script> 	
+ </body>
+</html>
