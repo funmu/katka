@@ -1,0 +1,220 @@
+#!/bin/bash
+# Copyright (C) 2016 Murali Krishnan "All Rights Reserved"
+#   Last Revised 07/03/2017
+#
+
+## Usage: create_node_server.sh [options] app_name
+##
+## Options:
+##  -h, --help      Display this message.
+##  -n, --dryrun    Dry-run; Shows only what will be done.
+##
+## Description:
+##  Prepares the folders and files for an application given the app name
+##
+
+# ------------------------------------------------------------------------------------
+# Process Command Line Arguments
+#
+COMMAND_NAME=$0;
+
+usage() {
+    [ "$*" ] && echo "$0: $*"; echo
+    sed -n '/^##/,/^$/s/^## \{0,1\}//p' "$0"
+    exit 2
+} 2>/dev/null
+
+error_exit() {
+    echo "${COMMAND_NAME}: Exiting with error" 1>&2;
+    exit 1;
+}
+
+echo
+while [ $# -gt 0 ]; do
+    case $1 in
+        (-n) DRY_RUN=1; shift;;
+        (-h|-\?|--help) usage ; shift;;
+        (-*) usage "$1: unknown option";;
+        (*) APP_NAME_FOR_CREATION=$1; shift;;
+    esac
+done
+
+if [ -z $APP_NAME_FOR_CREATION ]; then
+    echo No app name is specified.
+    usage;
+fi
+
+# ------------------------------------------------------------------------------------
+# Functional routines ... 
+
+CreateFoldersForServer() {
+
+    FOLDERS_TO_CREATE=( $* );
+    FOLDER_ROOT=${FOLDERS_TO_CREATE[0]};
+
+    for ((i = 1; i < ${#FOLDERS_TO_CREATE[@]}; i+= 1)); do
+        echo Creating folder: $FOLDER_ROOT/${FOLDERS_TO_CREATE[$i]}
+        CMD_TO_EXECUTE="mkdir -p  $FOLDER_ROOT/${FOLDERS_TO_CREATE[$i]}"
+        if [ $DRY_RUN ]; then
+            echo $CMD_TO_EXECUTE
+        else
+            $CMD_TO_EXECUTE
+        fi
+        echo
+    done
+};
+
+
+CreatePackageJSON() {
+
+    PACKAGES_TO_ADD=( $* );
+    TMP_PACKAGE_JSON="/tmp/package_$APP_NAME_FOR_CREATION.json"
+
+    echo "{" > $TMP_PACKAGE_JSON;
+    echo "   \"name\": \"$APP_NAME_FOR_CREATION\"," >> $TMP_PACKAGE_JSON
+    echo "   \"version\": \"1.0.0\"," >> $TMP_PACKAGE_JSON
+    echo "   \"description\": \"starting version of $APP_NAME_FOR_CREATION \"," >> $TMP_PACKAGE_JSON
+    echo "   \"main\": \"server.js\"," >> $TMP_PACKAGE_JSON
+    echo "   \"scripts\": {" >> $TMP_PACKAGE_JSON
+    echo "      \"start\": \"nodemon server.js\"," >> $TMP_PACKAGE_JSON
+    echo "      \"test\": \"echo \\\"Error: No Test specified\\\" && exit 1\"" >> $TMP_PACKAGE_JSON
+    echo "   }," >> $TMP_PACKAGE_JSON
+    echo "   \"author\": \"Murali\"," >> $TMP_PACKAGE_JSON
+    echo "   \"repository\": \"\"," >> $TMP_PACKAGE_JSON
+    echo "   \"license\": \"ISC\"," >> $TMP_PACKAGE_JSON
+
+    # let us now ensure dependencies are created
+    echo "   \"dependencies\": {" >> $TMP_PACKAGE_JSON
+    LAST_PACKAGE_INDEX=$((${#PACKAGES_TO_ADD[@]}-1));
+    for ((i = 0; i < $LAST_PACKAGE_INDEX; i+= 1)); do
+        echo Adding package: ${PACKAGES_TO_ADD[$i]}
+        echo "       \"${PACKAGES_TO_ADD[$i]}\": \"latest\"," >> $TMP_PACKAGE_JSON
+    done
+    # no trailing commas for the last item
+    if [ $LAST_PACKAGE_INDEX -ge 0 ]; then
+        echo Adding package: ${PACKAGES_TO_ADD[$LAST_PACKAGE_INDEX]}
+        echo "       \"${PACKAGES_TO_ADD[$LAST_PACKAGE_INDEX]}\": \"latest\"" >> $TMP_PACKAGE_JSON
+    fi
+    echo "   }" >> $TMP_PACKAGE_JSON    
+    echo "}" >> $TMP_PACKAGE_JSON
+    echo
+
+    pushd $APP_NAME_FOR_CREATION;
+    CMD_TO_EXECUTE="cp $TMP_PACKAGE_JSON package.json"
+    if [ $DRY_RUN ]; then
+        echo $CMD_TO_EXECUTE
+    else
+        $CMD_TO_EXECUTE
+    fi
+    echo
+    popd    
+}
+
+CopyFromTemplate() {
+
+    SOURCE_FILE=templates/$1
+    DEST_FILE=$APP_NAME_FOR_CREATION/$2
+    TEMPLATE_TO_REPLACE={TEMPLATE_APP_NAME_GOES_HERE}
+    REPLACE_SED_COMMAND="s/$TEMPLATE_TO_REPLACE/$APP_NAME_FOR_CREATION/g"    
+
+    CMD_TO_EXECUTE1="cp $SOURCE_FILE $DEST_FILE"
+    CMD_TO_EXECUTE2="sed -i -altered $REPLACE_SED_COMMAND $DEST_FILE"
+    CMD_TO_EXECUTE3="rm $DEST_FILE-altered"
+    if [ $DRY_RUN ]; then
+        echo $CMD_TO_EXECUTE1
+        echo $CMD_TO_EXECUTE2
+        echo $CMD_TO_EXECUTE3
+    else
+        echo $CMD_TO_EXECUTE1
+        $CMD_TO_EXECUTE1
+        $CMD_TO_EXECUTE2
+        $CMD_TO_EXECUTE3
+    fi
+    echo
+}
+
+CreateFilesFromTemplate() {
+
+    CopyFromTemplate "app.server.js" "server.js";
+    CopyFromTemplate "config.database.js" "config/database.js";
+    CopyFromTemplate "app.routes.js" "app/routes.js";
+    CopyFromTemplate "views.index.ejs" "views/index.ejs";
+    CopyFromTemplate "views.login.ejs" "views/login.ejs";
+    CopyFromTemplate "views.signup.ejs" "views/signup.ejs";
+}
+
+
+
+PostCreationSteps() {
+
+    echo
+    echo " Connect to mongo database and set up a database";
+    echo "   Database Name: $APP_NAME_FOR_CREATION_db";
+    echo "   Collection: users";
+
+
+    echo
+    echo Install the Node Packages using the following command at [$APP_NAME_FOR_CREATION/app]
+    echo "   \"npm install\""
+}
+
+
+echo
+echo ------------------------------------------------------------------------------------
+echo
+
+FOLDERS_FOR_NODE_WITH_AUTHENTICATION=( 
+    "app"
+    "app/models"
+    "config"
+    "views"    
+    )
+
+FILES_FOR_NODE_WITH_AUTHENTICATION=(
+    "app/models/user.js"        # user model file
+    "app/routes.js"             # all the routes for our application
+    "config/auth.js"            # will hold all our client secret keys (facebook, twitter, google)
+    "config/database.js"        # will hold our database connection settings
+    "config/passport.js"        # configuring the strategies for passport
+    "views/index.ejs"           # show our home page with login links
+    "views/login.ejs"           # show our login form
+    "views/signup.ejs"          # show our signup form
+    "views/profile.ejs"         # show profile after user logs in
+    "package.json"              # handle our npm packages
+    "server.js"                 # setup our application
+    )
+
+NODE_PACKAGES_FOR_APP=(
+    "express"           # web server framework 
+    "ejs"               # templating engine
+    "mongoose"          # object modeling for our MongoDB database
+    "passport"          # framework for authenticating with different methods
+    "connect-flash"     # allows us passing session flashdata messages.
+    "bcrypt-nodejs"     # gives us the ability to hash the password.
+    "passport-local"    # passport strategy for local database
+#    "passport-facebook" # passport strategy for facebook
+    "passport-twitter"  # passport strategy for twitter
+    "passport-google-oauth" # passport strategy for google OAuth
+    "morgan"            # log module for requests
+    "body-parser"       # Express 4.0 module for parsing HTTP POST body
+    "cookie-parser"     # Handle HTTP cookies
+    "method-override"   # simulates DELETE and PUT
+    "express-session"   # Express 4.x session management
+    )
+
+echo  Set up Node Server with Authentication for: $APP_NAME_FOR_CREATION
+echo ----------------------------------------------------------
+CreateFoldersForServer $APP_NAME_FOR_CREATION ${FOLDERS_FOR_NODE_WITH_AUTHENTICATION[@]};
+
+echo  Create package.json for: $APP_NAME_FOR_CREATION
+echo ----------------------------------------------------------
+CreatePackageJSON ${NODE_PACKAGES_FOR_APP[@]};
+
+echo  Create basic set of files from template
+echo ----------------------------------------------------------
+CreateFilesFromTemplate;
+
+echo ----------------------------------------------------------
+echo  Follow up Actions after creation ...
+echo ----------------------------------------------------------
+PostCreationSteps;
