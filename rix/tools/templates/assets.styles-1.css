@@ -9,9 +9,10 @@
 
 /* ======= Main Body ======= */
 body { 
-  padding-top:50px; 
+  padding-top:2px; 
   padding-bottom: 5px;
 }
+
 .form-cover  { background-color: lightgreen; }        
 
 /* ======= MAIN Container ======= */

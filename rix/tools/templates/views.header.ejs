@@ -6,13 +6,24 @@
 		        <a href="/">
 		        	<span class="fa fa-home"></span> Home</a>
 			</div>
-            <div class="col-sm-7"></div>
-            <div class="col-sm-2">
-		        <% if (typeof(user) !== 'undefined') { %>
-				    <h2><%= user.name %></h2>
-		            <a href="/logout" class="btn btn-danger btn-sm">Logout</a>        
-				<% } %>
-			</div>
+            <div class="col-sm-5"></div>
+	        <% if (typeof(user) !== 'undefined') { %>
+                <div class="col-sm-2">
+    			    <a href="/profile">
+                    <b><%= 
+                       (user.name) ? user.name 
+                        : (user.google.name) ? user.google.name
+                        : user.local.name;
+                         %></b></a>
+                </div>
+                <div class="col-sm-2">
+    	            <a href="/logout" class="btn btn-danger btn-sm">Logout</a>        
+                </div>
+			<% } else { %>
+                <div class="col-sm-2">
+                    <a href="/login" class="btn btn-danger btn-sm">Login</a>        
+                </div>            
+            <% } %>
 
         </div><!--//container-->
     </header><!--//header-->

@@ -75,8 +75,10 @@
                             // create the user
                             var newUser            = new UserModel();
 
+                            console.log( "Getting name from Req Body as: ", req.body.name);
                             // set the user's local credentials
                             newUser.local.email    = email;
+                            newUser.local.name     = req.body.name;
                             newUser.local.password = newUser.generateHash(password);
 
                             // save the user

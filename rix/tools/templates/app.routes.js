@@ -41,13 +41,83 @@
         });
     }
 
+	function getAppsListPage(req, res) {
+        res.render('appslist.ejs', {
+            user : req.user // get the user out of session and pass to template
+        });
+    }
+
 	function handleLogout(req, res) {
         req.logout();
         res.redirect('/');
-    }    
+    }
+
+    var _routingTable = {
+    	getMethods : [
+    		{ path: "/", handler: getHomePage, loginRequired: false },
+    		{ path: "/login", handler: getLoginPage, loginRequired: false },
+    		{ path: "/profile", handler: getProfilePage, loginRequired: true },
+    		{ path: "/appslist", handler: getAppsListPage, loginRequired: true },
+    		{ path: "/logout", handler: handleLogout, loginRequired: true }
+    	],
+    	postMethodsForAuthentication: [
+    		{ path: "/login", handler: function( passport) {
+    			return passport.authenticate('local-login', {
+			        successRedirect : '/appslist', // redirect to the secure profile section
+			        failureRedirect : '/login', // redirect back to the login page if there is an error
+			        failureFlash : true // allow flash messages
+			    }) 
+    		}},
+    		{ path: "/signup", handler: function( passport) {
+    			return passport.authenticate('local-signup', {
+			        successRedirect : '/appslist', // redirect to the secure profile section
+			        failureRedirect : '/signup', // redirect back to the signup page if there is an error
+			        failureFlash : true // allow flash messages
+			    }) 
+    		}}
+    	],
+    	getMethodsForAuthentication: [
+    		{ path: "/auth/google", handler: function( passport) {
+    			return passport.authenticate('google', { scope : ['profile', 'email'] });
+    		}},
+    		{ path: "/auth/google/callback", handler: function( passport) {
+    			return passport.authenticate('google', {
+                    successRedirect : '/appslist', 	// redirect to the secure profile section
+                    failureRedirect : '/'			// redirect back to home page for errors
+	            })
+    		}}
+    	]  	
+    };
 
 	function RouteManager(app, passport) {
 
+		// Use the routing table to set up the routes
+		_routingTable.getMethods.forEach( function( handlerInfo, i) {
+
+			console.log( "  Route [%d]: Get handler set up for path: %s", 
+				i, handlerInfo.path);
+			if ( handlerInfo.loginRequired) {
+				app.get( handlerInfo.path, isLoggedIn, handlerInfo.handler);
+			} else {
+				app.get( handlerInfo.path, handlerInfo.handler);
+			}
+		});
+
+		_routingTable.postMethodsForAuthentication.forEach( function( handlerInfo, i) {
+
+			console.log( "  Route [%d]: Post handler for Authentication set up for path: %s", 
+				i, handlerInfo.path);
+			app.post( handlerInfo.path, handlerInfo.handler( passport));
+		});
+
+		_routingTable.getMethodsForAuthentication.forEach( function( handlerInfo, i) {
+
+			console.log( "  Route [%d]: Get handler for Authentication set up for path: %s", 
+				i, handlerInfo.path);
+			app.get( handlerInfo.path, handlerInfo.handler( passport));
+		});
+
+/*
 	    // =====================================
 	    // HOME PAGE (with login links) ========
 	    // =====================================
@@ -80,6 +150,13 @@
 	    }));
 
 	    // =====================================
+	    // PROFILE SECTION =====================
+	    // =====================================
+	    // we will want this protected so you have to be logged in to visit
+	    // we will use route middleware to verify this (the isLoggedIn function)
+	    app.get('/profile', isLoggedIn, getProfilePage);
+
+	    // =====================================
 	    // GOOGLE ROUTES =======================
 	    // =====================================
 	    // send to google to do the authentication
@@ -96,16 +173,11 @@
 	            }));
 
 	    // =====================================
-	    // PROFILE SECTION =====================
-	    // =====================================
-	    // we will want this protected so you have to be logged in to visit
-	    // we will use route middleware to verify this (the isLoggedIn function)
-	    app.get('/profile', isLoggedIn, getProfilePage);
-
-	    // =====================================
 	    // LOGOUT ==============================
 	    // =====================================
 	    app.get('/logout', handleLogout);
+
+*/	    
 	};
 
 	module.exports = RouteManager;

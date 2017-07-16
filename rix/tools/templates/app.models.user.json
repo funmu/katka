@@ -1,6 +1,7 @@
 {
     "local"            : {
         "email"        : "String",
+        "name"         : "String",
         "password"     : "String"
     },
     "facebook"        : {

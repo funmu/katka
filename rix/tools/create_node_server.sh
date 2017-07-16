@@ -161,6 +161,7 @@ CreateFilesFromTemplate() {
     CopyFromTemplate "views.profile.ejs" "views/profile.ejs";
     CopyFromTemplate "views.login.ejs" "views/login.ejs";
     CopyFromTemplate "views.signup.ejs" "views/signup.ejs";
+    CopyFromTemplate "views.appslist.ejs" "views/appslist.ejs";
 
     # Get Special files from special locations
     CopyFromSourceToDest "$HOME/src/code/tools/AccountSecrets/config.auth.js" "config/auth.js";
