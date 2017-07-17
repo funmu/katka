@@ -1,5 +1,6 @@
 {
+	"userid"	: "ObjectId",
     "name"      : "String",
-    "author"    : "String",
-    "title"     : "String"
+    "path"   	: "String",
+    "description": "String"
 }

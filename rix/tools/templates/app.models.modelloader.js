@@ -19,8 +19,8 @@
         var userSchema = mongoose.Schema( user_model);
         var quoteSchema = mongoose.Schema( quote_model);
 
-        // var application_model = require('./application.json');
-        // var applicationSchema = mongoose.Schema( application_model);
+        var application_model = require('./application.json');
+        var applicationSchema = mongoose.Schema( application_model);
 
         // methods ======================
         // generating a hash
@@ -34,9 +34,9 @@
         };
 
         var modelMap = {
-            userModel: mongoose.model('User', userSchema),
-            quoteModel: mongoose.model('Quote', quoteSchema)
-            // , applicationModel: mongoose.model('Application', applicationSchema)
+            userModel: mongoose.model('User', userSchema)
+            , quoteModel: mongoose.model('Quote', quoteSchema)
+            , applicationModel: mongoose.model('Application', applicationSchema)
         };
 
         return modelMap;

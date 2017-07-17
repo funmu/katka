@@ -34,6 +34,17 @@ div.main_container {
   font-style: italic;
 }
 
+/* ======= Applications ======= */
+.application_name {
+  font-size: 2em;
+  font-style: oblique;
+}
+.application_path {
+  font-size: 1.5em;
+  font-color: blue;
+  font-style: italic;
+}
+
 /* ======= Header ======= */
 .header {
   padding: 10px 0;

@@ -14,20 +14,29 @@
     <%- include('header'); %>
 
     <div class="main_container">
-        <div class="container">
-            <div class="page-header text-center">
-                <h1><span class="fa fa-anchor"></span> List of Apps</h1>
-            </div>
-            <p> This page shows the list of apps that a user has </p>
-
-            <div class="row">
-
-                <!-- LOCAL INFORMATION -->
-                <div class="col-sm-3">
-                </div>
-
-            </div>
-        </div>
+        <div class="row">
+            <h2>Applications for You</h2>
+            <% if ( applications.length ) { %>
+                <ul class="list_of_items">
+                    <% for (var i = 0; i < applications.length; i++) { %>
+                    <li class="timeline-yellow">
+                        <div class="quote">
+                            <span class="application_name" style="text-align:left">
+                            <%= applications[i].name %> </span> &nbsp;
+                            <span class="application_path" style="text-align:left">
+                            <%= applications[i].path %> </span>
+                            <span class="application_description" style="text-align:left">
+                            <%= applications[i].description %> </span>
+                        </div>
+                    </li>
+                    <% } %>
+                </ul>
+                <p/>
+                <p> Number of Applications is <%= applications.length %> </p>
+            <% } else { %>
+                <p> It is lonely without any applications. Please get some soon. </p>
+            <% } %>
+        </div>        
     </div>
 
     <%- include('footer'); %>

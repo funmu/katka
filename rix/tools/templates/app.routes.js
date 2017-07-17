@@ -49,12 +49,6 @@
         });
     }
 
-	function getAppsListPage(req, res) {
-        res.render('appslist.ejs', {
-            user : req.user // get the user out of session and pass to template
-        });
-    }
-
 	function handleLogout(req, res) {
         req.logout();
         res.redirect('/');
@@ -68,8 +62,9 @@
 
 	function getQuotesPage(req, res) {
 
-		// To Do: Ask for quotes for this specific user
-        QuotesModel.find( {}, function( err, quotes) {
+		// Use the user Id to ask for quotes for this specific user
+        QuotesModel.find( { userid : req.user.id}, 
+        	function( err, quotes) {
         	console.log( " Got %d quotes ", quotes.length);
         	console.log( quotes);
         	res.render( 'quotes.ejs', {
@@ -78,6 +73,25 @@
         	});
         });
     }
+
+    // -------------------------------
+    // Applications related code
+    // -------------------------------
+    var ApplicationsModel = ourModels.applicationModel;
+
+	function getApplicationsPage(req, res) {
+
+		// Use the user Id to ask for quotes for this specific user
+        ApplicationsModel.find( { userid : req.user.id}, 
+        	function( err, applications) {
+        	console.log( " Got %d quotes ", applications.length);
+        	console.log( applications);
+        	res.render( 'appslist.ejs', {
+        		user : req.user,
+        		applications: applications
+        	});
+        });
+    }    
 
     // -------------------------------
     // Configuration of Routing Table
@@ -89,7 +103,7 @@
     		{ path: "/login", handler: getLoginPage, loginRequired: false },
     		{ path: "/login_local", handler: getLoginLocalPage, loginRequired: false },
     		{ path: "/profile", handler: getProfilePage, loginRequired: true },
-    		{ path: "/appslist", handler: getAppsListPage, loginRequired: true },
+    		{ path: "/appslist", handler: getApplicationsPage, loginRequired: true },
     		{ path: "/quotes", handler: getQuotesPage, loginRequired: true },
     		{ path: "/logout", handler: handleLogout, loginRequired: true }
     	],

@@ -1,4 +1,5 @@
 {
+    "userid"	: "ObjectId",	
     "message"   : "String",
     "author"    : "String",
     "when"      : "String"

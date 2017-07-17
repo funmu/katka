@@ -1,0 +1,62 @@
+// Sample Data File to get started for testing ...
+
+// -------- Quotes
+
+db.quotes.insert( { userid: ObjectId("596bdcd5ba20892ae1d078f4"), "message" : "The future is bright; Prepare for it.", "author" : "anonymous", "when" : "Jan 2017" })
+
+db.quotes.insert( { userid: ObjectId("596be1401b622f2b64aca010"), "message" : "Life is Beautiful; Enjoy it!", "author" : "Murali Krishnan", "when" : "Jan 2017" })
+
+db.quotes.insert( { userid: ObjectId("596be1401b622f2b64aca010"), "message" : "Do Science ... it is good!", "author" : "Murali Krishnan", userid: a, "when" : "Jan 2017" });
+
+db.quotes.insert( { userid: ObjectId("596be1401b622f2b64aca010"), "message" : "Do Arts ... it is great!", "author" : "anonymous", "when" : "Jan 2017" })
+
+
+// -------- Applications
+// myUserIdDoc = db.users.find( { "google.email" : "muralirk@gmail.com"});
+// myUserId = myUserIdDoc._id
+// assume myUserId is the _id field for selected user of interest
+
+db.applications.insert( { userid: ObjectId("596bdcd5ba20892ae1d078f4"), name: "Quotes", path: "/quotes", description: "Quotes the user loves to recall"});
+
+db.applications.insert( { userid: ObjectId("596be1401b622f2b64aca010"), name: "Quotes", path: "/quotes", description: "Quotes the user loves to recall"});
+
+db.applications.insert( { userid: ObjectId("596be1401b622f2b64aca010"), name: "Word Puzzles", path: "/games/word_puzzles", description: "Word Puzzle Games"});
+
+// -------- QUERIES
+
+// get all the applications along with user ID information 
+db.applications.aggregate( [  
+	{ $lookup: {
+	    from: "users"
+	    localField: "_id", foreignField: "userid", as : "application_users" } 
+	}
+]);
+
+
+// get the detail the Quotes application
+db.applications.aggregate( [  
+	{ $lookup: {
+	    from: "users",
+	    localField: "_id", foreignField: "userid", as : "application_users" } 
+	},
+	{ $match: {
+		name: "Quotes"
+		}
+	}
+]);
+
+
+// get all the applications for the specified user
+// myUserIdDoc = db.users.find( { "google.email" : "muralirk@gmail.com"});
+// myUserId = myUserIdDoc._id
+// assume myUserId is the _id field for selected user of interest
+db.applications.aggregate( [  
+	{ $lookup: {
+	    from: "users",
+	    localField: "_id", foreignField: "userid", as : "application_users" } 
+	},
+	{ $match: {
+		userid: myUserId
+		}
+	}
+]);
