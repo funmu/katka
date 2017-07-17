@@ -10,6 +10,7 @@
 ##  -n, --dryrun    Dry-run; Shows only what will be done.
 ##  -d, --directory Prepare the directories for copying files into.
 ##  -p, --package   Prepare the packages for nodejs app
+##  -t, --toolsdir  Root directory for Tools (default: ./tools)
 ##
 ## Description:
 ##  Prepares the folders and files for an application given the app name
@@ -32,6 +33,8 @@ error_exit() {
 }
 
 echo
+
+TOOLS_DIRECTORY_ROOT=./tools
 while [ $# -gt 0 ]; do
     case $1 in
         (-n) DRY_RUN=1; shift;;
@@ -103,15 +106,13 @@ CreatePackageJSON() {
     echo "}" >> $TMP_PACKAGE_JSON
     echo
 
-    pushd $APP_NAME_FOR_CREATION;
-    CMD_TO_EXECUTE="cp $TMP_PACKAGE_JSON package.json"
+    CMD_TO_EXECUTE="cp $TMP_PACKAGE_JSON $APP_NAME_FOR_CREATION/package.json"
     if [ $DRY_RUN ]; then
         echo $CMD_TO_EXECUTE
     else
         $CMD_TO_EXECUTE
     fi
     echo
-    popd    
 }
 
 CopyFromSourceToDest() {
@@ -139,35 +140,47 @@ CopyFromSourceToDest() {
 
 CopyFromTemplate() {
 
-    SOURCE_FILE=templates/$1
+    SOURCE_FILE=$TOOLS_DIRECTORY_ROOT/templates/$1
     CopyFromSourceToDest $SOURCE_FILE $2
 }
 
-CreateFilesFromTemplate() {
+CreateFilesFromTemplate() 
+{
 
     CopyFromTemplate "app.server.js" "server.js";
     CopyFromTemplate "app.routes.js" "app/routes.js";
     CopyFromTemplate "assets.styles-1.css" "public/assets/styles-1.css";
 
-    CopyFromTemplate "app.models.user.json" "app/models/user.json";
-    CopyFromTemplate "app.models.modelloader.js" "app/models/modelloader.js";
-
     CopyFromTemplate "config.database.js" "config/database.js";
     CopyFromTemplate "config.passport.js" "config/passport.js";
 
     CopyFromTemplate "views.index.ejs" "views/index.ejs";
+
     CopyFromTemplate "views.header.ejs" "views/header.ejs";
     CopyFromTemplate "views.footer.ejs" "views/footer.ejs";
+
+    CopyFromTemplate "views.loginform.inc" "views/loginform.ejs";
+
     CopyFromTemplate "views.profile.ejs" "views/profile.ejs";
     CopyFromTemplate "views.login.ejs" "views/login.ejs";
+    CopyFromTemplate "views.login_local.ejs" "views/login_local.ejs";
     CopyFromTemplate "views.signup.ejs" "views/signup.ejs";
     CopyFromTemplate "views.appslist.ejs" "views/appslist.ejs";
+    CopyFromTemplate "views.quotes.ejs" "views/quotes.ejs";
 
     # Get Special files from special locations
     CopyFromSourceToDest "$HOME/src/code/tools/AccountSecrets/config.auth.js" "config/auth.js";
 }
 
+CreateModelsFromTemplate() 
+{
 
+    CopyFromTemplate "app.models.modelloader.js" "app/models/modelloader.js";
+
+    CopyFromTemplate "app.models.user.json" "app/models/user.json";
+    CopyFromTemplate "app.models.application.json" "app/models/application.json";
+    CopyFromTemplate "app.models.quote.json" "app/models/quote.json";
+}
 
 
 PostCreationSteps() {
@@ -246,6 +259,7 @@ fi
 
 echo  Create basic set of files from template
 echo ----------------------------------------------------------
+CreateModelsFromTemplate;
 CreateFilesFromTemplate;
 
 echo ----------------------------------------------------------

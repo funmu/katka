@@ -15,23 +15,25 @@
 
     <div class="main_container">
         <div class="container">
+            <h1> Welcome to the Home Page </h1>
+        </div>
 
-            <div class="jumbotron text-center form-cover">
-                <h1><span class="fa fa-lock"></span> {TEMPLATE_APP_NAME_GOES_HERE}</h1>
-
-                <h2>Login with:</h2>
-                <a href="/auth/google" class="btn btn-danger">
-                    <span class="fa fa-google-plus"></span> Google</a>
-
-                <hr/>
-                <p>Login with:</p>
-
-                <a href="/login" class="btn btn-default"><span class="fa fa-user"></span> Local Login</a>
-
-                <p>Register with:</p>
-                <a href="/signup" class="btn btn-default"><span class="fa fa-user"></span> Local Signup</a>
-
+        <hr/>
+        <div class="row">
+        <% if (typeof(user) !== 'undefined') { %>
+            <div class="container">
+                <div class="row">
+                    <h2>Quotes to Enjoy</h2>
+                    <a href="/quotes">Quotes</a>
+                </div>
             </div>
+        <% } else { %>
+            <div class="container">
+                Please login to access the services: 
+                    <a href="/login" class="btn btn-danger btn-sm">
+                    <i class="fa fa-sign-in" aria-hidden="true"></i> Login</a>
+            </div>            
+        <% } %>
         </div>
     </div>
 

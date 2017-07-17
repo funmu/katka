@@ -18,8 +18,20 @@ body {
 /* ======= MAIN Container ======= */
 div.main_container {
 
-  padding-top:60px; 
+  padding-top:60px;
+  padding-left: 30px;
+  padding-bottom: 20px;
   background-color: wheat;
+}
+
+/* ======= Quotes Formats ======= */
+.quote_message {
+  font-size: 2em;
+  font-style: oblique;
+}
+.quote_author {
+  font-size: 1.5em;
+  font-style: italic;
 }
 
 /* ======= Header ======= */

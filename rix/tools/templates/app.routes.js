@@ -20,13 +20,21 @@
 	}
 
 	function getHomePage(req, res) {
-        res.render('index.ejs'); // load the index.ejs file
+        res.render('index.ejs', {
+        	user: req.user
+        }); // load the index.ejs file
     }
 
 	function getLoginPage(req, res) {
 
         // render the page and pass in any flash data if it exists
         res.render('login.ejs', { message: req.flash('loginMessage') }); 
+    }
+
+	function getLoginLocalPage(req, res) {
+
+        // render the page and pass in any flash data if it exists
+        res.render('login_local.ejs', { message: req.flash('loginMessage') }); 
     }
 
 	function getSignupPage(req, res) {
@@ -52,25 +60,50 @@
         res.redirect('/');
     }
 
+    // -------------------------------
+    // QUOTEs related code
+    // -------------------------------
+    var ourModels = require('../app/models/modelloader');
+    var QuotesModel = ourModels.quoteModel;
+
+	function getQuotesPage(req, res) {
+
+		// To Do: Ask for quotes for this specific user
+        QuotesModel.find( {}, function( err, quotes) {
+        	console.log( " Got %d quotes ", quotes.length);
+        	console.log( quotes);
+        	res.render( 'quotes.ejs', {
+        		user : req.user,
+        		quotes: quotes
+        	});
+        });
+    }
+
+    // -------------------------------
+    // Configuration of Routing Table
+    // -------------------------------
+
     var _routingTable = {
     	getMethods : [
     		{ path: "/", handler: getHomePage, loginRequired: false },
     		{ path: "/login", handler: getLoginPage, loginRequired: false },
+    		{ path: "/login_local", handler: getLoginLocalPage, loginRequired: false },
     		{ path: "/profile", handler: getProfilePage, loginRequired: true },
     		{ path: "/appslist", handler: getAppsListPage, loginRequired: true },
+    		{ path: "/quotes", handler: getQuotesPage, loginRequired: true },
     		{ path: "/logout", handler: handleLogout, loginRequired: true }
     	],
     	postMethodsForAuthentication: [
     		{ path: "/login", handler: function( passport) {
     			return passport.authenticate('local-login', {
-			        successRedirect : '/appslist', // redirect to the secure profile section
+			        successRedirect : '/', // redirect to the secure profile section
 			        failureRedirect : '/login', // redirect back to the login page if there is an error
 			        failureFlash : true // allow flash messages
 			    }) 
     		}},
     		{ path: "/signup", handler: function( passport) {
     			return passport.authenticate('local-signup', {
-			        successRedirect : '/appslist', // redirect to the secure profile section
+			        successRedirect : '/', // redirect to the secure profile section
 			        failureRedirect : '/signup', // redirect back to the signup page if there is an error
 			        failureFlash : true // allow flash messages
 			    }) 
@@ -82,7 +115,7 @@
     		}},
     		{ path: "/auth/google/callback", handler: function( passport) {
     			return passport.authenticate('google', {
-                    successRedirect : '/appslist', 	// redirect to the secure profile section
+                    successRedirect : '/', 	// redirect to the secure profile section
                     failureRedirect : '/'			// redirect back to home page for errors
 	            })
     		}}
@@ -118,6 +151,8 @@
 		});
 
 /*
+	// Pre-routing table code
+
 	    // =====================================
 	    // HOME PAGE (with login links) ========
 	    // =====================================
