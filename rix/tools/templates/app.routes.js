@@ -74,6 +74,46 @@
         });
     }
 
+	function getAddQuotesPage(req, res) {
+		console.log( "Rendering the add Quotes Page");
+        res.render('quote_add.ejs', 
+        	{ // message: null,
+        	 user: req.user
+        	});
+    }
+
+	function addQuote(req, res) {
+
+		// Add a new quote to the list of quotes we have
+
+        // if there is no user with that email
+        // create the user
+        var newQuote    = new QuotesModel();
+    	newQuote.userid = req.user.id;
+    	newQuote.message= req.body.message;
+    	newQuote.author = req.body.author;
+    	// newQuote.when   = new Date();
+
+        console.log( "Adding a new quote\n Author: %s\n Quote: %s\n UserId: %s",
+        	newQuote.author,
+        	newQuote.message,
+        	newQuote.userid
+        	);
+
+        // save the user
+        newQuote.save(function(err) {
+            if (err) {
+            	console.log(" ERROR in saving new quote: ", err);
+                throw err;
+            }
+
+	        res.render('quote_add.ejs', 
+	        	{  message: "Quote added", 
+	        		user: req.user
+	        	});
+        });
+    }
+
     // -------------------------------
     // Applications related code
     // -------------------------------
@@ -105,7 +145,22 @@
     		{ path: "/profile", handler: getProfilePage, loginRequired: true },
     		{ path: "/appslist", handler: getApplicationsPage, loginRequired: true },
     		{ path: "/quotes", handler: getQuotesPage, loginRequired: true },
+    		{ path: "/quotes/addform", handler: getAddQuotesPage, loginRequired: true },
     		{ path: "/logout", handler: handleLogout, loginRequired: true }
+    	],
+    	postMethods: [
+    		{ path: "/quote/add", handler: addQuote, loginRequired: true },
+		],
+    	getMethodsForAuthentication: [
+    		{ path: "/auth/google", handler: function( passport) {
+    			return passport.authenticate('google', { scope : ['profile', 'email'] });
+    		}},
+    		{ path: "/auth/google/callback", handler: function( passport) {
+    			return passport.authenticate('google', {
+                    successRedirect : '/', 	// redirect to the secure profile section
+                    failureRedirect : '/'			// redirect back to home page for errors
+	            })
+    		}}
     	],
     	postMethodsForAuthentication: [
     		{ path: "/login", handler: function( passport) {
@@ -122,18 +177,7 @@
 			        failureFlash : true // allow flash messages
 			    }) 
     		}}
-    	],
-    	getMethodsForAuthentication: [
-    		{ path: "/auth/google", handler: function( passport) {
-    			return passport.authenticate('google', { scope : ['profile', 'email'] });
-    		}},
-    		{ path: "/auth/google/callback", handler: function( passport) {
-    			return passport.authenticate('google', {
-                    successRedirect : '/', 	// redirect to the secure profile section
-                    failureRedirect : '/'			// redirect back to home page for errors
-	            })
-    		}}
-    	]  	
+    	]
     };
 
 	function RouteManager(app, passport) {
@@ -147,6 +191,17 @@
 				app.get( handlerInfo.path, isLoggedIn, handlerInfo.handler);
 			} else {
 				app.get( handlerInfo.path, handlerInfo.handler);
+			}
+		});
+
+		_routingTable.postMethods.forEach( function( handlerInfo, i) {
+
+			console.log( "  Route [%d]: Post handler set up for path: %s", 
+				i, handlerInfo.path);
+			if ( handlerInfo.loginRequired) {
+				app.post( handlerInfo.path, isLoggedIn, handlerInfo.handler);
+			} else {
+				app.post( handlerInfo.path, handlerInfo.handler);
 			}
 		});
 

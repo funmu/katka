@@ -7,13 +7,16 @@
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css"> <!-- load bootstrap css -->
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css"> <!-- load fontawesome -->
 
-    <link rel="stylesheet" href="assets/styles-1.css"> <!-- load stylesheet -->
+    <link rel="stylesheet" href="/assets/styles-1.css"> <!-- load stylesheet -->
 </head>
 
 <body>
     <%- include('header'); %>
 
     <div class="main_container">
+        <div class="row">
+            <a href="/quotes/addform">Add Quote</a>
+        </div>
         <div class="row">
             <h2>Quotes to Enjoy</h2>
             <% if ( quotes.length ) { %>

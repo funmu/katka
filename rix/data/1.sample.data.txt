@@ -1,5 +1,7 @@
 // Sample Data File to get started for testing ...
 
+use test1_db;
+
 // -------- Quotes
 
 db.quotes.insert( { userid: ObjectId("596bdcd5ba20892ae1d078f4"), "message" : "The future is bright; Prepare for it.", "author" : "anonymous", "when" : "Jan 2017" })
@@ -10,6 +12,7 @@ db.quotes.insert( { userid: ObjectId("596be1401b622f2b64aca010"), "message" : "D
 
 db.quotes.insert( { userid: ObjectId("596be1401b622f2b64aca010"), "message" : "Do Arts ... it is great!", "author" : "anonymous", "when" : "Jan 2017" })
 
+db.quotes.find();
 
 // -------- Applications
 // myUserIdDoc = db.users.find( { "google.email" : "muralirk@gmail.com"});

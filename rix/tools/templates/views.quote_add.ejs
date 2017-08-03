@@ -1,0 +1,38 @@
+<!-- views/quotes.ejs -->
+<!doctype html>
+<html>
+<head>
+    <title>List of Quotes: {TEMPLATE_APP_NAME_GOES_HERE}</title>
+
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css"> <!-- load bootstrap css -->
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css"> <!-- load fontawesome -->
+
+    <link rel="stylesheet" href="/assets/styles-1.css"> <!-- load stylesheet -->
+</head>
+
+<body>
+    <%- include('header'); %>
+
+    <div class="main_container">
+        <% if ( typeof(message) !== 'undefined' ) { %>
+        <div class="row">
+            <h4> <%= message %>
+        </div>
+        <% } %>
+        <div class="row">
+            <div class="col-md-6">
+                <h2>Add your Quote </h2>
+                <%- include('quoteAdd'); %>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <h2>Quotes to Enjoy</h2>
+                <a href="/quotes"> Visit all Quotes</a>
+            </div>
+        </div>        
+    </div>
+
+    <%- include('footer'); %>
+</body>
+</html>

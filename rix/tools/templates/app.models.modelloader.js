@@ -6,23 +6,35 @@
 
  (function() {
 
+    ///
+    /// getSchemaFromModel - generates the schema file required for database loader
+    ///
+    /// @param{Object} modelInfo - model from which to extract MongoDB file
+    ///
+    /// @return{Object} - schema model for use with MongoDB initialization
+    ///
+    function getSchemaFromModel( modelInfo) 
+    {
+        // get the modelInfo.properties and flatten with type of each object
+        var propertyNames = Object.keys( modelInfo.properties);
+        var schemaBag = {};
+        propertyNames.forEach( function ( propName, i) {
+            schemaBag[ propName] = modelInfo.properties[propName].type;
+        });
+
+        return schemaBag;
+    }
+
     function _buildModelMap() 
     {
         // 
         // load the things we need
         var mongoose = require('mongoose');
-        var bcrypt   = require('bcrypt-nodejs');
+
+        // ============== User Model Related code ==============
         var user_model = require('./user.json');
-        var quote_model = require('./quote.json');
-
-        // define the schema for our user model
+        var bcrypt   = require('bcrypt-nodejs');
         var userSchema = mongoose.Schema( user_model);
-        var quoteSchema = mongoose.Schema( quote_model);
-
-        var application_model = require('./application.json');
-        var applicationSchema = mongoose.Schema( application_model);
-
-        // methods ======================
         // generating a hash
         userSchema.methods.generateHash = function(password) {
             return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
@@ -32,6 +44,20 @@
         userSchema.methods.validPassword = function(password) {
             return bcrypt.compareSync(password, this.local.password);
         };
+
+        // ============== Application Related code ==============
+        var application_model = require('./application.json');
+        var applicationSchema = mongoose.Schema( application_model);
+
+        // ============== Quotes Related code ==============
+
+        var quote2Model = require('./common.quote.json');
+        var quote_properties = getSchemaFromModel( quote2Model);
+        var quoteSchema = mongoose.Schema( quote_properties);
+
+        // old way of doing it. 
+        // var quote_model = require('./quote.json');
+        // var quoteSchema = mongoose.Schema( quote_model);
 
         var modelMap = {
             userModel: mongoose.model('User', userSchema)

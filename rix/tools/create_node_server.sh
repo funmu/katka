@@ -8,6 +8,7 @@
 ## Options:
 ##  -h, --help      Display this message.
 ##  -n, --dryrun    Dry-run; Shows only what will be done.
+##  -v, --verbose   Verbose logging of outputs.
 ##  -d, --directory Prepare the directories for copying files into.
 ##  -p, --package   Prepare the packages for nodejs app
 ##  -t, --toolsdir  Root directory for Tools (default: ./tools)
@@ -35,10 +36,12 @@ error_exit() {
 echo
 
 TOOLS_DIRECTORY_ROOT=./tools
+FULL_LOGGING=0
 while [ $# -gt 0 ]; do
     case $1 in
         (-n) DRY_RUN=1; shift;;
         (-h|-\?|--help) usage ; shift;;
+        (-v|--verbose) FULL_LOGGING=1; shift;;
         (-d|--directory) PREP_DIRECTORY=1; shift;;
         (-p|--package) PREP_PACKAGE=1; shift;;
         (-*) usage "$1: unknown option";;
@@ -97,6 +100,7 @@ CreatePackageJSON() {
         echo Adding package: ${PACKAGES_TO_ADD[$i]}
         echo "       \"${PACKAGES_TO_ADD[$i]}\": \"latest\"," >> $TMP_PACKAGE_JSON
     done
+
     # no trailing commas for the last item
     if [ $LAST_PACKAGE_INDEX -ge 0 ]; then
         echo Adding package: ${PACKAGES_TO_ADD[$LAST_PACKAGE_INDEX]}
@@ -119,23 +123,40 @@ CopyFromSourceToDest() {
 
     SOURCE_FILE=$1      # do not escape the first file
     DEST_FILE=$APP_NAME_FOR_CREATION/$2
-    TEMPLATE_TO_REPLACE={TEMPLATE_APP_NAME_GOES_HERE}
-    REPLACE_SED_COMMAND="s/$TEMPLATE_TO_REPLACE/$APP_NAME_FOR_CREATION/g"    
 
-    CMD_TO_EXECUTE1="cp $SOURCE_FILE $DEST_FILE"
-    CMD_TO_EXECUTE2="sed -i -altered $REPLACE_SED_COMMAND $DEST_FILE"
-    CMD_TO_EXECUTE3="rm $DEST_FILE-altered"
-    if [ $DRY_RUN ]; then
-        echo $CMD_TO_EXECUTE1
-        echo $CMD_TO_EXECUTE2
-        echo $CMD_TO_EXECUTE3
-    else
-        echo $CMD_TO_EXECUTE1
-        $CMD_TO_EXECUTE1
-        $CMD_TO_EXECUTE2
-        $CMD_TO_EXECUTE3
+    DO_COPY=;  # nothing to start with
+    if ( [ -e $SOURCE_FILE ] && [ -e $DEST_FILE ] ); then
+
+        TS1=`stat -r $SOURCE_FILE | cut -d ' ' -f 10`
+        TS2=`stat -r $DEST_FILE | cut -d ' ' -f 10`
+        if [ "1$TS1" -gt "1$TS2" ]; then DO_COPY=YES; fi
+    elif ( [ -e $SOURCE_FILE ] ); then
+        DO_COPY=YES;
     fi
-    echo
+
+    if [ $DO_COPY ]; then
+        echo Copy updated file: $SOURCE_FILE to $DEST_FILE.
+        TEMPLATE_TO_REPLACE={TEMPLATE_APP_NAME_GOES_HERE}
+        REPLACE_SED_COMMAND="s/$TEMPLATE_TO_REPLACE/$APP_NAME_FOR_CREATION/g"    
+        CMD_TO_EXECUTE1="cp $SOURCE_FILE $DEST_FILE"
+        CMD_TO_EXECUTE2="sed -i -altered $REPLACE_SED_COMMAND $DEST_FILE"
+        CMD_TO_EXECUTE3="rm $DEST_FILE-altered"
+        if [ $DRY_RUN ]; then
+            echo $CMD_TO_EXECUTE1
+            echo $CMD_TO_EXECUTE2
+            echo $CMD_TO_EXECUTE3
+        else
+            echo $CMD_TO_EXECUTE1
+            $CMD_TO_EXECUTE1
+            $CMD_TO_EXECUTE2
+            $CMD_TO_EXECUTE3
+        fi
+        echo
+    else
+        if [ $FULL_LOGGING -gt 0 ]; then
+            echo Skipping older file: $SOURCE_FILE
+        fi
+    fi
 }
 
 CopyFromTemplate() {
@@ -160,6 +181,7 @@ CreateFilesFromTemplate()
     CopyFromTemplate "views.footer.ejs" "views/footer.ejs";
 
     CopyFromTemplate "views.loginform.inc" "views/loginform.ejs";
+    CopyFromTemplate "views.quoteAdd.inc" "views/quoteAdd.ejs";
 
     CopyFromTemplate "views.profile.ejs" "views/profile.ejs";
     CopyFromTemplate "views.login.ejs" "views/login.ejs";
@@ -167,9 +189,11 @@ CreateFilesFromTemplate()
     CopyFromTemplate "views.signup.ejs" "views/signup.ejs";
     CopyFromTemplate "views.appslist.ejs" "views/appslist.ejs";
     CopyFromTemplate "views.quotes.ejs" "views/quotes.ejs";
+    CopyFromTemplate "views.quote_add.ejs" "views/quote_add.ejs";
 
     # Get Special files from special locations
     CopyFromSourceToDest "$HOME/src/code/tools/AccountSecrets/config.auth.js" "config/auth.js";
+    echo    
 }
 
 CreateModelsFromTemplate() 
@@ -180,6 +204,12 @@ CreateModelsFromTemplate()
     CopyFromTemplate "app.models.user.json" "app/models/user.json";
     CopyFromTemplate "app.models.application.json" "app/models/application.json";
     CopyFromTemplate "app.models.quote.json" "app/models/quote.json";
+
+    CopyFromTemplate "common.models.application.json" "app/models/common.application.json";
+    CopyFromTemplate "common.models.quote.json" "app/models/common.quote.json";
+
+    echo
+
 }
 
 
@@ -198,8 +228,8 @@ PostCreationSteps() {
 
 
 echo
-echo ------------------------------------------------------------------------------------
-echo
+echo ----------------------------------------------------------
+
 
 FOLDERS_FOR_NODE_WITH_AUTHENTICATION=( 
     "app"
@@ -266,3 +296,4 @@ echo ----------------------------------------------------------
 echo  Follow up Actions after creation ...
 echo ----------------------------------------------------------
 PostCreationSteps;
+echo;

@@ -1,12 +1,13 @@
     <!-- ******LOGIN FORM****** -->
-    <div class="jumbotron text-center form-cover">
+    <div class="row">
+    <div class="jumbotron text-center form-cover col-sm-6">
         <h1><span class="fa fa-lock"></span> {TEMPLATE_APP_NAME_GOES_HERE}</h1>
 
         <div class="row">
         	<div class="col-sm-3">
-		        <h3>Login Using Services</h3>
+		        <h3>Login Using</h3>
 		    </div>
-		    <div class="col-sm-3">
+		    <div class="col-sm-9">
 		        <a href="/auth/google" class="btn btn-danger btn-large">
 		            <span class="fa fa-google-plus"></span> Google</a>
 		    </div>
@@ -17,7 +18,7 @@
         	<div class="col-sm-3">
 		        <h3>Login Locally</h3>
 		    </div>
-		    <div class="col-sm-6">
+		    <div class="col-sm-9">
                 <form action="/login" method="post">
                     <div class="form-group">
                         <label>Email</label>
@@ -42,3 +43,4 @@
 	        </p>
 	    </div>
     </div>
+  </div>

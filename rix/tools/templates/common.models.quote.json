@@ -1,0 +1,29 @@
+{
+  "description": "Common definition of 'Quote' schema",
+  "name": "Quote",
+  "base": "PersistedModel",
+  "idInjection": true,
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {
+    "userid": {
+      "type": "ObjectId",
+      "required": true
+    },
+    "message": {
+      "type": "String",
+      "required": true
+    },
+    "author": {
+      "type": "String"
+    },
+    "when": {
+      "type": "String"
+    }
+  },
+  "validations": [],
+  "relations": {},
+  "acls": [],
+  "methods": {}
+}
