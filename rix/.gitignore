@@ -1,2 +1,2 @@
-test1/
-./createTest1.sh
+createTest1.sh
+test1/*
