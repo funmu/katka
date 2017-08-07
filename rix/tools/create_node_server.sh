@@ -9,7 +9,8 @@
 ##  -h, --help      Display this message.
 ##  -n, --dryrun    Dry-run; Shows only what will be done.
 ##  -v, --verbose   Verbose logging of outputs.
-##  -c, --config    Location to fetch config settings from
+##  -f, --force     Force creation of all files without checking for time stamp
+##  -c, --configFrom    Location to fetch config settings from
 ##  -d, --directory Prepare the directories for copying files into.
 ##  -p, --package   Prepare the packages for nodejs app
 ##  -t, --toolsdir  Root directory for Tools (default: ./tools)
@@ -39,11 +40,13 @@ echo
 TOOLS_DIRECTORY_ROOT=./tools
 FULL_LOGGING=0
 CONFIG_FROM="./config.auth.js"
+FORCE_CREATION=0
 while [ $# -gt 0 ]; do
     case $1 in
         (-n) DRY_RUN=1; shift;;
         (-h|-\?|--help) usage ; shift;;
         (-v|--verbose) FULL_LOGGING=1; shift;;
+        (-f|--force) FORCE_CREATION=1; shift;;
         (-c|--config)  CONFIG_FROM=$2; shift 2;;
         (-d|--directory) PREP_DIRECTORY=1; shift;;
         (-p|--package) PREP_PACKAGE=1; shift;;
@@ -128,13 +131,18 @@ CopyFromSourceToDest() {
     DEST_FILE=$APP_NAME_FOR_CREATION/$2
 
     DO_COPY=;  # nothing to start with
-    if ( [ -e $SOURCE_FILE ] && [ -e $DEST_FILE ] ); then
-
-        TS1=`stat -r $SOURCE_FILE | cut -d ' ' -f 10`
-        TS2=`stat -r $DEST_FILE | cut -d ' ' -f 10`
-        if [ "1$TS1" -gt "1$TS2" ]; then DO_COPY=YES; fi
-    elif ( [ -e $SOURCE_FILE ] ); then
+    if [ ! -z $FORCE_CREATION ]; then
         DO_COPY=YES;
+    else
+        echo Optimizing the copy of files
+        if ( [ -e $SOURCE_FILE ] && [ -e $DEST_FILE ] ); then
+
+            TS1=`stat -r $SOURCE_FILE | cut -d ' ' -f 10`
+            TS2=`stat -r $DEST_FILE | cut -d ' ' -f 10`
+            if [ "1$TS1" -gt "1$TS2" ]; then DO_COPY=YES; fi
+        elif ( [ -e $SOURCE_FILE ] ); then
+            DO_COPY=YES;
+        fi
     fi
 
     if [ $DO_COPY ]; then
@@ -142,17 +150,14 @@ CopyFromSourceToDest() {
         TEMPLATE_TO_REPLACE={TEMPLATE_APP_NAME_GOES_HERE}
         REPLACE_SED_COMMAND="s/$TEMPLATE_TO_REPLACE/$APP_NAME_FOR_CREATION/g"    
         CMD_TO_EXECUTE1="cp $SOURCE_FILE $DEST_FILE"
-        CMD_TO_EXECUTE2="sed -i -altered $REPLACE_SED_COMMAND $DEST_FILE"
-        CMD_TO_EXECUTE3="rm $DEST_FILE-altered"
+        CMD_TO_EXECUTE2="sed -i $REPLACE_SED_COMMAND $DEST_FILE"
         if [ $DRY_RUN ]; then
             echo $CMD_TO_EXECUTE1
             echo $CMD_TO_EXECUTE2
-            echo $CMD_TO_EXECUTE3
         else
             echo $CMD_TO_EXECUTE1
             $CMD_TO_EXECUTE1
             $CMD_TO_EXECUTE2
-            $CMD_TO_EXECUTE3
         fi
         echo
     else
