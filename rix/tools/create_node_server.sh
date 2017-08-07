@@ -231,7 +231,7 @@ PostCreationSteps() {
 
 
     echo
-    echo Install the Node Packages using the following command at [$APP_NAME_FOR_CREATION/app]
+    echo Install the Node Packages using the following command at [$APP_NAME_FOR_CREATION]
     echo "   \"npm install\""
 }
 

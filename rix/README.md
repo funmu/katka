@@ -28,6 +28,9 @@
      Node.js was installed at */usr/local/bin/node*
      npm was installed at */usr/local/bin/npm*
   - [Node Upgrade](https://www.solarianprogrammer.com/2016/04/29/how-to-upgrade-nodejs-mac-os-x/)
+  - [NodeJS on AWS EC2](http://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/setting-up-node-on-ec2-instance.html)
+  - [Forever for continuous run](https://github.com/foreverjs/forever) - use this service for continuous run
+
 
 ### Tools for CSS and HTML5
  - [Font Awesome Icons](http://fontawesome.io/icons/) - great collection of icons to use
