@@ -38,12 +38,13 @@ echo
 
 TOOLS_DIRECTORY_ROOT=./tools
 FULL_LOGGING=0
-CONFIG_FROM="$HOME/src/code/tools/AccountSecrets/config.auth.js"
+CONFIG_FROM="./config.auth.js"
 while [ $# -gt 0 ]; do
     case $1 in
         (-n) DRY_RUN=1; shift;;
         (-h|-\?|--help) usage ; shift;;
         (-v|--verbose) FULL_LOGGING=1; shift;;
+        (-c|--config) CONFIG_FROM=1; shift;;
         (-d|--directory) PREP_DIRECTORY=1; shift;;
         (-p|--package) PREP_PACKAGE=1; shift;;
         (-*) usage "$1: unknown option";;
