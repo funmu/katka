@@ -44,7 +44,7 @@ while [ $# -gt 0 ]; do
         (-n) DRY_RUN=1; shift;;
         (-h|-\?|--help) usage ; shift;;
         (-v|--verbose) FULL_LOGGING=1; shift;;
-        (-c|--config) CONFIG_FROM=1; shift;;
+        (-c|--config)  CONFIG_FROM=$2; shift 2;;
         (-d|--directory) PREP_DIRECTORY=1; shift;;
         (-p|--package) PREP_PACKAGE=1; shift;;
         (-*) usage "$1: unknown option";;
@@ -195,6 +195,7 @@ CreateFilesFromTemplate()
     CopyFromTemplate "views.quote_add.ejs" "views/quote_add.ejs";
 
     # Get Special files from special locations
+    echo .... copying the special file from $CONFIG_FROM
     CopyFromSourceToDest $CONFIG_FROM "config/auth.js";
     echo    
 }
