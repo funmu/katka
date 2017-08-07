@@ -9,6 +9,7 @@
 ##  -h, --help      Display this message.
 ##  -n, --dryrun    Dry-run; Shows only what will be done.
 ##  -v, --verbose   Verbose logging of outputs.
+##  -c, --config    Location to fetch config settings from
 ##  -d, --directory Prepare the directories for copying files into.
 ##  -p, --package   Prepare the packages for nodejs app
 ##  -t, --toolsdir  Root directory for Tools (default: ./tools)
@@ -37,6 +38,7 @@ echo
 
 TOOLS_DIRECTORY_ROOT=./tools
 FULL_LOGGING=0
+CONFIG_FROM="$HOME/src/code/tools/AccountSecrets/config.auth.js"
 while [ $# -gt 0 ]; do
     case $1 in
         (-n) DRY_RUN=1; shift;;
@@ -192,7 +194,7 @@ CreateFilesFromTemplate()
     CopyFromTemplate "views.quote_add.ejs" "views/quote_add.ejs";
 
     # Get Special files from special locations
-    CopyFromSourceToDest "$HOME/src/code/tools/AccountSecrets/config.auth.js" "config/auth.js";
+    CopyFromSourceToDest $CONFIG_FROM "config/auth.js";
     echo    
 }
 

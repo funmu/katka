@@ -31,7 +31,13 @@
 
 ### Tools for CSS and HTML5
  - [Font Awesome Icons](http://fontawesome.io/icons/) - great collection of icons to use
+ - [JTable - JQuery Tables](http://www.jtable.org/Themes) - for CRUD with tables on the client side
+ - [Simple CRUD application with client-side JavaScript](https://medium.com/@etiennerouzeaud/a-simple-crud-application-with-javascript-ebc82f688c59)
  
 ### Authentication
 - [Easy Authentication with NodeJS](https://scotch.io/tutorials/easy-node-authentication-setup-and-local)
+
+### Data Tools
+ - [Create CRUD methods with less SQL code](https://www.codeproject.com/Tips/992200/Create-CRUD-Stored-Procedures-Without-Writing-One)
+ - 
 
