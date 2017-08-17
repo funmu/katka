@@ -19,11 +19,19 @@ db.quotes.find();
 // myUserId = myUserIdDoc._id
 // assume myUserId is the _id field for selected user of interest
 
+// list all applications that are present
+db.applications.find( {});
+
 db.applications.insert( { userid: ObjectId("596bdcd5ba20892ae1d078f4"), name: "Quotes", path: "/quotes", description: "Quotes the user loves to recall"});
 
 db.applications.insert( { userid: ObjectId("596be1401b622f2b64aca010"), name: "Quotes", path: "/quotes", description: "Quotes the user loves to recall"});
 
 db.applications.insert( { userid: ObjectId("596be1401b622f2b64aca010"), name: "Word Puzzles", path: "/games/word_puzzles", description: "Word Puzzle Games"});
+
+db.applications.insert( { userid: ObjectId("596be1401b622f2b64aca010"), name: "OKR1", path: "/okr1", description: "Objectives and Key Results App 1"});
+
+// remove an obsolete entry
+db.applications.remove( { "_id": ObjectId("596c45239cfe6b5d874ee632")});
 
 // -------- QUERIES
 

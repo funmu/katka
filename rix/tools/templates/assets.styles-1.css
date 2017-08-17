@@ -157,3 +157,18 @@ div.main_container {
 .footer .fa-heart {
   color: #bf225a;
 }
+
+/* ======= Information for OKRs ======= */
+.okr1_order {
+  color: green;
+}
+
+.okr1_objective {
+  color: green;
+  font-size: 1.4em;
+}
+
+.okr1_keyresult {
+  color: blue;
+  font-size: 1.1em;
+}

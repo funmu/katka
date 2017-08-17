@@ -59,9 +59,18 @@
         // var quote_model = require('./quote.json');
         // var quoteSchema = mongoose.Schema( quote_model);
 
+        // ============== OKR1 Related code ==============
+
+        var OKR1Model = require('./common.OKR1.json');
+        var okr1_properties = getSchemaFromModel( OKR1Model);
+        var okr1Schema = mongoose.Schema( okr1_properties);
+
+
+        // ============== Construct final Model Map ==============
         var modelMap = {
             userModel: mongoose.model('User', userSchema)
             , quoteModel: mongoose.model('Quote', quoteSchema)
+            , OKR1Model: mongoose.model('OKR1', okr1Schema)
             , applicationModel: mongoose.model('Application', applicationSchema)
         };
 

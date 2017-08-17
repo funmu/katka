@@ -1,0 +1,34 @@
+{
+  "description": "Common definition of 'OKR1' schema",
+  "name": "OKR1",
+  "base": "PersistedModel",
+  "idInjection": true,
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {
+    "userid": {
+      "type": "ObjectId",
+      "required": true
+    },
+    "order": {
+      "type": "number",
+      "required": true
+    },
+    "objective": {
+      "type": "String",
+      "required": true
+    },
+    "keyresults": {
+      "type": "Array",
+      "required": true
+    },
+    "when": {
+      "type": "String"
+    }
+  },
+  "validations": [],
+  "relations": {},
+  "acls": [],
+  "methods": {}
+}

@@ -11,6 +11,7 @@
 ##  -v, --verbose   Verbose logging of outputs.
 ##  -f, --force     Force creation of all files without checking for time stamp
 ##  -c, --configFrom    Location to fetch config settings from
+##  -m, --macosx    On MAC OSX
 ##  -d, --directory Prepare the directories for copying files into.
 ##  -p, --package   Prepare the packages for nodejs app
 ##  -t, --toolsdir  Root directory for Tools (default: ./tools)
@@ -35,21 +36,30 @@ error_exit() {
     exit 1;
 }
 
+SetMacMode() {
+
+    ON_MAC=1;
+    SED_CMD="sed -i -e";
+
+}
+
 echo
 
 TOOLS_DIRECTORY_ROOT=./tools
 FULL_LOGGING=0
 CONFIG_FROM="./config.auth.js"
 FORCE_CREATION=0
+SED_CMD="sed -i"
 while [ $# -gt 0 ]; do
     case $1 in
         (-n) DRY_RUN=1; shift;;
         (-h|-\?|--help) usage ; shift;;
         (-v|--verbose) FULL_LOGGING=1; shift;;
         (-f|--force) FORCE_CREATION=1; shift;;
-        (-c|--config)  CONFIG_FROM=$2; shift 2;;
         (-d|--directory) PREP_DIRECTORY=1; shift;;
+        (-m|--macosx) SetMacMode; shift;;
         (-p|--package) PREP_PACKAGE=1; shift;;
+        (-c|--config)  CONFIG_FROM=$2; shift 2;;
         (-*) usage "$1: unknown option";;
         (*) APP_NAME_FOR_CREATION=$1; shift;;
     esac
@@ -150,7 +160,7 @@ CopyFromSourceToDest() {
         TEMPLATE_TO_REPLACE={TEMPLATE_APP_NAME_GOES_HERE}
         REPLACE_SED_COMMAND="s/$TEMPLATE_TO_REPLACE/$APP_NAME_FOR_CREATION/g"    
         CMD_TO_EXECUTE1="cp $SOURCE_FILE $DEST_FILE"
-        CMD_TO_EXECUTE2="sed -i $REPLACE_SED_COMMAND $DEST_FILE"
+        CMD_TO_EXECUTE2="$SED_CMD $REPLACE_SED_COMMAND $DEST_FILE"     
         if [ $DRY_RUN ]; then
             echo $CMD_TO_EXECUTE1
             echo $CMD_TO_EXECUTE2
@@ -189,15 +199,18 @@ CreateFilesFromTemplate()
     CopyFromTemplate "views.footer.ejs" "views/footer.ejs";
 
     CopyFromTemplate "views.loginform.inc" "views/loginform.ejs";
-    CopyFromTemplate "views.quoteAdd.inc" "views/quoteAdd.ejs";
 
     CopyFromTemplate "views.profile.ejs" "views/profile.ejs";
     CopyFromTemplate "views.login.ejs" "views/login.ejs";
     CopyFromTemplate "views.login_local.ejs" "views/login_local.ejs";
     CopyFromTemplate "views.signup.ejs" "views/signup.ejs";
     CopyFromTemplate "views.appslist.ejs" "views/appslist.ejs";
+
     CopyFromTemplate "views.quotes.ejs" "views/quotes.ejs";
+    CopyFromTemplate "views.quoteAdd.inc" "views/quoteAdd.ejs";
     CopyFromTemplate "views.quote_add.ejs" "views/quote_add.ejs";
+
+    CopyFromTemplate "views.okr1.ejs" "views/okr1.ejs";
 
     # Get Special files from special locations
     echo .... copying the special file from $CONFIG_FROM
@@ -212,10 +225,12 @@ CreateModelsFromTemplate()
 
     CopyFromTemplate "app.models.user.json" "app/models/user.json";
     CopyFromTemplate "app.models.application.json" "app/models/application.json";
-    CopyFromTemplate "app.models.quote.json" "app/models/quote.json";
+
+    # CopyFromTemplate "app.models.quote.json" "app/models/quote.json";
 
     CopyFromTemplate "common.models.application.json" "app/models/common.application.json";
     CopyFromTemplate "common.models.quote.json" "app/models/common.quote.json";
+    CopyFromTemplate "common.models.okr1.json" "app/models/common.okr1.json";
 
     echo
 

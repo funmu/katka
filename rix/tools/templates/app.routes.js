@@ -54,10 +54,11 @@
         res.redirect('/');
     }
 
+    var ourModels = require('../app/models/modelloader');
+
     // -------------------------------
     // QUOTEs related code
     // -------------------------------
-    var ourModels = require('../app/models/modelloader');
     var QuotesModel = ourModels.quoteModel;
 
 	function getQuotesPage(req, res) {
@@ -114,6 +115,29 @@
         });
     }
 
+
+    // -------------------------------
+    // OKR1 related code
+    // -------------------------------
+    var OKR1Model = ourModels.OKR1Model;
+
+	function getOKR1Page(req, res) {
+
+		console.log( "getOKR1Page is called ");
+		
+		// Use the user Id to ask for quotes for this specific user
+        OKR1Model.find( { userid : req.user.id}, 
+        	function( err, okr1) {
+        	console.log( " Got %d OKR1 ", okr1.length);
+        	console.log( okr1);
+        	res.render( 'okr1.ejs', {
+        		user : req.user,
+        		okr1 : okr1
+        	});
+        });
+    }
+
+
     // -------------------------------
     // Applications related code
     // -------------------------------
@@ -124,7 +148,7 @@
 		// Use the user Id to ask for quotes for this specific user
         ApplicationsModel.find( { userid : req.user.id}, 
         	function( err, applications) {
-        	console.log( " Got %d quotes ", applications.length);
+        	console.log( " Got %d applications ", applications.length);
         	console.log( applications);
         	res.render( 'appslist.ejs', {
         		user : req.user,
@@ -144,8 +168,12 @@
     		{ path: "/login_local", handler: getLoginLocalPage, loginRequired: false },
     		{ path: "/profile", handler: getProfilePage, loginRequired: true },
     		{ path: "/appslist", handler: getApplicationsPage, loginRequired: true },
+
     		{ path: "/quotes", handler: getQuotesPage, loginRequired: true },
     		{ path: "/quotes/addform", handler: getAddQuotesPage, loginRequired: true },
+
+    		{ path: "/okr1", handler: getOKR1Page, loginRequired: true },
+
     		{ path: "/logout", handler: handleLogout, loginRequired: true }
     	],
     	postMethods: [
