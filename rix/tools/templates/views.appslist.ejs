@@ -14,19 +14,25 @@
     <%- include('header'); %>
 
     <div class="main_container">
+        <div class="container">
+            <h1> Welcome to the Home Page </h1>
+        </div>
+
+        <hr/>
         <div class="row">
+        <% if (typeof(user) !== 'undefined') { %>
             <h2>Applications for You</h2>
             <% if ( applications.length ) { %>
                 <ul class="list_of_items">
                     <% for (var i = 0; i < applications.length; i++) { %>
                     <li class="timeline-yellow">
                         <div class="quote">
+                            <a href="<%= applications[i].path %>">
                             <span class="application_name" style="text-align:left">
-                            <%= applications[i].name %> </span> &nbsp;
-                            <span class="application_path" style="text-align:left">
-                            <%= applications[i].path %> </span>
-                            <span class="application_description" style="text-align:left">
-                            <%= applications[i].description %> </span>
+                                <%= applications[i].name %> </span> &nbsp;
+                            </a>
+                            <p class="application_description" style="text-align:left">
+                            <%= applications[i].description %> </p>
                         </div>
                     </li>
                     <% } %>
@@ -36,7 +42,14 @@
             <% } else { %>
                 <p> It is lonely without any applications. Please get some soon. </p>
             <% } %>
-        </div>        
+        <% } else { %>
+            <div class="container">
+                Please login to access the services: 
+                    <a href="/login" class="btn btn-danger btn-sm">
+                    <i class="fa fa-sign-in" aria-hidden="true"></i> Login</a>
+            </div>            
+        <% } %>
+        </div>
     </div>
 
     <%- include('footer'); %>

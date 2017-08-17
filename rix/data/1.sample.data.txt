@@ -33,6 +33,15 @@ db.applications.insert( { userid: ObjectId("596be1401b622f2b64aca010"), name: "O
 // remove an obsolete entry
 db.applications.remove( { "_id": ObjectId("596c45239cfe6b5d874ee632")});
 
+
+// Update Data to have the path be pointing to real site
+db.applications.findAndModify({
+   query:    { name: "Word Puzzles" },
+    update: { name: "Word Puzzles", "userid" : ObjectId("596be1401b622f2b64aca010"), path : "http://hemocoel.com/wp/wordPuzzles.html", description: "Word Puzzle Games"},
+    upsert: true
+});
+
+
 // -------- QUERIES
 
 // get all the applications along with user ID information 

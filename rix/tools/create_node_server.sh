@@ -160,14 +160,20 @@ CopyFromSourceToDest() {
         TEMPLATE_TO_REPLACE={TEMPLATE_APP_NAME_GOES_HERE}
         REPLACE_SED_COMMAND="s/$TEMPLATE_TO_REPLACE/$APP_NAME_FOR_CREATION/g"    
         CMD_TO_EXECUTE1="cp $SOURCE_FILE $DEST_FILE"
-        CMD_TO_EXECUTE2="$SED_CMD $REPLACE_SED_COMMAND $DEST_FILE"     
+        CMD_TO_EXECUTE2="$SED_CMD $REPLACE_SED_COMMAND $DEST_FILE"
+        CMD_TO_CLEANUP="rm -f $DEST_FILE-e"
         if [ $DRY_RUN ]; then
             echo $CMD_TO_EXECUTE1
             echo $CMD_TO_EXECUTE2
+            echo $CMD_TO_CLEANUP
         else
             echo $CMD_TO_EXECUTE1
             $CMD_TO_EXECUTE1
             $CMD_TO_EXECUTE2
+            if [ ! -z $ON_MAC ]; then
+                echo $CMD_TO_CLEANUP
+                $CMD_TO_CLEANUP
+            fi
         fi
         echo
     else

@@ -20,7 +20,7 @@
 	}
 
 	function getHomePage(req, res) {
-        res.render('index.ejs', {
+        res.render('index.ejs', {	// was: index.ejs 
         	user: req.user
         }); // load the index.ejs file
     }
@@ -124,7 +124,7 @@
 	function getOKR1Page(req, res) {
 
 		console.log( "getOKR1Page is called ");
-		
+
 		// Use the user Id to ask for quotes for this specific user
         OKR1Model.find( { userid : req.user.id}, 
         	function( err, okr1) {
@@ -166,6 +166,7 @@
     		{ path: "/", handler: getHomePage, loginRequired: false },
     		{ path: "/login", handler: getLoginPage, loginRequired: false },
     		{ path: "/login_local", handler: getLoginLocalPage, loginRequired: false },
+
     		{ path: "/profile", handler: getProfilePage, loginRequired: true },
     		{ path: "/appslist", handler: getApplicationsPage, loginRequired: true },
 
@@ -185,7 +186,7 @@
     		}},
     		{ path: "/auth/google/callback", handler: function( passport) {
     			return passport.authenticate('google', {
-                    successRedirect : '/', 	// redirect to the secure profile section
+                    successRedirect : '/appslist', 	// redirect to the list of applications
                     failureRedirect : '/'			// redirect back to home page for errors
 	            })
     		}}
@@ -193,14 +194,14 @@
     	postMethodsForAuthentication: [
     		{ path: "/login", handler: function( passport) {
     			return passport.authenticate('local-login', {
-			        successRedirect : '/', // redirect to the secure profile section
+			        successRedirect : '/appslist', // redirect to the list of applications
 			        failureRedirect : '/login', // redirect back to the login page if there is an error
 			        failureFlash : true // allow flash messages
 			    }) 
     		}},
     		{ path: "/signup", handler: function( passport) {
     			return passport.authenticate('local-signup', {
-			        successRedirect : '/', // redirect to the secure profile section
+			        successRedirect : '/appslist', // redirect to the secure profile section
 			        failureRedirect : '/signup', // redirect back to the signup page if there is an error
 			        failureFlash : true // allow flash messages
 			    }) 
