@@ -7,6 +7,9 @@
 	Dependencies
 	-  DropBox SDK installed using
 		pip install dropbox
+	- Dropbox SDK updated from v1 API to v2 in July 2017. 
+		https://blogs.dropbox.com/developers/2016/06/api-v1-deprecated/
+	- accordingly I am updating the code in Sep 2018.
 """
 __author__ = 'Murali Krishnan'
 
@@ -35,10 +38,11 @@ class AccessDropBox:
 
 		if (self.fVerbose):
 			print( "\t  a.Creating a client object");
-		self.client = dropbox.client.DropboxClient(access_token)
+		self.client = dropbox.Dropbox(access_token)
 		if (self.fVerbose):
-			print( "\t  d.Complete the authentication process");		
-			print 'linked account: ', self.client.account_info()
+			print( "\t  d.Complete the authentication process");
+			print( self.client);		
+			print('linked account: ', self.client.users_get_current_account());
 		return;
 
 	def GetCollection( self, folderPath):
@@ -48,18 +52,29 @@ class AccessDropBox:
 		if (self.fVerbose):
 			print( "\t  Getting metadata for folder: {}".format( folderPath));
 
-		folder_metadata = self.client.metadata( folderPath);
+		# list files in the root directory
+		# for entry in dbx.files_list_folder('').entries:
+    	#	print(entry.name)
+
+		folder_metadata = self.client.files_list_folder(folderPath);
+
 		# print 'metadata: ', folder_metadata
-		collection = folder_metadata["contents"];
+		print( folder_metadata);
+		collection = folder_metadata.entries;
+		print(collection);
 		items = [];
-		for item in collection:
+ 		for item in collection:
 			newStorageItem = SH.AccessStorageItem(self.fVerbose);
-			newStorageItem.name 	= item["path"];
-			newStorageItem.path 	= item["path"];
-			newStorageItem.num_bytes= item["bytes"];
-			newStorageItem.is_dir	= item["is_dir"];
-			newStorageItem.modified_date = item["modified"];
-			newStorageItem.revision	= item["rev"];
+			newStorageItem.name 	= item.name;
+			newStorageItem.path 	= item.path_lower;
+			if (isinstance( item, dropbox.files.FolderMetadata) ):
+				newStorageItem.num_bytes= 0;
+				newStorageItem.is_dir = 1;
+			elif (isinstance( item, dropbox.files.FileMetadata) ):
+				newStorageItem.num_bytes= item.size;
+				newStorageItem.is_dir = 0;
+				newStorageItem.modified_date = item.server_modified;
+				newStorageItem.revision	= item.rev;
 			items.append( newStorageItem);
 
 		return items;
@@ -111,7 +126,7 @@ class AccessDropBox:
 		return allItems;
 
 
-	def _downloadFile( self, item, outputFileName):
+	def _downloadFile_v1( self, item, outputFileName):
 		print( u" .... about to download file {:30s} to {:40s}"
 			.format( item.path, outputFileName));
 		f = self.client.get_file( item.path);
@@ -119,6 +134,13 @@ class AccessDropBox:
 		out.write(f.read());
 		out.close();
 		return;
+
+	def _downloadFile( self, item, outputFileName):
+		print( u" .... about to download file {:30s} to {:40s}"
+			.format( item.path, outputFileName));
+		self.client.files_download_to_file( outputFileName, item.path, item.revision);
+		return;
+
 
 	def DownloadItem( self, item, destRoot = u"."):
 		"""

@@ -31,6 +31,10 @@ A simple class is provided for listing, getting, and downloading the files.
  * [List Config](listConfig.py) - simple script to list config file details (used for testing and viewing configuration)
  * [Config Template](configTemplate.ini) - sample configuration file
   
+##Usage##
+	python myCloudStorage.py -c $CONFIGFILE -s Dropbox
+	python myCloudStorage.py -c $CONFIGFILE -s OneDrive
+
 
 ###Wish List###
  * Logging - write out log to a separate file for analysis.
