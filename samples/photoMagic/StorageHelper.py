@@ -43,13 +43,12 @@ class AccessStorageItem:
 		return ( self.is_dir);
 
 	def PrintItem( self, index = 0):
-		print( u"{0:4d}. {1:10s} {2:15,d}  {3:40s} {4} {5:15s}\n\t{6:s}\n"
+		print( u"{0:4d}. {1:6s} {2:12,d} [{3}] {4:60s}\n\t{5:s}\n"
 			.format( index,
 				"Folder" if self.is_dir else '',
 				self.num_bytes if self.num_bytes else 0,
-				self.path,
 				self.modified_date,
-				self.revision,
+				self.path,
 				self.itemHash.encode('hex')
 			));
 		if (self.children):
@@ -167,10 +166,10 @@ class AccessStorageHelper:
 
 	def PrintItems( self, items):
 		print("\n\n-------------------------------------------");
-		count = 1;
 		for count, item in enumerate( items):
 			item.PrintItem( count);
-		print("\n Total of {:,d} items".format( count));
+		print("\n-------------------------------------------");
+		print(" Total of {:,d} items \n".format( len(items)));
 
 	def Apply( self, list, applyFunction):
 		allItems = [];

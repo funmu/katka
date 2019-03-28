@@ -8,8 +8,8 @@ var fVerbose = false;
 var fs = require('fs');
 var fileToProcess = './inputs/1sponsor.json'; // sample file for testing purposes
 var templateForHTML = "templates/templateForProjects.html";
-var outputDirectory = "output/2017/";
-var outputIndexStart = 1838; // some random number. use a uniquefier in the future
+var outputDirectory = "output/2019/";
+var outputIndexStart = 201900; // some random number. use a uniquefier in the future
 
 // --=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 // Process Command line to get parameters for processing
@@ -24,7 +24,7 @@ if (process.argv.length > 2) {
 if (process.argv.length > 3) {
 
 	// 3nd argument is the template HTML data file
-	fileToProcess = process.argv[3];
+	templateForHTML = process.argv[3];
 }
 
 // --=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
