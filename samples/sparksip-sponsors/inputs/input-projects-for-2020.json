@@ -1,0 +1,34 @@
+[
+    {
+      "Timestamp": "2020-02-07T04:47:51.405Z",
+      "Email Address": "will@indoormaps.com",
+      "Project Title (6-8 words)": "Cartogram Summer Internship Program",
+      "Name of your Organization": "Cartogram Inc",
+      "OrganizationWebsite" : "http://www.cartogram.com/",
+      "ContactTitle": "CEO",
+      "Who is the best contact  (name + email) if not you?": "Will Clausen",
+      "Length of Internship (in number of weeks)": "8 weeks",
+      "Number of hours per week": "40 hours",
+      "Can you pay an optional stipend of (max of $500 per intern)?": "Yes",
+      "Describe the project (3-5 sentences)": "Cartogram offers 8-week technical internships to give the brightest high school students an opportunity to make an impact in real-world software engineering projects. Our mission is to conquer the technical challenges of indoor and outdoor wayfinding via the world's most powerful real-time navigation platform. Internship projects range from frontend web development, to infrastructure and content management, to native mobile development on Android and iOS. ",
+      "Qualifications you are looking for (3-5 sentences)": "Cartogram looks for the following qualities in our interns:\n\n- Attitude: Candidates should enjoy making things and learning about building software. \n- Availability: Candidates are expected to work 40 hours per week over an 8-week internship. However, scheduling is flexible and we understand that some interns will need some time off.\n- Independence: While our interns work within a group, each person is responsible for their own deliverables at the end of the internship. Being willing to ask questions and make mistakes will be key to success.\n- Coding and Problem Solving: Rudimentary experience in at least one mainstream programming language is a requirement for the program. Javascript/PHP, Java, .NET, C/C++, and others are good examples.",
+      "Is there a Scientific or Business Research component?": "Yes",
+      "Describe the Research Component (3-5 sentences)": "Research components are made available based on the needs of the business shortly prior to the start of the summer program. Examples of research components could include, for example, customer usage analysis, competitor product comparison, and market outreach analysis."
+    },
+    {
+      "Timestamp": "2020-02-07T04:54:53.857Z",
+      "Email Address": "helen@6crickets.com",
+      "Project Title (6-8 words)": "6crickets internship",
+      "Name of your Organization": "6crickets Inc.",
+      "OrganizationWebsite" : "http://www.6crickets.com/",      
+      "ContactTitle": "Hiring Manager",      
+      "Who is the best contact  (name + email) if not you?": "hiring@6crickets.com",
+      "Length of Internship (in number of weeks)": "8 weeks",
+      "Number of hours per week": "Flexible",
+      "Can you pay an optional stipend of (max of $500 per intern)?": "No",
+      "Describe the project (3-5 sentences)": "You can pick either a business development project or a programming project. Past students gained tremendous experience and made a real impact at our company. Successful experiences led to stellar recommendations and contributed to top university acceptances. ",
+      "Qualifications you are looking for (3-5 sentences)": "Grit. Desire to solve real-time problems. Independence in learning new things, put new skills to use, and accomplish real results. ",
+      "Is there a Scientific or Business Research component?": "Yes",
+      "Describe the Research Component (3-5 sentences)": "Business research would involve market research and lead research and generation.\nTechnology research involves exploring existing and new methods of crawling and scraping websites to extract useful information. "
+    }
+]
